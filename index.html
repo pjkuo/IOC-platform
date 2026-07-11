@@ -1,0 +1,275 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>計算機概論實習 · 課程入口與總覽</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@400;500;700;900&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --navy:#0f2a4a; --navy-2:#16385f; --cyan:#00b8d4; --cyan-soft:#e3f7fb;
+    --amber:#f5a623; --ink:#1a2333; --muted:#5b6b82; --line:#d5dee8;
+    --bg:#f4f7fb; --card:#fff;
+  }
+  *{box-sizing:border-box;margin:0;padding:0}
+  body{font-family:'Noto Sans TC',system-ui,sans-serif;background:var(--bg);color:var(--ink);line-height:1.6;-webkit-font-smoothing:antialiased}
+  .wrap{max-width:1080px;margin:0 auto;padding:34px 24px 80px}
+  a{text-decoration:none;color:inherit}
+
+  /* Hero */
+  .hero{
+    background:linear-gradient(135deg,#0a1f38,#123a63);color:#fff;
+    border-radius:20px;padding:36px 34px;
+  }
+  .hero .eyebrow{font-size:12.5px;letter-spacing:.28em;color:#7fd6e8;font-weight:700;text-transform:uppercase}
+  .hero h1{font-size:32px;font-weight:900;margin:10px 0 8px;letter-spacing:.02em}
+  .hero p{font-size:15px;color:#bcd2e8;max-width:40em}
+  .cta{display:flex;gap:12px;margin-top:24px;flex-wrap:wrap}
+  .cta a{font-size:14.5px;font-weight:800;padding:12px 20px;border-radius:10px;transition:.15s}
+  .cta .go-plat{background:var(--cyan);color:#04212a}
+  .cta .go-plat:hover{background:#33c9e0}
+  .cta .go-scroll{background:rgba(255,255,255,.12);color:#fff;border:1px solid rgba(255,255,255,.32)}
+  .cta .go-scroll:hover{background:rgba(255,255,255,.2)}
+
+  /* Section title */
+  .sec-title{
+    display:flex;align-items:baseline;gap:12px;
+    margin:48px 0 22px;padding-bottom:12px;border-bottom:2px solid var(--line);
+  }
+  .sec-title .num{font-size:13px;font-weight:700;color:#fff;background:var(--cyan);padding:3px 9px;border-radius:5px;letter-spacing:.05em}
+  .sec-title h2{font-size:21px;font-weight:700;color:var(--navy)}
+  .hint{margin-top:-8px;margin-bottom:18px;font-size:13px;color:#0a6070;background:var(--cyan-soft);border:1px solid #b8e8f1;border-radius:8px;padding:9px 14px;display:inline-block}
+
+  /* Architecture diagram */
+  .arch{background:var(--card);border-radius:16px;padding:26px;box-shadow:0 6px 24px rgba(15,42,74,.07);border:1px solid var(--line)}
+  .layer{border-radius:11px;padding:20px 22px;margin-bottom:14px;display:flex;align-items:center;gap:16px}
+  .layer:last-child{margin-bottom:0}
+  .layer .tag{font-size:12px;font-weight:700;letter-spacing:.06em;padding:4px 10px;border-radius:20px;white-space:nowrap}
+  .layer .name{font-size:22px;font-weight:900}
+
+  a.linked{cursor:pointer;transition:transform .12s,box-shadow .12s}
+  a.linked:hover{transform:translateY(-2px);box-shadow:0 10px 22px rgba(15,42,74,.14)}
+  a.linked:focus-visible{outline:3px solid var(--cyan);outline-offset:3px}
+  .go{font-size:12px;font-weight:800;letter-spacing:.03em;white-space:nowrap}
+  .apex-app .go,.apex-ai .go{color:#bfe9f5;margin-left:14px}
+  .ccard .go,.mid-right .go{color:#0284a3}
+
+  .apex-app{background:linear-gradient(135deg,#0a1f38,#123a63);color:#fff}
+  .apex-app .tag{background:var(--cyan);color:#052a35}
+  .apex-ai{background:#2c5480;color:#fff}
+  .apex-ai .tag{background:rgba(255,255,255,.18);color:#d3ecf5}
+
+  .mid-band{display:grid;grid-template-columns:1fr 1fr;gap:14px;margin-bottom:14px}
+  .mid-left{display:flex;flex-direction:column;gap:14px}
+  .ccard{background:var(--cyan-soft);border:1.5px solid #b8e8f1;border-radius:11px;padding:20px 22px;display:flex;flex-direction:column;align-items:flex-start;gap:12px;flex:1;justify-content:center}
+  .ccard .tag{font-size:12px;font-weight:700;letter-spacing:.06em;padding:4px 10px;border-radius:20px;background:var(--cyan);color:#fff}
+  .ccard .name{font-size:22px;font-weight:900;color:var(--navy)}
+  .cc-head{display:flex;align-items:center;gap:14px;width:100%}
+  .cc-head .go{margin-left:auto}
+  .elem{font-size:13px;font-weight:700;color:#0a6070;background:#fff;border:1.5px solid #9fdfe9;padding:5px 13px;border-radius:16px;letter-spacing:.02em}
+  .chips{margin-left:auto;display:flex;gap:8px;flex-wrap:wrap;justify-content:flex-end;align-items:center}
+  .chip{font-size:12.5px;font-weight:700;padding:4px 12px;border-radius:14px;white-space:nowrap}
+  .chip-ai{background:rgba(255,255,255,.2);color:#eaf7fb}
+  .chip-sec{background:var(--amber);color:#4a3208}
+  .chip-app{background:var(--cyan);color:#04212a}
+  .mid-right{background:var(--cyan-soft);border:1.5px solid #b8e8f1;border-radius:11px;padding:20px 16px;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:12px;text-align:center}
+  .mid-right .net-tag{font-size:12px;font-weight:700;letter-spacing:.06em;padding:4px 10px;border-radius:20px;background:var(--cyan);color:#fff}
+  .mid-right .net-name{font-size:27px;font-weight:900;color:var(--navy);letter-spacing:.14em;line-height:1.25}
+  .v-arrow{color:var(--amber);font-weight:900;font-size:22px;line-height:1}
+  .iot-box{background:#fff;border:1.5px dashed var(--amber);border-radius:9px;padding:11px 18px;display:flex;flex-direction:column;align-items:center;gap:4px}
+  .iot-box .etag{font-size:11px;font-weight:700;background:var(--amber);color:#4a3208;padding:3px 9px;border-radius:14px}
+  .iot-box .ename{font-size:21px;font-weight:900;color:var(--amber);letter-spacing:.1em}
+  .iot-box .enote{font-size:11.5px;color:var(--muted)}
+
+  .base{background:repeating-linear-gradient(135deg,#fff7e8,#fff7e8 12px,#fdf0d6 12px,#fdf0d6 24px);border:1.5px dashed var(--amber)}
+  .base .tag{background:var(--amber);color:#4a3208}
+  .base .name{color:#8a5e08}
+
+  .fig-cap{margin-top:20px;padding:14px 16px;background:var(--cyan-soft);border-left:4px solid var(--cyan);border-radius:0 8px 8px 0;font-size:13.5px;color:var(--ink);line-height:1.75}
+  .fig-cap .fc-label{font-weight:700;color:var(--navy);margin-right:6px}
+  .fig-cap b{color:var(--navy)}
+  .legend{margin-top:18px;font-size:13px;color:var(--muted);display:flex;flex-wrap:wrap;gap:18px;padding-top:16px;border-top:1px dashed var(--line)}
+  .legend b{color:var(--navy)}
+
+  /* Table */
+  .tbl-scroll{overflow-x:auto;border-radius:14px;box-shadow:0 6px 24px rgba(15,42,74,.07);border:1px solid var(--line)}
+  table{width:100%;border-collapse:collapse;background:var(--card);min-width:820px}
+  thead th{background:var(--navy);color:#fff;font-weight:700;font-size:13.5px;padding:14px 14px;text-align:left;letter-spacing:.03em;white-space:nowrap}
+  thead th.eng{background:var(--navy-2)}
+  tbody td{padding:13px 14px;border-bottom:1px solid var(--line);font-size:14px;vertical-align:top}
+  tbody tr:last-child td{border-bottom:none}
+  tbody tr:nth-child(even){background:#f8fbfd}
+  .layer-cell{font-weight:700;color:var(--navy);white-space:nowrap}
+  .elem-cell{font-weight:700;color:#0a6070;white-space:nowrap}
+  .tbl-scroll a{color:#0284a3;font-weight:700;border-bottom:1px solid #a9dfea}
+  .tbl-scroll a:hover{border-bottom-color:#0284a3}
+  .arc-tag{display:inline-block;font-size:11px;font-weight:700;color:#fff;background:var(--navy-2);padding:2px 8px;border-radius:5px;margin-right:6px}
+  .wk{display:inline-block;font-size:12px;font-weight:700;color:var(--cyan);background:var(--cyan-soft);padding:2px 8px;border-radius:6px;white-space:nowrap}
+  .row-ai .layer-cell{color:var(--cyan)}
+  .row-cap{background:#eef3f9 !important}
+  .row-cap td{font-weight:500;color:var(--navy)}
+
+  /* module shortcuts */
+  .mods{display:flex;flex-wrap:wrap;gap:9px}
+  .mod{font-size:13.5px;font-weight:700;background:#fff;border:1px solid var(--line);padding:10px 16px;border-radius:9px;color:var(--navy);transition:.13s}
+  .mod:hover{border-color:var(--cyan);color:var(--cyan);transform:translateY(-1px)}
+  .mod .mi{font-size:11px;opacity:.6;margin-right:5px}
+
+  footer{margin-top:48px;padding-top:20px;border-top:2px solid var(--line);color:var(--muted);font-size:13px}
+  footer b{color:var(--navy)}
+
+  @media(max-width:720px){
+    .hero h1{font-size:26px}
+    .mid-band{grid-template-columns:1fr}
+    .wrap{padding:24px 16px 60px}
+  }
+  @media print{ body{background:#fff} .arch,.tbl-scroll{box-shadow:none} .cta{display:none} }
+</style>
+</head>
+<body>
+<div class="wrap">
+
+  <!-- 入口 Hero -->
+  <div class="hero">
+    <div class="eyebrow">Introduction to Computer · Practicum</div>
+    <h1>計算機概論實習</h1>
+    <p>資管系大一新生的做中學平台 —— 由硬體、軟體、網路到 AI 人機協作，一條「先思考、後驗證」的學習路徑。</p>
+    <div class="cta">
+      <a class="go-plat" href="platform.html">進入模擬平台 →</a>
+      <a class="go-scroll" href="#map">看課程總覽 ↓</a>
+    </div>
+  </div>
+
+  <!-- 架構圖 -->
+  <div class="sec-title" id="map"><span class="num">01</span><h2>課程架構圖（可點導覽）</h2></div>
+  <div class="hint">點各層卡與週次列，可直接進入對應模組。</div>
+  <div class="arch">
+
+    <a class="layer apex-app linked" href="https://pjkuo.github.io">
+      <span class="tag">應用場域</span>
+      <span class="name">智慧應用</span>
+      <span class="chips"><span class="chip chip-app">智慧商務</span><span class="chip chip-app">資訊系統整合</span></span>
+      <span class="go">前往&nbsp;→</span>
+    </a>
+
+    <a class="layer apex-ai linked" href="https://pjkuo.github.io">
+      <span class="tag">技術頂層</span>
+      <span class="name">人工智慧</span>
+      <span class="chips"><span class="chip chip-ai">HITL 人在迴路中</span><span class="chip chip-ai">HOTL 人在迴路上</span></span>
+      <span class="go">前往&nbsp;→</span>
+    </a>
+
+    <div class="mid-band">
+      <div class="mid-left">
+        <a class="ccard linked" href="platform.html#software">
+          <div class="cc-head"><span class="tag">核心</span><span class="name">軟體</span><span class="go">前往&nbsp;→</span></div>
+          <span class="elem">主角：程式設計</span>
+        </a>
+        <a class="ccard linked" href="platform.html#hardware">
+          <div class="cc-head"><span class="tag">核心</span><span class="name">硬體</span><span class="go">前往&nbsp;→</span></div>
+          <span class="elem">主角：CPU</span>
+        </a>
+      </div>
+      <a class="mid-right linked" href="platform.html#network">
+        <span class="net-tag">核心</span>
+        <span class="net-name">網&nbsp;路</span>
+        <span class="v-arrow">↓</span>
+        <div class="iot-box">
+          <span class="etag">主角</span>
+          <span class="ename">物聯網</span>
+          <span class="enote">網路的落地代表</span>
+        </div>
+        <span class="go">前往&nbsp;→</span>
+      </a>
+    </div>
+
+    <div class="layer base">
+      <span class="tag">貫穿全課</span>
+      <span class="name">資訊安全</span>
+      <span class="chips"><span class="chip chip-sec">事前</span><span class="chip chip-sec">事中</span><span class="chip chip-sec">事後</span></span>
+    </div>
+
+    <div class="fig-cap">
+      <span class="fc-label">圖說</span>各層以主角元素代表：<b>硬體→CPU</b>、<b>軟體→程式設計</b>、<b>網路→物聯網</b>（右側直式）、<b>人工智慧→HITL / HOTL</b> 人機協作、<b>智慧應用</b> 為最頂應用場域；<b>資訊安全</b> 以「事前 / 事中 / 事後」三階段貫穿全課。點硬/軟/網進 platform 模組，點 AI 兩層進 pjkuo 專題平台。
+    </div>
+
+    <div class="legend">
+      <span><b>三核心</b>：CPU（硬體）· 程式設計（軟體）· 物聯網（網路）</span>
+      <span><b>頂層</b>：HITL / HOTL（AI）→ 智慧應用</span>
+      <span><b>資安</b>：事前防護 → 事中偵測應變 → 事後復原鑑識</span>
+    </div>
+  </div>
+
+  <!-- 週次對照表 -->
+  <div class="sec-title"><span class="num">02</span><h2>週次對照表（層 × 週次 × 課程元素 × 實習重點）</h2></div>
+  <div class="tbl-scroll">
+    <table>
+      <thead>
+        <tr>
+          <th>層 / 階段</th>
+          <th>週次</th>
+          <th class="eng">課程元素</th>
+          <th class="eng">實習重點</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr class="row-cap" style="background:#eef2f7 !important">
+          <td class="layer-cell" style="color:#8a5e08">銜接基礎</td>
+          <td><span class="wk" style="color:#8a5e08;background:#fbeecf">W1–4</span></td>
+          <td class="elem-cell" style="color:#8a5e08">cc-platform 核心站</td>
+          <td>以 <a href="platform.html">模擬平台</a> 為主，由硬體、軟體到網路與資安基礎，銜接高中與大學學程；含診斷分流與自主學習（先思考、後驗證）</td>
+        </tr>
+        <tr>
+          <td class="layer-cell">硬體 · 軟體 · 網路<br><span style="font-weight:400;font-size:12px;color:var(--muted)">物聯網應用</span></td>
+          <td><span class="wk">W5–9</span></td>
+          <td class="elem-cell"><a href="platform.html#network">感知 · 網路 · 應用</a></td>
+          <td>以「感知 → 網路 → 應用」貫穿：CPU 感測、Python 控制、感測器串接雲端，整合為一個 HITL 人機協作 IoT 專題（先思考架構、後驗證資料）</td>
+        </tr>
+        <tr class="row-ai">
+          <td class="layer-cell" rowspan="3">人工智慧<br><span style="font-weight:400;font-size:12px;color:var(--muted)">HITL 與 HOTL<br>7 週 · 三小弧</span></td>
+          <td><span class="wk">W10–11</span></td>
+          <td class="elem-cell"><span class="arc-tag">弧一</span>心智圖</td>
+          <td>以 <a href="https://pjkuo.github.io">pjkuo.github.io</a> 為主 — 概念與工具：用心智圖拆解專題主題、發散與聚斂（人設方向）</td>
+        </tr>
+        <tr class="row-ai">
+          <td><span class="wk">W12–13</span></td>
+          <td class="elem-cell"><span class="arc-tag">弧二</span>IPO 模式</td>
+          <td>IPO 模式核心：Input–Process–Output 把想法結構化為可執行流程</td>
+        </tr>
+        <tr class="row-ai">
+          <td><span class="wk">W14–16</span></td>
+          <td class="elem-cell"><span class="arc-tag">弧三</span>Python→影片→報告</td>
+          <td>Python 程式驗證 → 專題影片 → 專題報告情境驗證（AI 出草稿、人驗證修正的 HITL/HOTL 循環）</td>
+        </tr>
+        <tr class="row-cap">
+          <td class="layer-cell">智慧應用<br><span style="font-weight:400;font-size:12px;color:var(--muted)">總結</span></td>
+          <td><span class="wk">W17–18</span></td>
+          <td class="elem-cell"><a href="https://pjkuo.github.io">資訊系統整合</a></td>
+          <td>跨層專題整合（智慧商務 / 資訊系統應用）· 成果發表與同儕互評</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+
+  <!-- 模組捷徑 -->
+  <div class="sec-title"><span class="num">03</span><h2>模擬平台模組捷徑</h2></div>
+  <div class="mods">
+    <a class="mod" href="platform.html#hardware"><span class="mi">▢</span>硬體</a>
+    <a class="mod" href="platform.html#software"><span class="mi">◇</span>軟體</a>
+    <a class="mod" href="platform.html#network"><span class="mi">⬡</span>網路</a>
+    <a class="mod" href="platform.html#repair"><span class="mi">🧰</span>3C 拆裝實訓</a>
+    <a class="mod" href="platform.html#pcbuild"><span class="mi">⚙</span>虛擬組裝</a>
+    <a class="mod" href="platform.html#aicollab"><span class="mi">◈</span>AI 協作</a>
+    <a class="mod" href="platform.html#assess"><span class="mi">✓</span>即時評量</a>
+    <a class="mod" href="platform.html#exam"><span class="mi">▤</span>課後評量</a>
+  </div>
+
+  <footer>
+    <b>設計備註</b>　對象為資管系大一新生，18 週落點：銜接 4 週（cc-platform 為主）、物聯網應用 5 週（感知→網路→應用）、HITL/HOTL 7 週（三小弧：心智圖→IPO→Python/影片/報告驗證）、智慧應用總結 2 週。資訊安全「事前→事中→事後」貫穿各階段。連結：硬/軟/網 → platform 模組（同分頁）；AI 兩層與專題 → pjkuo.github.io。
+  </footer>
+
+</div>
+</body>
+</html>
