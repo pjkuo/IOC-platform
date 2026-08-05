@@ -572,6 +572,107 @@
   .sc-finish{display:flex;gap:10px;flex-wrap:wrap;margin-top:16px}
   @media(max-width:640px){.study-box .sc-main{flex-direction:column}.sc-outline{flex:0 0 auto;max-height:116px;border-right:0;border-bottom:1px solid var(--line)}}
   @media(prefers-reduced-motion:reduce){*{transition:none!important;animation:none!important}}
+
+  /* ===== ★ 精進版 v2：評量報告 UI ＋ 學習地圖嚮導 ===== */
+  .ccr-hero{display:flex;gap:20px;align-items:center;flex-wrap:wrap;margin-bottom:10px}
+  .ccr-ringbox{position:relative;width:132px;height:132px;flex:none}
+  .ccr-ringbox svg{width:100%;height:100%}
+  .ccr-ringnum{position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center}
+  .ccr-ringnum .score-big{font-size:38px;line-height:1}
+  .ccr-ringnum small{color:var(--muted);font-size:12px}
+  .ccr-hello{font-size:17px;font-weight:800;color:var(--ink);margin:0 0 4px}
+  .ccr-msg{color:var(--muted);font-size:14px;margin:0}
+  .ccr-quad{display:grid;grid-template-columns:1fr 1fr;gap:8px}
+  @media(max-width:560px){.ccr-quad{grid-template-columns:1fr}}
+  .ccr-qcell{border:1px solid var(--line);border-radius:10px;padding:9px 12px;background:#fff}
+  .ccr-qcell .t{font-size:13px;font-weight:700}
+  .ccr-qcell b.n{display:block;font-size:20px}
+  .ccr-qcell .d{font-size:12px;color:var(--muted)}
+  .ccr-qcell.g{border-left:4px solid var(--ok)} .ccr-qcell.b{border-left:4px solid var(--fail)}
+  .ccr-qcell.w{border-left:4px solid var(--warn)} .ccr-qcell.i{border-left:4px solid var(--hw)}
+  .ccr-calibsum{margin-top:8px;font-size:13px;background:#f2f5f9;border-radius:9px;padding:8px 12px;color:var(--ink)}
+  .ccr-coach{border-left:4px solid var(--hw);background:#f2f5f9;border-radius:0 10px 10px 0;padding:10px 14px}
+  .ccr-coach h4{margin:0 0 6px;font-size:14px;color:var(--ink)}
+  .ccr-coach ul{margin:0;padding-left:1.2em;font-size:13.5px}
+  .ccr-coach li{margin:4px 0}
+  .ccr-coach .nx{margin-top:8px;font-size:13.5px;font-weight:700}
+  .ccr-wc{border:1px solid var(--line);border-radius:10px;margin-top:10px;overflow:hidden;background:#fff}
+  .ccr-wc summary{list-style:none;cursor:pointer;padding:11px 14px;display:flex;gap:8px;align-items:center;flex-wrap:wrap;font-size:14px}
+  .ccr-wc summary::-webkit-details-marker{display:none}
+  .ccr-wc summary:hover{background:#f2f5f9}
+  .ccr-wc .q{font-weight:700;flex:1;min-width:200px;color:var(--ink)}
+  .ccr-pill{font-size:11px;border-radius:99px;padding:2px 9px;background:#eef1f5;color:var(--muted);white-space:nowrap}
+  .ccr-pill.blind{background:var(--fail);color:#fff}
+  .ccr-wcb{padding:2px 14px 12px;border-top:1px dashed var(--line);font-size:13.5px}
+  .ccr-ans{margin:8px 0;padding:7px 11px;border-radius:8px}
+  .ccr-ans.x{background:#fbeae8;border:1px solid var(--fail)} .ccr-ans.o{background:#e9f5ee;border:1px solid var(--ok)}
+  .ccr-ans .who{font-size:11px;font-weight:800;margin-right:8px}
+  .ccr-why{color:var(--muted);margin-top:6px}
+  .ccr-wc .arow{margin-top:8px}
+  /* 學習地圖 */
+  .ccgmap h2{color:var(--ink)}
+  .ccg-track{height:10px;border-radius:5px;background:#e8edf3;overflow:hidden;margin:6px 0 4px}
+  .ccg-track i{display:block;height:100%;background:var(--hw);border-radius:5px;transition:width .6s ease}
+  .ccg-cap{font-size:12.5px;color:var(--muted);margin-bottom:10px}
+  .ccg-steps{display:flex;flex-wrap:wrap;gap:8px}
+  .ccg-step{display:flex;align-items:center;gap:7px;border:1px solid var(--line);background:#fff;border-radius:99px;padding:7px 13px;font-size:13px;cursor:pointer;color:var(--ink)}
+  .ccg-step:hover{border-color:var(--hw)}
+  .ccg-step .dot{width:20px;height:20px;border-radius:50%;background:#e8edf3;color:var(--muted);display:inline-flex;align-items:center;justify-content:center;font-size:11px;font-weight:800;flex:none}
+  .ccg-step.done .dot{background:var(--ok);color:#fff}
+  .ccg-step.done{color:var(--muted)}
+  .ccg-step.next{border-color:var(--hw);box-shadow:0 0 0 2px rgba(46,84,150,.18)}
+  .ccg-step.next .dot{background:var(--hw);color:#fff}
+  /* ===== ★ 精進版 v3：邊雲運算與 AI 人機協作模組 ===== */
+  :root{ --edx:#a06b00; --edxd:#7c5300; --aix:#a83d78; --aixd:#87275e; }
+  .qcat.ed{background:var(--edx)} .qcat.ai{background:var(--aix)}
+  .exam-cta.ed{border-left-color:var(--edx)} .exam-cta.ai{border-left-color:var(--aix)}
+  .btn.ed{background:var(--edx);border-color:var(--edx);color:#fff}
+  .btn.ai{background:var(--aix);border-color:var(--aix);color:#fff}
+  .panel.ed{border-top:3px solid var(--edx)} .panel.ai{border-top:3px solid var(--aix)}
+  .h2b.ed{color:var(--edxd)} .h2b.ai{color:var(--aixd)}
+  /* 邊緣或雲端？分配卡 */
+  .ec-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(250px,1fr));gap:10px}
+  .ec-card{border:1px solid var(--line);border-radius:11px;padding:12px 14px;background:#fff}
+  .ec-card h5{margin:0 0 4px;font-size:14.5px;color:var(--ink)}
+  .ec-card p{margin:0 0 10px;font-size:12.5px;color:var(--muted)}
+  .ec-pick{display:flex;gap:8px}
+  .ec-pick button{flex:1;border:1.5px solid var(--line);background:#f6f8fb;border-radius:9px;padding:8px 6px;font-size:13px;cursor:pointer;color:var(--ink)}
+  .ec-pick button.sel{border-color:var(--edx);background:#fdf6e8;font-weight:700}
+  .ec-card.ok{border-color:var(--ok);background:#f2faf5}
+  .ec-card.no{border-color:var(--fail);background:#fdf3f2}
+  .ec-why{display:none;font-size:12.5px;margin-top:8px;color:var(--muted);border-top:1px dashed var(--line);padding-top:7px}
+  .ec-card.show .ec-why{display:block}
+  .ec-latency{margin-top:12px;display:none}
+  .ec-latency.show{display:block}
+  .lat-row{display:grid;grid-template-columns:130px 1fr 74px;gap:10px;align-items:center;font-size:13px;margin:6px 0}
+  .lat-bar{height:12px;border-radius:6px;background:#e8edf3;overflow:hidden}
+  .lat-bar i{display:block;height:100%;width:0;border-radius:6px;transition:width 1.1s ease}
+  /* AI 審核員 */
+  .aij-box{border:1px solid var(--line);border-radius:12px;padding:14px 16px;background:#fff}
+  .aij-q{font-size:15px;font-weight:700;color:var(--ink);margin:0 0 8px}
+  .aij-ai{border-left:4px solid var(--aix);background:#faf3f8;border-radius:0 10px 10px 0;padding:10px 13px;margin:8px 0}
+  .aij-ai .who{font-size:12px;font-weight:800;color:var(--aixd)}
+  .aij-ai p{margin:4px 0 0;font-size:14px}
+  .aij-judge{display:flex;gap:10px;margin-top:10px;flex-wrap:wrap}
+  .aij-judge button{flex:1;min-width:150px;border:1.5px solid var(--line);border-radius:10px;padding:10px;font-size:14px;cursor:pointer;background:#f6f8fb;color:var(--ink)}
+  .aij-judge button:hover{border-color:var(--aix)}
+  .aij-fb{display:none;margin-top:10px;font-size:13.5px;border-radius:10px;padding:10px 13px}
+  .aij-fb.show{display:block}
+  .aij-fb.ok{background:#f2faf5;border:1px solid var(--ok)}
+  .aij-fb.no{background:#fdf3f2;border:1px solid var(--fail)}
+  .aij-meta{display:flex;gap:10px;align-items:center;font-size:12.5px;color:var(--muted);margin-bottom:8px}
+  .aij-final{display:none;margin-top:12px}
+  .aij-final.show{display:block}
+  /* 嚮導列 */
+  #ccgBar{position:fixed;left:0;right:0;bottom:0;z-index:60;background:var(--ink);color:#fff;display:none;box-shadow:0 -4px 18px rgba(0,0,0,.18)}
+  #ccgBar.on{display:block}
+  #ccgBar .in{max-width:1080px;margin:0 auto;padding:10px 16px;display:flex;gap:10px;align-items:center;flex-wrap:wrap}
+  #ccgBar .st{font-size:13.5px;flex:1;min-width:200px}
+  #ccgBar .st b{font-size:14.5px}
+  #ccgBar .btn{border:1px solid rgba(255,255,255,.35);background:transparent;color:#fff}
+  #ccgBar .btn.go{background:var(--ok);border-color:var(--ok);font-weight:700}
+  body.ccg-on{padding-bottom:64px}
+  @media print{#ccgBar{display:none!important}}
 </style>
 </head>
 <body>
@@ -592,6 +693,19 @@
   <div class="resume" id="ovResume">
     <div class="r-txt"><b id="ovResumeTitle">繼續學習</b><span id="ovResumeSub">載入進度中…</span></div>
     <button class="btn bex" id="ovResumeBtn">開始 →</button>
+  </div>
+
+  <!-- ★ 精進版 v2：學習地圖（step-by-step 嚮導） -->
+  <div class="panel ccgmap" id="ccgMapPanel" style="margin-bottom:18px">
+    <h2 style="margin:0 0 4px">📍 學習地圖・跟著走就完成</h2>
+    <p class="lead" style="margin:0 0 8px">照著下面的步驟走，每一站約 10–15 分鐘、一個主軸單元約 30–40 分鐘，即可獨力完成本課程的自學與評量。點任一站可直接前往；開啟「嚮導模式」後，畫面下方會一路帶著你走。</p>
+    <div class="ccg-track"><i id="ccgTrackFill" style="width:0%"></i></div>
+    <div class="ccg-cap" id="ccgCap">進度載入中…</div>
+    <div class="ccg-steps" id="ccgSteps"></div>
+    <div class="arow" style="margin-top:12px">
+      <button class="btn primary" id="ccgStartBtn">🧭 開啟嚮導模式（從下一站繼續）</button>
+      <span style="font-size:12.5px;color:var(--muted)">進度存在此瀏覽器；「單元評量」完成後會自動打勾。</span>
+    </div>
   </div>
   <div class="practice" id="prBox">
     <h2 style="color:var(--ink);margin:0 0 4px">課堂暖身・提取與交錯練習（不計分）</h2>
@@ -1271,6 +1385,168 @@
 </section>
 
 <!-- ===================== 即時評量 ===================== -->
+<!-- ===================== ★ 邊雲運算（新） ===================== -->
+<section class="view" id="view-edgecloud">
+  <div class="subbar"><button class="btn back" data-back>← 返回首頁</button><span class="crumb">☁ 邊雲運算 ✦新</span><span class="spacer"></span><button class="btn" data-quiz="ed">✓ 本主軸速測</button></div>
+  <div class="unitnav">
+    <span class="unit-lab">學習路徑</span>
+    <button class="unit-chip" data-scroll="sim-ed">① 互動模擬</button>
+    <button class="unit-chip" data-scroll="lec-ed">② 教學講義</button>
+    <button class="unit-chip" data-scroll="quiz-ed">③ 課後評量</button>
+  </div>
+  <div class="guide">
+    <div class="g-col">
+      <h4>本節學習目標（對應教材第 4 章）</h4>
+      <ul><li>說出雲端運算三特性：隨用隨付、彈性擴充、集中管理</li><li>說出邊緣運算的優勢：低延遲、省頻寬、保隱私</li><li>能依情境判斷工作該放「邊緣」還是「雲端」</li></ul>
+    </div>
+    <div class="g-col">
+      <h4>30–40 分鐘時間分配（建議）</h4>
+      <div class="timestrip"><span class="tchip"><b>12′</b> 自學講義</span><span class="tchip"><b>13′</b> 互動模擬</span><span class="tchip"><b>10′</b> 單元評量</span></div>
+      <p style="font-size:12px;color:var(--muted);margin:8px 0 0">先玩模擬建立直覺，再讀講義補觀念，最後做評量驗收。</p>
+    </div>
+  </div>
+
+  <section class="block" id="sim-ed">
+    <h2 class="h2b ed">互動模擬：邊緣或雲端？</h2>
+    <div class="panel ed">
+      <h2>把每個工作分配到對的位置</h2>
+      <p class="lead">下面是六個真實情境。<b>先自己想</b>：這個工作需要「即時反應」（放邊緣）還是「大量運算與儲存」（放雲端）？全部選完後按「驗證」對答案——這就是「先思考後驗證」。</p>
+      <div class="ec-grid" id="ecGrid"></div>
+      <div class="arow" style="margin-top:12px">
+        <button class="btn ed" id="ecVerify" disabled>驗證</button>
+        <button class="btn" id="ecReset">換一組情境</button>
+        <span class="bsel" id="ecScore" style="color:var(--muted)">先完成六個選擇</span>
+      </div>
+      <div class="ec-latency" id="ecLat">
+        <h3 class="rsec">為什麼位置很重要？延遲與頻寬比一比</h3>
+        <div class="lat-row"><span>邊緣（就地處理）</span><div class="lat-bar"><i id="latEdge" style="background:var(--ok)"></i></div><span>約 5 ms</span></div>
+        <div class="lat-row"><span>雲端（來回傳輸）</span><div class="lat-bar"><i id="latCloud" style="background:var(--edx)"></i></div><span>約 80 ms</span></div>
+        <p style="font-size:12.5px;color:var(--muted);margin:6px 0 0">自駕車煞車若等雲端回覆 80ms，車子已前進約 2 公尺——這就是「即時的事放邊緣」的理由；而全校成績分析不在乎 80ms，放雲端最划算。</p>
+      </div>
+    </div>
+  </section>
+
+  <section class="block" id="lec-ed">
+    <h2 class="h2b ed">教學講義（精要）</h2>
+    <div class="grid g2">
+      <div class="panel ed">
+        <h2>雲端運算：像水電一樣用運算</h2>
+        <p class="lead">雲端＝把運算與儲存放在遠端資料中心，透過網路取用。三個關鍵特性：</p>
+        <table class="map">
+          <thead><tr><th>特性</th><th>意思</th><th class="c">生活比喻</th></tr></thead>
+          <tbody>
+            <tr><td>隨用隨付</td><td>用多少付多少，不必買設備</td><td class="c">水電費</td></tr>
+            <tr><td>彈性擴充</td><td>尖峰自動加開、離峰縮減</td><td class="c">選課週加開伺服器</td></tr>
+            <tr><td>集中管理</td><td>資料與備份集中在資料中心</td><td class="c">銀行保管箱</td></tr>
+          </tbody>
+        </table>
+      </div>
+      <div class="panel ed">
+        <h2>邊緣運算：在資料產生的現場處理</h2>
+        <p class="lead">邊緣＝把運算搬到裝置或現場閘道器。優勢與適用情境：</p>
+        <table class="map">
+          <thead><tr><th>優勢</th><th>原因</th><th class="c">典型情境</th></tr></thead>
+          <tbody>
+            <tr><td>低延遲</td><td>不必來回雲端</td><td class="c">自駕車、機械手臂</td></tr>
+            <tr><td>省頻寬</td><td>只上傳結果不傳原始資料</td><td class="c">監視器影像分析</td></tr>
+            <tr><td>保隱私</td><td>敏感資料不出現場</td><td class="c">人臉辨識門禁</td></tr>
+          </tbody>
+        </table>
+        <div class="note" style="margin-top:10px"><b>一句話總結：</b>邊雲是分工不是對立——<b>即時的事放邊緣，大量的事放雲端</b>，兩者透過網路協作。</div>
+      </div>
+    </div>
+    <div class="arow" style="margin-top:10px"><button class="btn ed" id="edLecDone">✔ 我讀完講義了（標記完成）</button><span class="bsel" id="edLecMsg" style="color:var(--muted)"></span></div>
+  </section>
+
+  <section class="block" id="quiz-ed">
+    <h2 class="h2b ed">單元課後評量</h2>
+    <div class="panel exam-cta ed">
+      <p class="lead" style="margin-bottom:10px">上完「邊雲運算」單元後，進行約 <b>10 分鐘</b> 的課後評量（需具名、計分並納入成績統計）；採「先思考後驗證」，作答後可複習錯題。</p>
+      <button class="btn ed" data-exam="ed">▤ 開始邊雲運算單元課後評量</button>
+    </div>
+  </section>
+</section>
+
+<!-- ===================== ★ AI 人機協作（新） ===================== -->
+<section class="view" id="view-aicollab">
+  <div class="subbar"><button class="btn back" data-back>← 返回首頁</button><span class="crumb">✦ AI 人機協作 ✦新</span><span class="spacer"></span><button class="btn" data-quiz="ai">✓ 本主軸速測</button></div>
+  <div class="unitnav">
+    <span class="unit-lab">學習路徑</span>
+    <button class="unit-chip" data-scroll="sim-ai">① 互動模擬</button>
+    <button class="unit-chip" data-scroll="lec-ai">② 教學講義</button>
+    <button class="unit-chip" data-scroll="quiz-ai">③ 課後評量</button>
+  </div>
+  <div class="guide">
+    <div class="g-col">
+      <h4>本節學習目標（對應教材第 5 章）</h4>
+      <ul><li>理解 HITL（人在迴圈內）與 HOTL（人在迴圈上）的差別</li><li>能當「AI 審核員」：判斷 AI 的回答對不對、錯在哪</li><li>知道哪些任務適合交給 AI、哪些必須人來把關</li></ul>
+    </div>
+    <div class="g-col">
+      <h4>30–40 分鐘時間分配（建議）</h4>
+      <div class="timestrip"><span class="tchip"><b>12′</b> 自學講義</span><span class="tchip"><b>13′</b> AI 審核員</span><span class="tchip"><b>10′</b> 單元評量</span></div>
+      <p style="font-size:12px;color:var(--muted);margin:8px 0 0">審核 AI 就是在練 HOTL：放手讓它做，你負責把關。</p>
+    </div>
+  </div>
+
+  <section class="block" id="sim-ai">
+    <h2 class="h2b ai">互動模擬：AI 審核員（監督把關訓練）</h2>
+    <div class="panel ai">
+      <h2>AI 給了答案——它對嗎？</h2>
+      <p class="lead">AI 會回答一題計概問題並說明理由，其中<b>有些答案是錯的</b>。你的任務不是自己作答，而是<b>審核 AI</b>：先自己想正確答案，再判斷 AI 對或錯。這正是 HOTL「人在迴圈上」的核心能力。</p>
+      <div class="aij-box">
+        <div class="aij-meta"><span id="aijIdx">第 1 / 6 題</span><span class="spacer"></span><span id="aijScore">審核正確 0 題</span></div>
+        <p class="aij-q" id="aijQ">—</p>
+        <div class="aij-ai"><span class="who">🤖 AI 的回答</span><p id="aijAns">—</p><p id="aijReason" style="color:var(--muted);font-size:12.5px">—</p></div>
+        <div class="aij-judge" id="aijJudge">
+          <button data-j="1">✔ AI 答對了，可以採用</button>
+          <button data-j="0">✘ AI 答錯了，要退回修正</button>
+        </div>
+        <div class="aij-fb" id="aijFb"></div>
+        <div class="arow" style="margin-top:10px"><button class="btn ai" id="aijNext" style="display:none">下一題 →</button></div>
+        <div class="aij-final" id="aijFinal"></div>
+      </div>
+    </div>
+  </section>
+
+  <section class="block" id="lec-ai">
+    <h2 class="h2b ai">教學講義（精要）</h2>
+    <div class="grid g2">
+      <div class="panel ai">
+        <h2>HITL → HOTL：人與 AI 的分工光譜</h2>
+        <table class="map">
+          <thead><tr><th>模式</th><th>誰做決定</th><th class="c">例子</th></tr></thead>
+          <tbody>
+            <tr><td>HITL 人在迴圈內</td><td>每個關鍵步驟由人先判斷，AI 輔助</td><td class="c">學習期：先自己想、再看 AI／解答</td></tr>
+            <tr><td>HOTL 人在迴圈上</td><td>AI 執行，人負責監督與否決</td><td class="c">熟練期：審核 AI 產出、抽查把關</td></tr>
+          </tbody>
+        </table>
+        <div class="note" style="margin-top:10px"><b>關鍵：</b>能放手的前提是「你查得出它錯在哪」。基本功（三大主軸）越紮實，你越有資格監督 AI。</div>
+      </div>
+      <div class="panel ai">
+        <h2>生成式 AI 使用守則（大學生版）</h2>
+        <table class="map">
+          <thead><tr><th>情境</th><th>建議做法</th></tr></thead>
+          <tbody>
+            <tr><td>AI 產出報告初稿</td><td>逐段查證來源與數字，改寫成自己的話再使用</td></tr>
+            <tr><td>AI 給程式碼</td><td>先讀懂每一行，執行測試後才採用</td></tr>
+            <tr><td>AI 說得很有自信</td><td>自信≠正確——關鍵事實一定要二次查證（AI 會「幻覺」）</td></tr>
+            <tr><td>作業／考試</td><td>遵守課程規範；能力要長在自己身上，AI 是教練不是槍手</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+    <div class="arow" style="margin-top:10px"><button class="btn ai" id="aiLecDone">✔ 我讀完講義了（標記完成）</button><span class="bsel" id="aiLecMsg" style="color:var(--muted)"></span></div>
+  </section>
+
+  <section class="block" id="quiz-ai">
+    <h2 class="h2b ai">單元課後評量</h2>
+    <div class="panel exam-cta ai">
+      <p class="lead" style="margin-bottom:10px">上完「AI 人機協作」單元後，進行約 <b>10 分鐘</b> 的課後評量（需具名、計分並納入成績統計）；採「先思考後驗證」，作答後可複習錯題。</p>
+      <button class="btn ai" data-exam="ai">▤ 開始 AI 人機協作單元課後評量</button>
+    </div>
+  </section>
+</section>
+
 <section class="view" id="view-assess">
   <div class="subbar"><button class="btn back" data-back>← 返回首頁</button><span class="crumb">✓ 即時評量</span></div>
   <div class="seg" id="quizSeg">
@@ -1287,6 +1563,8 @@
       <label class="chk"><input type="radio" name="qcat" value="hw"> 硬體</label>
       <label class="chk"><input type="radio" name="qcat" value="sw"> 軟體</label>
       <label class="chk"><input type="radio" name="qcat" value="nw"> 網路</label>
+      <label class="chk"><input type="radio" name="qcat" value="ed"> 邊雲運算 ✦新</label>
+      <label class="chk"><input type="radio" name="qcat" value="ai"> AI 協作 ✦新</label>
     </div>
     <div class="arow">
       <span class="ctrl-lab">難度</span>
@@ -1323,11 +1601,20 @@
 
   <div id="quizResult" style="display:none">
     <div class="qbox">
-      <div style="display:flex;align-items:baseline;gap:10px;margin-bottom:6px">
-        <span class="score-big" id="rScore">0</span>
-        <span style="color:var(--muted)">/ 100　<b id="rGrade" style="color:var(--hw)"></b></span>
+      <div class="ccr-hero">
+        <div class="ccr-ringbox">
+          <svg viewBox="0 0 120 120" role="img" aria-label="總分環形圖">
+            <circle cx="60" cy="60" r="52" fill="none" stroke="#e8edf3" stroke-width="11"/>
+            <circle id="rRingF" cx="60" cy="60" r="52" fill="none" stroke="var(--hw)" stroke-width="11" stroke-linecap="round" stroke-dasharray="326.7" stroke-dashoffset="326.7" transform="rotate(-90 60 60)" style="transition:stroke-dashoffset 1s ease"/>
+          </svg>
+          <div class="ccr-ringnum"><span class="score-big" id="rScore">0</span><small>／100・<b id="rGrade" style="color:var(--hw)"></b></small></div>
+        </div>
+        <div style="flex:1;min-width:220px">
+          <p class="ccr-hello" id="rHello"></p>
+          <p class="ccr-msg" id="rMsg"></p>
+        </div>
       </div>
-      <div class="score-bar"><i id="rBar" style="width:0%"></i></div>
+      <div class="score-bar" style="display:none"><i id="rBar" style="width:0%"></i></div>
       <h3 class="rsec">各主軸表現</h3>
       <div class="catbars" id="rCats"></div>
       <h3 class="rsec">運算思維（CT）四構面</h3>
@@ -1339,6 +1626,7 @@
       <div id="rReview" class="review"></div>
       <div class="arow" style="margin-top:14px">
         <button class="btn primary" id="qAgain">再測一次</button>
+        <button class="btn" id="qRetryWrong" style="display:none">🔁 錯題重練（不計入統計）</button>
         <button class="btn" id="qExportCsv">⬇ 下載作答紀錄（CSV）</button>
         <button class="btn" id="qPrint">🖶 列印成績單</button>
       </div>
@@ -1413,6 +1701,8 @@
         <label class="chk"><input type="radio" name="excat" value="hw"> 硬體</label>
         <label class="chk"><input type="radio" name="excat" value="sw"> 軟體</label>
         <label class="chk"><input type="radio" name="excat" value="nw"> 網路</label>
+        <label class="chk"><input type="radio" name="excat" value="ed"> 邊雲運算 ✦新</label>
+        <label class="chk"><input type="radio" name="excat" value="ai"> AI 協作 ✦新</label>
       </div>
       <div class="arow">
         <span class="ctrl-lab">難度</span>
@@ -1444,8 +1734,21 @@
 
     <div id="exResult" style="display:none">
       <div class="qbox">
-        <div style="display:flex;align-items:baseline;gap:10px;margin-bottom:6px"><span class="score-big" id="exScore">0</span><span style="color:var(--muted)">/ 100　<b id="exGrade" style="color:var(--hw)"></b></span><span class="spacer"></span><span id="exSaved" class="savedtag"></span></div>
-        <div class="score-bar"><i id="exBar" style="width:0%"></i></div>
+        <div class="ccr-hero">
+          <div class="ccr-ringbox">
+            <svg viewBox="0 0 120 120" role="img" aria-label="總分環形圖">
+              <circle cx="60" cy="60" r="52" fill="none" stroke="#e8edf3" stroke-width="11"/>
+              <circle id="exRingF" cx="60" cy="60" r="52" fill="none" stroke="var(--hw)" stroke-width="11" stroke-linecap="round" stroke-dasharray="326.7" stroke-dashoffset="326.7" transform="rotate(-90 60 60)" style="transition:stroke-dashoffset 1s ease"/>
+            </svg>
+            <div class="ccr-ringnum"><span class="score-big" id="exScore">0</span><small>／100・<b id="exGrade" style="color:var(--hw)"></b></small></div>
+          </div>
+          <div style="flex:1;min-width:220px">
+            <p class="ccr-hello" id="exHello"></p>
+            <p class="ccr-msg" id="exMsg2"></p>
+            <span id="exSaved" class="savedtag"></span>
+          </div>
+        </div>
+        <div class="score-bar" style="display:none"><i id="exBar" style="width:0%"></i></div>
         <h3 class="rsec">各主軸表現</h3><div class="catbars" id="exCats"></div>
         <h3 class="rsec">運算思維（CT）四構面</h3><div class="catbars" id="exCT"></div>
         <h3 class="rsec">把握度校準</h3><div id="exCalib" class="calib"></div>
@@ -2253,12 +2556,13 @@ function makeTrouble(mountId, bank){
 
   function reset(){
     idx=0; score=0; locked=false;
-    catStat={hw:{c:0,t:0},sw:{c:0,t:0},nw:{c:0,t:0}};
+    catStat={hw:{c:0,t:0},sw:{c:0,t:0},nw:{c:0,t:0},ed:{c:0,t:0},ai:{c:0,t:0}};
     ctStat={de:{c:0,t:0},pa:{c:0,t:0},ab:{c:0,t:0},al:{c:0,t:0}};
     calib={gs:0,gw:0,bs:0,bw:0}; // good-sure / good-weak / bad-sure / bad-weak
     history=[];
   }
   function start(){
+    retryMode=false;
     var cat=document.querySelector('input[name="qcat"]:checked').value;
     var lvSel=document.querySelector('input[name="qlevel"]:checked').value;
     lastScope=cat; lastLevel=lvSel;
@@ -2320,7 +2624,7 @@ function makeTrouble(mountId, bank){
     catStat[q.cat].t++; ctStat[q.ct].t++;
     if(right){ score+=Math.round(100/quiz.length); catStat[q.cat].c++; ctStat[q.ct].c++; }
     if(right){ if(conf===3) calib.gs++; else calib.gw++; } else { if(conf===3) calib.bs++; else calib.bw++; }
-    history.push({n:idx+1,cat:q.cat,ct:q.ct,lv:q.lv,stem:q.stem,pick:q.opts[pi],correct:q.opts[q.ans],right:right,conf:conf});
+    history.push({n:idx+1,cat:q.cat,ct:q.ct,lv:q.lv,stem:q.stem,pick:q.opts[pi],correct:q.opts[q.ans],right:right,conf:conf,exp:q.exp});
     $("qScoreNow").textContent="目前 "+score+" 分";
     var cnote = right
       ? (conf===3?"觀念扎實，繼續保持。":(conf===1?"用猜的卻答對，建議回模組再複習鞏固。":"答對，持續累積。"))
@@ -2355,7 +2659,7 @@ function makeTrouble(mountId, bank){
       '<div class="ci warn"><span>答對·沒把握（待鞏固）</span><b>'+calib.gw+'</b></div>'+
       '<div class="ci bad"><span>答錯·有把握（迷思）</span><b>'+calib.bs+'</b></div>'+
       '<div class="ci warn"><span>答錯·沒把握（待學習）</span><b>'+calib.bw+'</b></div>';
-    var weakCat=["hw","sw","nw"].filter(function(k){return catStat[k].t>0 && catStat[k].c/catStat[k].t<0.6;}).map(function(k){return CATNAME[k];});
+    var weakCat=["hw","sw","nw","ed","ai"].filter(function(k){return catStat[k].t>0 && catStat[k].c/catStat[k].t<0.6;}).map(function(k){return CATNAME[k];});
     var weakCT=["de","pa","ab","al"].filter(function(k){return ctStat[k].t>0 && ctStat[k].c/ctStat[k].t<0.6;}).map(function(k){return CTFULL[k];});
     var sug="<b>學習建議（"+grade+"）：</b>";
     if(weakCat.length) sug+=" 主軸「"+weakCat.join("、")+"」答對率偏低，建議回該分頁重做安裝模擬與故障排除。";
@@ -2368,7 +2672,9 @@ function makeTrouble(mountId, bank){
       return '<div class="ri"><div class="rq">第 '+r.n+' 題（'+CATNAME[r.cat]+'·CT '+CTNAME[r.ct]+'）'+r.stem+'</div>'+
         '<div class="ra">你的選擇：<span class="x">'+r.pick+'</span>　正解：<span class="o">'+r.correct+'</span></div></div>';
     }).join("") : '<div class="empty">✔ 全部答對，沒有錯題！</div>';
-    try{ qadd({ts:Date.now(),scope:lastScope,level:lastLevel,count:quiz.length,score:score,cat:catStat,ct:ctStat,calib:calib,items:history.map(function(r){return {stem:r.stem,cat:r.cat,ct:r.ct,right:r.right};})}); }catch(e){}
+    try{ if(!retryMode) qadd({ts:Date.now(),scope:lastScope,level:lastLevel,count:quiz.length,score:score,cat:catStat,ct:ctStat,calib:calib,items:history.map(function(r){return {stem:r.stem,cat:r.cat,ct:r.ct,right:r.right};})}); }catch(e){}
+    /* ★ 精進版 v2：報告 UI */
+    if(window.CCREPORT) try{ CCREPORT({p:"r",score:score,grade:grade,calib:calib,cat:catStat,ct:ctStat,wrong:wrong,reviewId:"rReview",retryBtnId:"qRetryWrong",retryMode:retryMode}); }catch(e){}
   }
 
   function csvCell(s){ return '"'+String(s).replace(/"/g,'""')+'"'; }
@@ -2389,7 +2695,20 @@ function makeTrouble(mountId, bank){
   }
 
   $("qStart").addEventListener("click", start);
-  $("qAgain").addEventListener("click", function(){ $("quizResult").style.display="none"; start(); });
+  $("qAgain").addEventListener("click", function(){ retryMode=false; $("quizResult").style.display="none"; start(); });
+  /* ★ 精進版 v2：錯題重練佇列（答對才過關，不計入統計） */
+  var retryMode=false;
+  $("qRetryWrong").addEventListener("click", function(){
+    var stems={}; history.filter(function(r){return !r.right;}).forEach(function(r){ stems[r.stem]=1; });
+    var w=BANK.filter(function(q){ return stems[q.stem]; });
+    if(!w.length) return;
+    retryMode=true;
+    quiz=w.slice().sort(function(){return Math.random()-0.5;});
+    reset();
+    $("quizResult").style.display="none"; $("quizArea").style.display="block";
+    renderQ();
+    window.scrollTo({top:0,behavior:REDUCE?"auto":"smooth"});
+  });
   $("qExportCsv").addEventListener("click", exportCsv);
   $("qPrint").addEventListener("click", function(){ window.print(); });
 
@@ -2434,8 +2753,8 @@ function makeTrouble(mountId, bank){
     recs.forEach(function(r){ var s=r.score; if(s>=90)bk[0][1]++; else if(s>=80)bk[1][1]++; else if(s>=70)bk[2][1]++; else if(s>=60)bk[3][1]++; else bk[4][1]++; });
     var mx=Math.max(1,Math.max.apply(null,bk.map(function(b){return b[1];})));
     $("qstHist").innerHTML=bk.map(function(b){ return '<div class="hbar"><span class="hl">'+b[0]+'</span><span class="ht"><i style="width:'+Math.round(b[1]/mx*100)+'%"></i></span><span class="hn">'+b[1]+'</span></div>'; }).join("");
-    var cAgg={hw:{c:0,t:0},sw:{c:0,t:0},nw:{c:0,t:0}}, tAgg={de:{c:0,t:0},pa:{c:0,t:0},ab:{c:0,t:0},al:{c:0,t:0}};
-    recs.forEach(function(r){ ["hw","sw","nw"].forEach(function(k){ if(r.cat&&r.cat[k]){cAgg[k].c+=r.cat[k].c;cAgg[k].t+=r.cat[k].t;} }); ["de","pa","ab","al"].forEach(function(k){ if(r.ct&&r.ct[k]){tAgg[k].c+=r.ct[k].c;tAgg[k].t+=r.ct[k].t;} }); });
+    var cAgg={hw:{c:0,t:0},sw:{c:0,t:0},nw:{c:0,t:0},ed:{c:0,t:0},ai:{c:0,t:0}}, tAgg={de:{c:0,t:0},pa:{c:0,t:0},ab:{c:0,t:0},al:{c:0,t:0}};
+    recs.forEach(function(r){ ["hw","sw","nw","ed","ai"].forEach(function(k){ if(r.cat&&r.cat[k]){cAgg[k].c+=r.cat[k].c;cAgg[k].t+=r.cat[k].t;} }); ["de","pa","ab","al"].forEach(function(k){ if(r.ct&&r.ct[k]){tAgg[k].c+=r.ct[k].c;tAgg[k].t+=r.ct[k].t;} }); });
     $("qstCat").innerHTML=bars(cAgg,CATNAME,""); $("qstCT").innerHTML=bars(tAgg,CTNAME,"ct-");
     var arr=qItemAgg(recs);
     var irows=arr.map(function(it){ var p=Math.round(it.c/it.t*100); var col=p<60?"var(--fail)":(p<80?"var(--warn)":"var(--hw)"); return '<tr><td>'+CATNAME[it.cat]+'</td><td>'+CTNAME[it.ct]+'</td><td>'+qEsc(it.stem)+'</td><td class="sc">'+it.c+"/"+it.t+'</td><td style="color:'+col+';font-weight:700">'+p+'%</td></tr>'; }).join("");
@@ -2512,7 +2831,7 @@ function makeTrouble(mountId, bank){
   /* ---- 學生測驗 ---- */
   var quiz=[], idx=0, score=0, locked=false, reviewMode=false, practice=false, who={};
   var catStat, ctStat, calib, history;
-  function resetStats(){ catStat={hw:{c:0,t:0},sw:{c:0,t:0},nw:{c:0,t:0}}; ctStat={de:{c:0,t:0},pa:{c:0,t:0},ab:{c:0,t:0},al:{c:0,t:0}}; calib={gs:0,gw:0,bs:0,bw:0}; history=[]; idx=0; score=0; locked=false; }
+  function resetStats(){ catStat={hw:{c:0,t:0},sw:{c:0,t:0},nw:{c:0,t:0},ed:{c:0,t:0},ai:{c:0,t:0}}; ctStat={de:{c:0,t:0},pa:{c:0,t:0},ab:{c:0,t:0},al:{c:0,t:0}}; calib={gs:0,gw:0,bs:0,bw:0}; history=[]; idx=0; score=0; locked=false; }
 
   /* ---- 倒數計時（約 30 分鐘） ---- */
   var EXAM_SEC=30*60, timerId=null, remain=0, timedOut=false;
@@ -2600,7 +2919,7 @@ function makeTrouble(mountId, bank){
     $("exGrade").textContent=grade;
     $("exCats").innerHTML=bars(catStat,CAT(),""); $("exCT").innerHTML=bars(ctStat,CT(),"ct-");
     $("exCalib").innerHTML='<div class="ci good"><span>答對·有把握</span><b>'+calib.gs+'</b></div><div class="ci warn"><span>答對·沒把握（待鞏固）</span><b>'+calib.gw+'</b></div><div class="ci bad"><span>答錯·有把握（迷思）</span><b>'+calib.bs+'</b></div><div class="ci warn"><span>答錯·沒把握</span><b>'+calib.bw+'</b></div>';
-    var wc=["hw","sw","nw"].filter(function(k){return catStat[k].t>0&&catStat[k].c/catStat[k].t<0.6;}).map(function(k){return CAT()[k];});
+    var wc=["hw","sw","nw","ed","ai"].filter(function(k){return catStat[k].t>0&&catStat[k].c/catStat[k].t<0.6;}).map(function(k){return CAT()[k];});
     var wt=["de","pa","ab","al"].filter(function(k){return ctStat[k].t>0&&ctStat[k].c/ctStat[k].t<0.6;}).map(function(k){return CTF()[k];});
     var sug="<b>學習建議（"+grade+"）：</b>"; if(wc.length)sug+=" 主軸「"+wc.join("、")+"」偏弱，建議回該模組複習。"; if(wt.length)sug+=" 運算思維「"+wt.join("、")+"」較弱。"; if(calib.bs>0)sug+=" 有 "+calib.bs+" 題迷思（很有把握卻答錯），請優先澄清。"; if(!wc.length&&!wt.length&&calib.bs===0)sug+=" 表現均衡、把握度校準良好，可挑戰進階。"; $("exSug").innerHTML=sug;
     var wrong=history.filter(function(r){return !r.right;});
@@ -2610,9 +2929,11 @@ function makeTrouble(mountId, bank){
       addRecord({ts:Date.now(),name:who.name,id:who.id,cls:who.cls,scope:who.scope,level:who.level,count:quiz.length,score:score,grade:grade,cat:catStat,ct:ctStat,calib:calib,timeUsed:timeUsed});
       saved=true;
     }
-    if(saved && window.ccProg && (who.scope==="hw"||who.scope==="sw"||who.scope==="nw")) ccProg.mark(who.scope,"quiz");
+    if(saved && window.ccProg && (who.scope==="hw"||who.scope==="sw"||who.scope==="nw"||who.scope==="ed"||who.scope==="ai")) ccProg.mark(who.scope,"quiz");
     $("exSaved").textContent = (timedOut?"⏰ 時間到，自動交卷　":"") + (saved?"✔ 已記錄到成績統計" : ((reviewMode||practice)?"（練習／複習，未計入統計）":""));
     timedOut=false;
+    /* ★ 精進版 v2：報告 UI */
+    if(window.CCREPORT) try{ CCREPORT({p:"ex",score:score,grade:grade,calib:calib,cat:catStat,ct:ctStat,wrong:wrong,reviewId:"exReviewList",name:(who&&who.name)||""}); }catch(e){}
   }
 
   $("exStart").addEventListener("click", start);
@@ -2651,8 +2972,8 @@ function makeTrouble(mountId, bank){
     recs.forEach(function(r){ var s=r.score; if(s>=90)bk[0][1]++; else if(s>=80)bk[1][1]++; else if(s>=70)bk[2][1]++; else if(s>=60)bk[3][1]++; else bk[4][1]++; });
     var mx=Math.max(1,Math.max.apply(null,bk.map(function(b){return b[1];})));
     $("stHist").innerHTML=bk.map(function(b){ return '<div class="hbar"><span class="hl">'+b[0]+'</span><span class="ht"><i style="width:'+Math.round(b[1]/mx*100)+'%"></i></span><span class="hn">'+b[1]+'</span></div>'; }).join("");
-    var cAgg={hw:{c:0,t:0},sw:{c:0,t:0},nw:{c:0,t:0}}, tAgg={de:{c:0,t:0},pa:{c:0,t:0},ab:{c:0,t:0},al:{c:0,t:0}};
-    recs.forEach(function(r){ ["hw","sw","nw"].forEach(function(k){ if(r.cat&&r.cat[k]){cAgg[k].c+=r.cat[k].c;cAgg[k].t+=r.cat[k].t;} }); ["de","pa","ab","al"].forEach(function(k){ if(r.ct&&r.ct[k]){tAgg[k].c+=r.ct[k].c;tAgg[k].t+=r.ct[k].t;} }); });
+    var cAgg={hw:{c:0,t:0},sw:{c:0,t:0},nw:{c:0,t:0},ed:{c:0,t:0},ai:{c:0,t:0}}, tAgg={de:{c:0,t:0},pa:{c:0,t:0},ab:{c:0,t:0},al:{c:0,t:0}};
+    recs.forEach(function(r){ ["hw","sw","nw","ed","ai"].forEach(function(k){ if(r.cat&&r.cat[k]){cAgg[k].c+=r.cat[k].c;cAgg[k].t+=r.cat[k].t;} }); ["de","pa","ab","al"].forEach(function(k){ if(r.ct&&r.ct[k]){tAgg[k].c+=r.ct[k].c;tAgg[k].t+=r.ct[k].t;} }); });
     $("stCat").innerHTML=bars(cAgg,CAT(),""); $("stCT").innerHTML=bars(tAgg,CT(),"ct-");
     var rows=recs.slice().sort(function(a,b){return b.ts-a.ts;}).map(function(r){ return '<tr><td>'+fmtTime(r.ts)+'</td><td>'+esc(r.name)+'</td><td>'+esc(r.id)+'</td><td>'+esc(r.cls)+'</td><td>'+scopeName(r.scope)+'</td><td>'+lvName(r.level)+'</td><td>'+r.count+'</td><td class="sc">'+r.score+'</td><td>'+r.grade+'</td><td>'+(r.timeUsed!=null?fmtClock(r.timeUsed):"—")+'</td></tr>'; }).join("");
     $("stTable").innerHTML='<thead><tr><th>時間</th><th>姓名</th><th>學號</th><th>班級</th><th>範圍</th><th>難度</th><th>題數</th><th>分數</th><th>等第</th><th>用時</th></tr></thead><tbody>'+rows+'</tbody>';
@@ -2666,8 +2987,8 @@ function makeTrouble(mountId, bank){
   if($("exCloudLoad")) $("exCloudLoad").addEventListener("click", function(){ if(!window.CCLOUD) return; exCloudMsg("載入中…"); CCLOUD.fetchAll("exam", function(data,err){ if(err){ exCloudMsg("✗ "+err); return; } examCloud=data||[]; exCloudMsg("✔ 已載入雲端 "+examCloud.length+" 筆，併入統計。"); renderStats(); }); });
   $("stCsv").addEventListener("click", function(){
     var recs=load(); if(!recs.length)return;
-    var head=["時間","姓名","學號","班級","範圍","難度","題數","分數","等第","用時","硬體答對","硬體題數","軟體答對","軟體題數","網路答對","網路題數"];
-    var rows=recs.slice().sort(function(a,b){return a.ts-b.ts;}).map(function(r){ var c=r.cat||{}; function g(k,f){return c[k]?c[k][f]:0;} return [fmtTime(r.ts),r.name,r.id,r.cls,scopeName(r.scope),lvName(r.level),r.count,r.score,r.grade,(r.timeUsed!=null?fmtClock(r.timeUsed):""),g("hw","c"),g("hw","t"),g("sw","c"),g("sw","t"),g("nw","c"),g("nw","t")].map(csv).join(","); });
+    var head=["時間","姓名","學號","班級","範圍","難度","題數","分數","等第","用時","硬體答對","硬體題數","軟體答對","軟體題數","網路答對","網路題數","邊雲答對","邊雲題數","AI答對","AI題數"];
+    var rows=recs.slice().sort(function(a,b){return a.ts-b.ts;}).map(function(r){ var c=r.cat||{}; function g(k,f){return c[k]?c[k][f]:0;} return [fmtTime(r.ts),r.name,r.id,r.cls,scopeName(r.scope),lvName(r.level),r.count,r.score,r.grade,(r.timeUsed!=null?fmtClock(r.timeUsed):""),g("hw","c"),g("hw","t"),g("sw","c"),g("sw","t"),g("nw","c"),g("nw","t"),g("ed","c"),g("ed","t"),g("ai","c"),g("ai","t")].map(csv).join(","); });
     dl("課後評量成績統計.csv", head.map(csv).join(",")+"\n"+rows.join("\n")+"\n");
   });
 
@@ -7558,6 +7879,392 @@ body:not(.student-mode) #tt-panel{display:block}
   window.addEventListener("hashchange", go);
   if(document.readyState==="loading") document.addEventListener("DOMContentLoaded", function(){ setTimeout(go,80); });
   else setTimeout(go,80);
+})();
+</script>
+<script>
+/* ============================================================
+   ★ 精進版 v2：評量報告 UI（CCREPORT）＋ 學習地圖嚮導（CCMAP）
+   設計參考：Khan Academy（精熟與提示）、Brilliant（答錯即解析）、
+   Duolingo（錯題佇列）、Code.org（步驟圓點）、CS50（示範→引導→獨立→自測）
+============================================================ */
+(function(){
+"use strict";
+var $=function(id){ return document.getElementById(id); };
+var CATN={hw:"硬體",sw:"軟體",nw:"網路",ed:"邊雲運算",ai:"AI 協作"}, CTN={de:"拆解",pa:"找規律",ab:"抽象化",al:"演算法"};
+var VIEWOF={hw:"hardware",sw:"software",nw:"network",ed:"edgecloud",ai:"aicollab"};
+/* 註冊新主軸名稱到全站類別表（quiz/exam 共用） */
+if(window.CC_CAT){ CC_CAT.ed="邊雲運算"; CC_CAT.ai="AI 協作"; }
+var RED=window.matchMedia&&window.matchMedia("(prefers-reduced-motion:reduce)").matches;
+
+function gotoModule(cat){
+  if(window.__show) window.__show(VIEWOF[cat]||"overview");
+  setTimeout(function(){ var el=document.getElementById("sim-"+cat); if(el) el.scrollIntoView({behavior:RED?"auto":"smooth",block:"start"}); },100);
+}
+
+/* ---------- 評量報告 ---------- */
+window.CCREPORT=function(o){
+  var p=o.p, score=o.score||0;
+  /* 分數環 */
+  var ring=$(p+"RingF");
+  if(ring){
+    ring.style.stroke = score>=80?"var(--ok)":(score>=60?"var(--hw)":"var(--warn)");
+    ring.style.strokeDashoffset="326.7";
+    setTimeout(function(){ ring.style.strokeDashoffset=(326.7*(1-Math.min(100,score)/100)).toFixed(1); },RED?0:80);
+  }
+  /* 問候與鼓勵訊息 */
+  var hello=$(p+"Hello"), msg=$(p==="ex"?"exMsg2":p+"Msg");
+  if(hello){
+    var nm=o.name?("，"+o.name):"";
+    hello.textContent = o.retryMode ? ("錯題重練結果"+nm) : ("嗨"+nm+"！這是你這次的學習成果");
+  }
+  if(msg){
+    msg.textContent = score>=80 ? "表現很穩！你已掌握這部分的核心概念，往下一站前進吧。"
+      : score>=60 ? "及格了，基礎有了！下面幫你標出最值得補強的地方，補完就很不一樣。"
+      : "這次比較辛苦，沒關係——錯的地方就是進步的入口，跟著下面的建議一步一步來。";
+  }
+  /* 把握度校準四象限 */
+  var calEl=$(p+"Calib"), c=o.calib||{gs:0,gw:0,bs:0,bw:0};
+  if(calEl){
+    calEl.innerHTML=
+      '<div class="ccr-quad">'
+      +'<div class="ccr-qcell g"><span class="t">✅ 穩固區</span><b class="n">'+c.gs+' 題</b><span class="d">很有把握・答對——真的懂了</span></div>'
+      +'<div class="ccr-qcell b"><span class="t">⚠️ 盲點區</span><b class="n">'+c.bs+' 題</b><span class="d">很有把握・答錯——最優先複習</span></div>'
+      +'<div class="ccr-qcell i"><span class="t">💪 低估區</span><b class="n">'+c.gw+' 題</b><span class="d">沒把握・答對——你其實會</span></div>'
+      +'<div class="ccr-qcell w"><span class="t">📖 待學區</span><b class="n">'+c.bw+' 題</b><span class="d">沒把握・答錯——回模組看講義</span></div>'
+      +'</div>';
+    var sureAll=c.gs+c.bs;
+    var sum=document.createElement("div"); sum.className="ccr-calibsum";
+    if(sureAll>0){
+      var acc=Math.round(100*c.gs/sureAll);
+      sum.innerHTML='你標「很有把握」的題目共 '+sureAll+' 題，實際答對率 <b>'+acc+'%</b>。'+(acc>=80?"校準得很好——你對自己的了解相當準確。":"「以為懂」和「真的懂」還有落差，這正是平台想幫你看見的；優先看盲點區的題目。");
+    } else { sum.textContent="這次沒有標「很有把握」的題目。誠實標把握度，報告才能幫你校準自信。"; }
+    calEl.appendChild(sum);
+  }
+  /* AI 學習教練（規則式） */
+  var sug=$(p+"Sug");
+  if(sug){
+    var cats=Object.keys(o.cat||{}).filter(function(k){return o.cat[k].t>0;});
+    var worst=null; cats.forEach(function(k){ var r=o.cat[k].c/o.cat[k].t; if(!worst||r<worst.r) worst={k:k,r:r}; });
+    var cts=Object.keys(o.ct||{}).filter(function(k){return o.ct[k].t>0;});
+    var wct=null; cts.forEach(function(k){ var r=o.ct[k].c/o.ct[k].t; if(!wct||r<wct.r) wct={k:k,r:r}; });
+    var li=[];
+    if(worst && worst.r<1) li.push('最需要補強的主軸是「<b>'+ (CATN[worst.k]||worst.k) +'</b>」（答對率 '+Math.round(worst.r*100)+'%）——建議回該模組先重玩一次互動模擬，再看講義。');
+    else li.push('各主軸全數答對，表現非常均衡——可以挑戰進階難度或往下一站前進。');
+    if(c.bs>0) li.push('你有 <b>'+c.bs+' 題「很有把握」卻答錯</b>（盲點）。這比不會更需要處理——先複習這幾題，並想想「當時為什麼那麼確定」。');
+    else if(c.gw>=3) li.push('你有 '+c.gw+' 題「沒把握」其實答對了——你比自己以為的更會，下次可以更相信自己的判斷。');
+    else li.push('把握度校準不錯：「以為懂」和「真的懂」差距小，是很成熟的自我監控能力。');
+    if(wct && wct.r<1) li.push('運算思維構面中「<b>'+(CTN[wct.k]||wct.k)+'</b>」相對較弱。做「解題示範」時，特別留意放聲思考裡這一步是怎麼想的。');
+    var h='<div class="ccr-coach"><h4>🤖 AI 學習教練・給你的重點</h4><ul>';
+    li.forEach(function(x){ h+='<li>'+x+'</li>'; });
+    h+='</ul>';
+    if(worst && worst.r<1 && VIEWOF[worst.k]) h+='<div class="nx">👉 建議路線：'+(CATN[worst.k])+'模組・互動模擬 → 錯題重練 → 下一站（約 30–40 分鐘） <button class="btn" data-ccr-go="'+worst.k+'" style="margin-left:8px">前往 '+CATN[worst.k]+'模組 →</button></div>';
+    h+='</div>';
+    sug.innerHTML=h;
+  }
+  /* 錯題複習卡（可展開、附解析與回模組按鈕） */
+  var rv=$(o.reviewId);
+  if(rv){
+    var wrong=o.wrong||[];
+    if(!wrong.length){ rv.innerHTML='<div class="empty">🎉 全部答對，沒有錯題！可以直接前往下一站。</div>'; }
+    else{
+      rv.innerHTML="";
+      var tip=document.createElement("p");
+      tip.style.cssText="font-size:12.5px;color:var(--muted);margin:0 0 4px";
+      tip.innerHTML='點題目展開解析。標 <span class="ccr-pill blind">盲點</span> 的是「很有把握卻答錯」的題目，優先複習它，進步最快。';
+      rv.appendChild(tip);
+      var firstBlind=-1;
+      wrong.forEach(function(r,i){ if(firstBlind<0&&r.conf===3) firstBlind=i; });
+      if(firstBlind<0) firstBlind=0;
+      wrong.forEach(function(r,i){
+        var pick = (r.pick!==undefined)?r.pick:(r.opts?r.opts[r.pi]:"");
+        var correct = (r.correct!==undefined)?r.correct:(r.opts?r.opts[r.ans]:"");
+        var det=document.createElement("details"); det.className="ccr-wc"; if(i===firstBlind) det.open=true;
+        var sm=document.createElement("summary");
+        var q=document.createElement("span"); q.className="q"; q.textContent="Q"+(i+1)+". "+r.stem; sm.appendChild(q);
+        var p1=document.createElement("span"); p1.className="ccr-pill"; p1.textContent=(CATN[r.cat]||"")+"・CT "+(CTN[r.ct]||""); sm.appendChild(p1);
+        var p2=document.createElement("span"); p2.className="ccr-pill"+(r.conf===3?" blind":"");
+        p2.textContent=(r.conf===3?"盲點：很有把握卻答錯":(r.conf===1?"把握度：用猜的":"把握度：普通")); sm.appendChild(p2);
+        det.appendChild(sm);
+        var bd=document.createElement("div"); bd.className="ccr-wcb";
+        var a1=document.createElement("div"); a1.className="ccr-ans x"; a1.innerHTML='<span class="who">你的選擇</span>'; a1.appendChild(document.createTextNode(pick)); bd.appendChild(a1);
+        var a2=document.createElement("div"); a2.className="ccr-ans o"; a2.innerHTML='<span class="who">正解</span>'; a2.appendChild(document.createTextNode(correct)); bd.appendChild(a2);
+        if(r.exp){ var w=document.createElement("div"); w.className="ccr-why"; w.textContent="💡 "+r.exp; bd.appendChild(w); }
+        if(VIEWOF[r.cat]){
+          var ar=document.createElement("div"); ar.className="arow";
+          var gb=document.createElement("button"); gb.className="btn"; gb.textContent="🔗 回到"+CATN[r.cat]+"模組複習";
+          gb.setAttribute("data-ccr-go", r.cat); ar.appendChild(gb); bd.appendChild(ar);
+        }
+        det.appendChild(bd); rv.appendChild(det);
+      });
+    }
+    /* 錯題重練按鈕（即時評量） */
+    if(o.retryBtnId){ var rb=$(o.retryBtnId); if(rb) rb.style.display = wrong.length? "" : "none"; }
+  }
+};
+document.addEventListener("click", function(e){
+  var t=e.target.closest&&e.target.closest("[data-ccr-go]");
+  if(t) gotoModule(t.getAttribute("data-ccr-go"));
+});
+
+/* ---------- 學習地圖 ＋ 嚮導模式 ---------- */
+var XKEY="cc_v2_extra";
+function xload(){ try{ var s=localStorage.getItem(XKEY); return s?JSON.parse(s):{}; }catch(e){ return {}; } }
+function xmark(k){ var x=xload(); if(x[k])return; x[k]=1; try{ localStorage.setItem(XKEY,JSON.stringify(x)); }catch(e){} renderMap(); }
+function prog(){ try{ var s=localStorage.getItem("cc_progress_v1"); return s?JSON.parse(s):{}; }catch(e){ return {}; } }
+function hasRec(key){ try{ var s=localStorage.getItem(key); var a=s?JSON.parse(s):[]; return a.length>0; }catch(e){ return false; } }
+
+function stepGo(view,anchor){
+  return function(){
+    if(window.__show) window.__show(view);
+    if(anchor) setTimeout(function(){ var el=document.getElementById(anchor); if(el) el.scrollIntoView({behavior:RED?"auto":"smooth",block:"start"}); },100);
+  };
+}
+var SN={sim:"① 互動模擬",lec:"② 教學講義",quiz:"③ 單元評量"};
+function modStep(u,s){
+  return {
+    id:u+"-"+s, label:CATN[u]+"・"+SN[s], time:"12–15 分",
+    done:function(){ var st=prog(); return !!(st[u]&&st[u][s]); },
+    mark:function(){ if(window.ccProg) ccProg.mark(u,s); },
+    go:stepGo(VIEWOF[u], s+"-"+u)
+  };
+}
+var STEPS=[
+  {id:"warm",label:"課堂暖身・提取練習",time:"5 分",
+   done:function(){ return !!xload().warm; }, mark:function(){ xmark("warm"); },
+   go:stepGo("overview","prBox")},
+  modStep("hw","sim"),modStep("hw","lec"),modStep("hw","quiz"),
+  modStep("sw","sim"),modStep("sw","lec"),modStep("sw","quiz"),
+  modStep("nw","sim"),modStep("nw","lec"),modStep("nw","quiz"),
+  modStep("ed","sim"),modStep("ed","lec"),modStep("ed","quiz"),
+  modStep("ai","sim"),modStep("ai","lec"),modStep("ai","quiz"),
+  {id:"quizAll",label:"即時評量（三主軸綜合）",time:"15 分",
+   done:function(){ return hasRec("cc_quiz_records_v1")||!!xload().quizAll; }, mark:function(){ xmark("quizAll"); },
+   go:stepGo("assess",null)},
+  {id:"exam",label:"課後評量（具名・計分）",time:"30 分",
+   done:function(){ return hasRec("cc_exam_records_v1")||!!xload().exam; }, mark:function(){ xmark("exam"); },
+   go:stepGo("exam",null)}
+];
+function nextIdx(){ for(var i=0;i<STEPS.length;i++){ if(!STEPS[i].done()) return i; } return -1; }
+
+function renderMap(){
+  var box=$("ccgSteps"); if(!box) return;
+  var done=0, nx=nextIdx();
+  box.innerHTML="";
+  STEPS.forEach(function(s,i){
+    var d=s.done(); if(d) done++;
+    var b=document.createElement("button");
+    b.className="ccg-step"+(d?" done":"")+(i===nx?" next":"");
+    b.innerHTML='<span class="dot">'+(d?"✓":(i+1))+'</span>';
+    b.appendChild(document.createTextNode(s.label));
+    b.title=(d?"已完成｜":"約 "+s.time+"｜")+"點擊前往";
+    b.addEventListener("click", s.go);
+    box.appendChild(b);
+  });
+  var pct=Math.round(100*done/STEPS.length);
+  var f=$("ccgTrackFill"); if(f) f.style.width=pct+"%";
+  var cap=$("ccgCap");
+  if(cap) cap.textContent = nx<0 ? ("🎉 全部 "+STEPS.length+" 站完成！可複習錯題、挑戰進階難度或 3C 拆裝實訓。")
+    : ("已完成 "+done+"／"+STEPS.length+" 站（"+pct+"%）・下一站："+STEPS[nx].label+"（約 "+STEPS[nx].time+"）");
+  renderBar();
+}
+
+/* 嚮導列 */
+var GKEY="cc_v2_guide";
+function gOn(){ try{ return localStorage.getItem(GKEY)==="1"; }catch(e){ return false; } }
+function gSet(v){ try{ localStorage.setItem(GKEY,v?"1":"0"); }catch(e){} document.body.classList.toggle("ccg-on",v); renderBar(); }
+var bar=document.createElement("div"); bar.id="ccgBar";
+bar.innerHTML='<div class="in"><span class="st" id="ccgBarSt"></span>'
+ +'<button class="btn" id="ccgBarGo">前往這一站</button>'
+ +'<button class="btn go" id="ccgBarDone">✔ 我完成了，下一站 →</button>'
+ +'<button class="btn" id="ccgBarOff" title="結束嚮導模式">✕ 結束</button></div>';
+document.body.appendChild(bar);
+function renderBar(){
+  var on=gOn(); bar.classList.toggle("on",on); document.body.classList.toggle("ccg-on",on);
+  if(!on) return;
+  var nx=nextIdx(), st=$("ccgBarSt");
+  if(nx<0){ st.innerHTML="🎉 <b>全部完成！</b> 12 站都走完了——可以複習錯題或挑戰 3C 拆裝實訓。"; $("ccgBarGo").style.display="none"; $("ccgBarDone").style.display="none"; return; }
+  $("ccgBarGo").style.display=""; $("ccgBarDone").style.display="";
+  st.innerHTML='🧭 第 <b>'+(nx+1)+'／'+STEPS.length+'</b> 站：<b>'+STEPS[nx].label+'</b>（約 '+STEPS[nx].time+'）';
+}
+document.addEventListener("click", function(e){
+  if(!e.target||!e.target.id) return;
+  if(e.target.id==="ccgBarGo"){ var n=nextIdx(); if(n>=0) STEPS[n].go(); }
+  else if(e.target.id==="ccgBarDone"){ var n2=nextIdx(); if(n2>=0){ STEPS[n2].mark(); renderMap(); var n3=nextIdx(); if(n3>=0) STEPS[n3].go(); } }
+  else if(e.target.id==="ccgBarOff"){ gSet(false); }
+});
+var sb=$("ccgStartBtn");
+if(sb) sb.addEventListener("click", function(){ gSet(true); var n=nextIdx(); if(n>=0) STEPS[n].go(); });
+
+/* 完成事件掛勾：模組進度更新、暖身練習點擊時刷新地圖 */
+if(window.ccProg && ccProg.mark){
+  var om=ccProg.mark;
+  ccProg.mark=function(u,s){ om(u,s); renderMap(); };
+}
+["prRetrieval","prInterleave"].forEach(function(id){
+  var el=$(id); if(el) el.addEventListener("click", function(){ xmark("warm"); });
+});
+if(window.__show){
+  var os=window.__show;
+  window.__show=function(v){ os(v); if(v==="overview") renderMap(); };
+}
+renderMap(); gSet(gOn());
+
+/* ============================================================
+   ★ 精進版 v3：邊雲運算・AI 人機協作　題庫＋互動模組
+============================================================ */
+/* ---- 題庫（各 15 題，含 CT 構面、難度、提示與解析） ---- */
+if(window.CC_BANK){
+  var NEWQ=[
+  /* 邊雲運算 */
+  {cat:"ed",ct:"pa",lv:1,hint:"想想水電費怎麼算。",stem:"雲端運算的「隨用隨付」特性指的是？",opts:["買斷軟體後永久使用","依實際使用量計費，可隨需求增減","只能預付年費","免費使用"],ans:1,exp:"雲端像水電：用多少付多少，尖峰可即時擴充，不必自購設備。"},
+  {cat:"ed",ct:"ab",lv:1,hint:"把「取用運算資源」類比成日常服務。",stem:"下列哪個生活比喻最貼近雲端運算？",opts:["自己挖井取水","水電公司：接上就用、按量計費","囤積瓶裝水","自備發電機"],ans:1,exp:"雲端把運算變成像水電一樣的公共服務，透過網路隨取隨用。"},
+  {cat:"ed",ct:"de",lv:1,hint:"「邊緣」是相對於遠端資料中心的位置。",stem:"「邊緣運算」指的是？",opts:["在資料產生的現場就近處理","把所有資料傳到遠端處理","只用手機運算","不使用網路"],ans:0,exp:"邊緣運算把運算搬到裝置或現場閘道器，減少來回雲端的延遲。"},
+  {cat:"ed",ct:"de",lv:1,hint:"哪個情境慢 0.1 秒就出事？",stem:"下列哪個情境「最需要」邊緣運算？",opts:["整理去年相簿","自駕車緊急煞車判斷","備份期末報告","列印成績單"],ans:1,exp:"煞車判斷要毫秒級反應，等雲端來回可能已釀成事故——即時的事放邊緣。"},
+  {cat:"ed",ct:"pa",lv:1,hint:"大量資料、不趕時間的工作放哪裡？",stem:"下列哪個工作「最適合」放雲端？",opts:["電梯門即時避障","全校一學期成績的大數據分析","機械手臂即時控制","手環即時心率警示"],ans:1,exp:"大量運算與長期儲存、不需毫秒回應的工作，集中在雲端最有效率。"},
+  {cat:"ed",ct:"al",lv:2,hint:"尖峰只有一週，買設備划算嗎？",stem:"系上網站每年只有選課週流量暴增 10 倍，最划算的做法是？",opts:["買 10 倍規格的伺服器","用雲端自動擴充、離峰縮回","請大家分流慢慢選","關閉選課系統"],ans:1,exp:"彈性擴充正是雲端的強項：尖峰加開、離峰縮減，只付實際用量。"},
+  {cat:"ed",ct:"ab",lv:1,hint:"兩者是對手還是隊友？",stem:"邊緣運算與雲端運算的關係，何者正確？",opts:["互斥，只能擇一","邊緣即將取代雲端","分工協作：邊緣管即時、雲端管大量","完全相同"],ans:2,exp:"邊雲是分工不是對立：即時的事放邊緣、大量的事放雲端，透過網路協作。"},
+  {cat:"ed",ct:"de",lv:2,hint:"傳「結果」和傳「原始影像」差多少資料量？",stem:"監視器在現場只上傳「偵測結果」而非全部影像，主要節省？",opts:["電力","網路頻寬","螢幕","記憶體插槽"],ans:1,exp:"原始影像資料量龐大；邊緣先分析、只回傳結果，大幅節省頻寬。"},
+  {cat:"ed",ct:"ab",lv:2,hint:"敏感資料離開現場會有什麼風險？",stem:"人臉辨識門禁選擇在「裝置端」運算，除了即時，還主要考量？",opts:["畫質更好","隱私：敏感資料不出現場","比較省電","安裝方便"],ans:1,exp:"生物特徵屬敏感資料，在邊緣處理可降低外洩風險——這是邊緣的隱私優勢。"},
+  {cat:"ed",ct:"al",lv:2,hint:"哪件事等得起、哪件事等不起？",stem:"智慧路口的「即時號誌調整」與「全市月報表」分別放哪裡最合理？",opts:["都放雲端","都放路口攝影機","即時在邊緣、報表在雲端","即時在雲端、報表在邊緣"],ans:2,exp:"號誌調整要即時（邊緣）；月報表要彙整全市大量資料（雲端）。"},
+  {cat:"ed",ct:"pa",lv:1,hint:"哪個服務的檔案存在遠端、多裝置同步？",stem:"下列何者是典型的雲端服務？",opts:["Google Drive 雲端硬碟","隨身碟","電腦裡的小算盤","主機板"],ans:0,exp:"雲端硬碟把檔案存在資料中心，任何裝置連網即可存取與同步。"},
+  {cat:"ed",ct:"de",lv:2,hint:"全部押在遠端，斷線時會怎樣？",stem:"完全依賴雲端服務的主要風險是？",opts:["檔案會變大","斷網或服務故障時無法存取","電腦會變慢","硬碟會壞掉"],ans:1,exp:"雲端依賴網路與服務商；離線備援與本地快取是常見的風險對策。"},
+  {cat:"ed",ct:"al",lv:2,hint:"80 毫秒對誰是災難？",stem:"約 80ms 的雲端來回延遲，對下列哪個應用影響最大？",opts:["夜間自動備份","工廠機械手臂的即時避障","每週寄送電子報","相簿整理"],ans:1,exp:"機械手臂避障需毫秒級反應，80ms 可能已碰撞——這類控制要放邊緣。"},
+  {cat:"ed",ct:"ab",lv:1,hint:"「彈性」形容的是資源的什麼？",stem:"雲端的「彈性擴充」意思是？",opts:["伺服器可以彎曲","需求高峰時自動增加資源、離峰縮減","硬碟越用越大","網速永遠不變"],ans:1,exp:"彈性擴充讓資源跟著需求伸縮，兼顧效能與成本。"},
+  {cat:"ed",ct:"pa",lv:2,hint:"「邊緣」要能在現場算，本身要有什麼？",stem:"下列何者最像「邊緣運算裝置」？",opts:["純顯示的廣告看板","能現場辨識車牌的智慧攝影機","紙本考卷","滑鼠"],ans:1,exp:"具運算能力、能就地分析資料的裝置（智慧攝影機、閘道器）就是邊緣節點。"},
+  /* AI 人機協作 */
+  {cat:"ai",ct:"de",lv:1,hint:"In the loop＝在迴圈「內」。",stem:"HITL（Human-in-the-loop）指的是？",opts:["AI 完全自主決策","每個關鍵步驟由人先判斷、AI 輔助","人完全不使用 AI","AI 監督人類"],ans:1,exp:"HITL：人在迴圈內，關鍵步驟由人判斷——這是學習期最好的姿態。"},
+  {cat:"ai",ct:"de",lv:1,hint:"On the loop＝站在迴圈「上」看。",stem:"HOTL（Human-on-the-loop）指的是？",opts:["AI 執行、人負責監督與否決","人做所有事","AI 與人輪流休息","沒有人參與"],ans:0,exp:"HOTL：放手讓 AI 執行，人負責監督、抽查與最終把關。"},
+  {cat:"ai",ct:"ab",lv:1,hint:"「放手」的前提是什麼能力？",stem:"從 HITL 進步到 HOTL 的前提是？",opts:["買更好的電腦","具備查核 AI 對錯的基本功","AI 夠便宜","網速夠快"],ans:1,exp:"能放手的前提是查得出它錯在哪——基本功越紮實，越有資格監督 AI。"},
+  {cat:"ai",ct:"pa",lv:1,hint:"「一本正經地胡說八道」。",stem:"AI 的「幻覺（hallucination）」指的是？",opts:["AI 會做夢","AI 以流暢自信的語氣說出錯誤內容","AI 當機","AI 拒絕回答"],ans:1,exp:"幻覺＝AI 產生看似合理但不正確的內容，所以關鍵事實必須查證。"},
+  {cat:"ai",ct:"al",lv:1,hint:"初稿和成品之間該做什麼？",stem:"用 AI 產生報告初稿後，最符合人機協作精神的做法是？",opts:["直接繳交","逐段查證、改寫成自己的話再使用","請 AI 自我檢查就好","加上封面就繳交"],ans:1,exp:"AI 給的是初稿；查證與改寫是人的責任，也是學習真正發生的地方。"},
+  {cat:"ai",ct:"al",lv:2,hint:"看不懂的程式碼敢上線嗎？",stem:"AI 產生的程式碼，採用前應該？",opts:["直接複製執行","讀懂每一行、執行測試後才採用","改個變數名稱就好","印出來收藏"],ans:1,exp:"讀懂＋測試，才能為結果負責——這就是 HOTL 的監督責任。"},
+  {cat:"ai",ct:"pa",lv:1,hint:"重複性高、量大的工作交給誰？",stem:"下列哪類任務「最適合」先交給 AI 處理？",opts:["大量資料的初步整理與摘要","攸關安全的最終決定","替你參加期末考","簽署法律文件"],ans:0,exp:"量大、重複、有明確模式的工作適合 AI 先做，人再驗收。"},
+  {cat:"ai",ct:"ab",lv:2,hint:"出了事誰負責，誰就該做決定。",stem:"下列哪種決定「必須由人」做最終把關？",opts:["照片自動分類","攸關安全與責任的最終決定","把文字翻成英文草稿","整理會議逐字稿"],ans:1,exp:"涉及安全、權益與責任的決定，人必須在迴圈中拍板——這是不可下放的。"},
+  {cat:"ai",ct:"de",lv:2,hint:"語氣和正確性有關嗎？",stem:"AI 回答時語氣非常肯定，這代表？",opts:["一定正確","不代表正確，關鍵事實仍要查證","是官方認證","可以直接引用"],ans:1,exp:"自信的語氣是生成風格，不是正確性保證；查證責任在人。"},
+  {cat:"ai",ct:"ab",lv:1,hint:"平台一直強調的那句話。",stem:"「先思考、後驗證」的主要目的為？",opts:["節省時間","讓能力真正長在自己身上","應付老師","少打幾個字"],ans:1,exp:"先自己想再驗證，思考的肌肉才會成長——直接看答案學不會判斷。"},
+  {cat:"ai",ct:"pa",lv:2,hint:"AI 不會通靈，你要把需求說清楚。",stem:"下列哪個提示詞（prompt）寫法最好？",opts:["「幫我寫」","「寫報告」","「我是大一生，請用 300 字說明邊緣運算，附 2 個生活例子」","「快點」"],ans:2,exp:"好提示＝背景＋明確目標＋格式要求，AI 的產出品質取決於你的表達。"},
+  {cat:"ai",ct:"al",lv:2,hint:"教練和槍手的差別。",stem:"用 AI 學習的健康方式是？",opts:["把作業丟給它做完","當教練：請它出題、追問自己不懂的地方","抄它的答案","完全不用"],ans:1,exp:"AI 當教練（出題、解釋、追問）能加速學習；當槍手則讓能力空洞化。"},
+  {cat:"ai",ct:"de",lv:1,hint:"「學」規律，而不是被寫死規則。",stem:"「機器學習」指的是？",opts:["把規則全部寫死在程式裡","從大量資料中自動學出規律","機器人上學","背答案"],ans:1,exp:"機器學習從資料歸納規律來做預測，而非依人工逐條規則。"},
+  {cat:"ai",ct:"ab",lv:2,hint:"查無此文的引用能用嗎？",stem:"審核 AI 報告時發現引用的文獻查不到，應該？",opts:["當作沒看到","退回：刪除或自行找到真實來源再用","把字體改小","只刪頁碼"],ans:1,exp:"查無來源極可能是幻覺；引用必須真實可查，這是審核者的底線。"},
+  {cat:"ai",ct:"al",lv:2,hint:"個資進 AI 前要先做什麼？",stem:"要用 AI 分析全班問卷（含姓名、學號），正確做法是？",opts:["原封不動丟給 AI","先去識別化（移除個資）再分析","只上傳一半","印成紙本再拍照"],ans:1,exp:"個資去識別化後才能交給外部服務分析——保護資料是使用 AI 的基本素養。"}
+  ];
+  NEWQ.forEach(function(q){ CC_BANK.push(q); });
+}
+
+/* ---- 互動模擬 A：邊緣或雲端？ ---- */
+(function edgeSim(){
+  var grid=$("ecGrid"); if(!grid) return;
+  var POOL=[
+    {t:"自駕車緊急煞車判斷",d:"偵測到障礙物，0.01 秒內要做決定",ans:"edge",why:"毫秒級反應，等雲端來回車已前進數公尺。"},
+    {t:"全校一學期成績分析",d:"彙整數萬筆成績做統計與趨勢",ans:"cloud",why:"大量運算與儲存、不趕時間——雲端最有效率。"},
+    {t:"工廠機械手臂避障",d:"手臂即將碰撞時立即停止",ans:"edge",why:"即時控制不能等網路來回，必須就地判斷。"},
+    {t:"相簿備份與跨裝置同步",d:"手機拍的照片在電腦也看得到",ans:"cloud",why:"集中儲存、多裝置同步正是雲端的看家本領。"},
+    {t:"門禁人臉辨識",d:"住戶刷臉開門，資料涉及隱私",ans:"edge",why:"就地辨識既即時又讓敏感資料不出現場。"},
+    {t:"選課系統尖峰擴充",d:"選課週流量暴增 10 倍",ans:"cloud",why:"彈性擴充：尖峰自動加開、離峰縮減，只付用量。"},
+    {t:"跌倒偵測即時警報",d:"長輩在家跌倒須立刻通報",ans:"edge",why:"現場即時偵測與警報，不能被網路延遲耽誤。"},
+    {t:"訓練大型 AI 模型",d:"需要數千張 GPU 運算數週",ans:"cloud",why:"超大規模運算只有資料中心供得起。"},
+    {t:"智慧路口即時號誌",d:"依當下車流每秒調整紅綠燈",ans:"edge",why:"即時調整放現場；歷史彙整才交給雲端。"},
+    {t:"全市交通月報表",d:"整合全市路口一個月的資料",ans:"cloud",why:"跨地點、大量、離線的彙整工作屬於雲端。"},
+    {t:"手環心率異常提醒",d:"偵測異常立即震動警示",ans:"edge",why:"警示要即時，在裝置端判斷最快最可靠。"},
+    {t:"健康資料長期趨勢分析",d:"分析三年的睡眠與運動紀錄",ans:"cloud",why:"長期資料的儲存與深度分析適合雲端。"}
+  ];
+  var cur=[], picks={}, done=false;
+  function deal(){
+    cur=POOL.slice().sort(function(){return Math.random()-0.5;}).slice(0,6);
+    picks={}; done=false;
+    $("ecLat").classList.remove("show");
+    $("ecScore").textContent="先完成六個選擇"; $("ecVerify").disabled=true;
+    grid.innerHTML="";
+    cur.forEach(function(s,i){
+      var c=document.createElement("div"); c.className="ec-card"; c.setAttribute("data-i",i);
+      c.innerHTML='<h5>'+s.t+'</h5><p>'+s.d+'</p><div class="ec-pick"><button data-v="edge">📍 邊緣（現場）</button><button data-v="cloud">☁ 雲端（資料中心）</button></div><div class="ec-why"></div>';
+      grid.appendChild(c);
+    });
+  }
+  grid.addEventListener("click", function(e){
+    if(done) return;
+    var b=e.target.closest("button[data-v]"); if(!b) return;
+    var card=b.closest(".ec-card"), i=+card.getAttribute("data-i");
+    picks[i]=b.getAttribute("data-v");
+    [].slice.call(card.querySelectorAll("button")).forEach(function(x){ x.classList.toggle("sel",x===b); });
+    $("ecVerify").disabled = Object.keys(picks).length<cur.length;
+    if(Object.keys(picks).length===cur.length) $("ecScore").textContent="都選好了——按「驗證」對答案";
+  });
+  $("ecVerify").addEventListener("click", function(){
+    if(done) return; done=true;
+    var ok=0;
+    cur.forEach(function(s,i){
+      var card=grid.querySelector('[data-i="'+i+'"]'), right=(picks[i]===s.ans);
+      if(right) ok++;
+      card.classList.add(right?"ok":"no","show");
+      card.querySelector(".ec-why").innerHTML=(right?"✔ 正確！":"✘ 正解：<b>"+(s.ans==="edge"?"邊緣":"雲端")+"</b>。")+" "+s.why;
+    });
+    $("ecScore").textContent="答對 "+ok+"／"+cur.length+"。"+(ok===cur.length?"太厲害了！":"看看說明，想想判斷的關鍵：即時？大量？隱私？");
+    $("ecLat").classList.add("show");
+    setTimeout(function(){ $("latEdge").style.width="6%"; $("latCloud").style.width="92%"; },RED?0:120);
+    $("ecVerify").disabled=true;
+    if(window.ccProg) ccProg.mark("ed","sim");
+  });
+  $("ecReset").addEventListener("click", function(){ $("latEdge").style.width="0"; $("latCloud").style.width="0"; deal(); });
+  deal();
+})();
+
+/* ---- 互動模擬 B：AI 審核員 ---- */
+(function aiJudge(){
+  var box=$("aijQ"); if(!box) return;
+  var POOL=[
+    {q:"1 Byte（位元組）等於幾個 bit？",a:"1 Byte 等於 8 bit。",r:"Byte 是資料量基本單位，由 8 個位元組成。",ok:true,why:"AI 說得對：1 Byte＝8 bit。"},
+    {q:"RAM 斷電後，裡面的資料會怎樣？",a:"資料會完整保留，因為 RAM 是永久儲存裝置。",r:"記憶體就是用來長期存資料的。",ok:false,why:"AI 錯了：RAM 是揮發性記憶體，斷電即清空；長期保存靠 SSD／硬碟。"},
+    {q:"DNS 的功能是什麼？",a:"DNS 把網域名稱翻譯成 IP 位址。",r:"像通訊錄：記名字、查號碼。",ok:true,why:"AI 說得對：DNS 負責名稱到 IP 的解析。"},
+    {q:"能 ping 通 8.8.8.8 卻打不開網頁，應先檢查？",a:"應該先更換一台新螢幕試試。",r:"看不到網頁通常是螢幕問題。",ok:false,why:"AI 錯了：IP 通、網址不通的典型原因是 DNS 設定，跟螢幕無關。"},
+    {q:"雲端運算的「隨用隨付」是什麼意思？",a:"就是買斷軟體之後可以永久使用。",r:"付一次錢用一輩子最划算。",ok:false,why:"AI 錯了：隨用隨付是依使用量計費、可彈性增減，不是買斷。"},
+    {q:"開機自我測試（POST）偵測不到 RAM 會怎樣？",a:"會以嗶聲警示並中止開機。",r:"RAM 是開機必需元件。",ok:true,why:"AI 說得對：POST 偵測不到必要元件會鳴聲中止。"},
+    {q:"邊緣運算的主要優點是？",a:"在現場就近處理，延遲低、反應即時。",r:"不必等資料來回雲端。",ok:true,why:"AI 說得對：低延遲正是邊緣運算的核心優勢。"},
+    {q:"應用程式打不開，第一步該怎麼做？",a:"直接重灌作業系統，AP 出錯一律重灌 OS。",r:"重灌最快最乾淨。",ok:false,why:"AI 錯了：應由上往下檢查——先看 AP 本身與相依元件、驅動，重灌 OS 是最後手段。"}
+  ];
+  var rounds=[], idx=0, okCnt=0, judged=false;
+  function deal(){ rounds=POOL.slice().sort(function(){return Math.random()-0.5;}).slice(0,6); idx=0; okCnt=0; render(); }
+  function render(){
+    judged=false; var t=rounds[idx];
+    $("aijIdx").textContent="第 "+(idx+1)+" / "+rounds.length+" 題";
+    $("aijScore").textContent="審核正確 "+okCnt+" 題";
+    $("aijQ").textContent="題目："+t.q;
+    $("aijAns").textContent=t.a; $("aijReason").textContent="AI 的理由："+t.r;
+    var fb=$("aijFb"); fb.className="aij-fb"; fb.innerHTML="";
+    $("aijNext").style.display="none"; $("aijFinal").className="aij-final";
+    [].slice.call($("aijJudge").querySelectorAll("button")).forEach(function(b){ b.disabled=false; b.style.opacity=1; });
+  }
+  $("aijJudge").addEventListener("click", function(e){
+    var b=e.target.closest("button[data-j]"); if(!b||judged) return;
+    judged=true;
+    var say=(b.getAttribute("data-j")==="1"), t=rounds[idx], right=(say===t.ok);
+    if(right) okCnt++;
+    [].slice.call($("aijJudge").querySelectorAll("button")).forEach(function(x){ x.disabled=true; if(x!==b)x.style.opacity=.45; });
+    var fb=$("aijFb");
+    fb.className="aij-fb show "+(right?"ok":"no");
+    fb.innerHTML=(right?"<b>✔ 審核正確！</b> ":"<b>✘ 審核失誤。</b> ")+t.why;
+    $("aijScore").textContent="審核正確 "+okCnt+" 題";
+    if(idx<rounds.length-1){ $("aijNext").style.display=""; }
+    else{
+      var pct=Math.round(100*okCnt/rounds.length);
+      var msg = pct>=83 ? "你已具備相當可靠的把關能力——這正是 HOTL「人在迴圈上」需要的判斷力，可以開始放手讓 AI 做、由你監督。"
+        : pct>=50 ? "把關能力正在成形。被 AI「自信的語氣」騙到的題目，回對應模組把觀念補穩，再來挑戰一輪。"
+        : "先別急著放手給 AI——回三大主軸把基本功練穩，基本功就是你監督 AI 的本錢。";
+      var fin=$("aijFinal"); fin.className="aij-final show";
+      fin.innerHTML='<div class="ccr-coach" style="border-left-color:var(--aix)"><h4>🧑‍⚖️ 審核結果：'+okCnt+'／'+rounds.length+'（'+pct+'%）</h4><ul><li>'+msg+'</li><li>記住：AI 的自信語氣不等於正確——你的查證，才是品質的最後防線。</li></ul><div class="nx"><button class="btn ai" id="aijAgain">🔁 再審一輪</button></div></div>';
+      if(window.ccProg) ccProg.mark("ai","sim");
+    }
+  });
+  $("aijNext").addEventListener("click", function(){ idx++; render(); });
+  document.addEventListener("click", function(e){ if(e.target&&e.target.id==="aijAgain") deal(); });
+  deal();
+})();
+
+/* ---- 講義完成標記 ---- */
+[["edLecDone","ed","edLecMsg"],["aiLecDone","ai","aiLecMsg"]].forEach(function(x){
+  var b=$(x[0]); if(!b) return;
+  b.addEventListener("click", function(){ if(window.ccProg) ccProg.mark(x[1],"lec"); var m=$(x[2]); if(m) m.textContent="✔ 已標記完成，學習地圖已更新"; });
+});
 })();
 </script>
 </body>
