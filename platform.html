@@ -8267,5 +8267,1657 @@ if(window.CC_BANK){
 });
 })();
 </script>
+<!-- ===== 注入：XR 實境實習中心（只增不改 / 冪等防護 / #iocxr- 前綴）===== -->
+<style id="iocxr-style">
+#iocxr-root{--xr-ink:#1b2733;--xr-muted:#5b6b7a;--xr-line:#dfe5ec;--xr-wash:#f4f7fa;
+  --xr-hw:#2e5496;--xr-sw:#6b4d9e;--xr-nw:#138a8a;--xr-ed:#d9912f;--xr-ai:#b5497f;
+  --xr-gold:#e0b44a;--xr-board:#10312a;--xr-ok:#34a36b;--xr-fail:#e2574c;
+  --xr-mono:ui-monospace,"SFMono-Regular",Consolas,Menlo,monospace}
+#iocxr-root *{box-sizing:border-box}
+#iocxr-root .xr-hd{background:linear-gradient(135deg,#10312a,#0c2620);color:#fff;
+  border-radius:14px;padding:18px 22px;border-bottom:4px solid var(--xr-gold);margin-bottom:16px}
+#iocxr-root .xr-hd h2{margin:0 0 4px;font-size:22px;color:#fff}
+#iocxr-root .xr-hd p{margin:0;font-size:14px;opacity:.9}
+#iocxr-root .xr-seg{display:flex;gap:6px;flex-wrap:wrap;margin-bottom:14px}
+#iocxr-root .xr-seg button{font:600 14px var(--sans,sans-serif);border:1px solid var(--xr-line);
+  background:#fff;color:var(--xr-muted);padding:9px 15px;border-radius:999px;cursor:pointer;min-height:40px}
+#iocxr-root .xr-seg button:hover{border-color:#b9c4d2;color:var(--xr-ink)}
+#iocxr-root .xr-seg button[aria-selected="true"]{background:var(--xr-board);border-color:var(--xr-board);color:#fff}
+#iocxr-root .xr-pane{display:none}
+#iocxr-root .xr-pane.on{display:block}
+#iocxr-root .xr-card{background:#fff;border:1px solid var(--xr-line);border-radius:14px;padding:16px 18px;margin-bottom:14px}
+#iocxr-root .xr-card h3{margin:0 0 4px;font-size:16px}
+#iocxr-root .xr-card .lead{color:var(--xr-muted);font-size:13.5px;margin:0 0 12px}
+#iocxr-root .xr-row{display:flex;gap:8px;flex-wrap:wrap;align-items:center;margin:10px 0}
+#iocxr-root .xr-btn{font:600 13.5px var(--sans,sans-serif);border:1px solid var(--xr-line);background:#fff;
+  color:var(--xr-ink);padding:8px 14px;border-radius:10px;cursor:pointer;min-height:40px}
+#iocxr-root .xr-btn:hover:not(:disabled){border-color:#b9c4d2}
+#iocxr-root .xr-btn:disabled{opacity:.45;cursor:not-allowed}
+#iocxr-root .xr-btn.pri{background:var(--xr-board);border-color:var(--xr-board);color:#fff}
+#iocxr-root .xr-btn.warn{background:var(--xr-ed);border-color:var(--xr-ed);color:#fff}
+#iocxr-root .xr-btn.sm{min-height:32px;padding:5px 11px;font-size:12.5px;border-radius:8px}
+#iocxr-root .xr-note{border-left:4px solid var(--xr-gold);background:var(--xr-wash);border-radius:0 10px 10px 0;
+  padding:10px 14px;font-size:13px;color:var(--xr-muted);margin:10px 0}
+#iocxr-root .xr-note b{color:var(--xr-ink)}
+#iocxr-root .xr-note.ok{border-left-color:var(--xr-ok)}
+#iocxr-root .xr-note.bad{border-left-color:var(--xr-fail)}
+#iocxr-root .xr-pill{display:inline-block;font:600 11px var(--xr-mono);background:var(--xr-wash);
+  border:1px solid var(--xr-line);color:var(--xr-muted);border-radius:999px;padding:2px 9px;white-space:nowrap}
+#iocxr-root .xr-pill.on{background:var(--xr-ok);border-color:var(--xr-ok);color:#fff}
+#iocxr-root .xr-pill.off{background:#eceff3}
+
+/* ---- 媒體庫 ---- */
+#iocxr-root .xr-drop{border:2px dashed var(--xr-line);border-radius:14px;padding:26px 18px;text-align:center;
+  color:var(--xr-muted);font-size:14px;background:var(--xr-wash);transition:.15s;cursor:pointer}
+#iocxr-root .xr-drop.hot{border-color:var(--xr-gold);background:#fdf7e8;color:var(--xr-ink)}
+#iocxr-root .xr-slots{display:grid;grid-template-columns:repeat(auto-fill,minmax(178px,1fr));gap:12px;margin-top:14px}
+#iocxr-root .xr-slot{border:1px solid var(--xr-line);border-radius:12px;overflow:hidden;background:#fff;display:flex;flex-direction:column}
+#iocxr-root .xr-slot .th{aspect-ratio:4/3;background:var(--xr-wash);display:block;width:100%;object-fit:cover}
+#iocxr-root .xr-slot .mt{padding:8px 10px;font-size:12.5px;line-height:1.45}
+#iocxr-root .xr-slot .mt b{display:block;font-size:13px}
+#iocxr-root .xr-slot .mt .k{font:600 10.5px var(--xr-mono);color:var(--xr-muted)}
+#iocxr-root .xr-slot .ops{display:flex;gap:5px;padding:0 10px 9px;flex-wrap:wrap}
+#iocxr-root .xr-src{font-size:10.5px;padding:1px 7px;border-radius:999px;font-weight:700}
+#iocxr-root .xr-src.emb{background:#e4f0e9;color:#17603a}
+#iocxr-root .xr-src.url{background:#e6ecf7;color:#1f3d78}
+#iocxr-root .xr-src.gen{background:#f0eef5;color:#4d3f70}
+#iocxr-root .xr-src.web{background:#fdf1e0;color:#8a5a12}
+#iocxr-root .xr-src.dg,.iocxr-strip .xr-src.dg{background:#e7f1ef;color:#0f5a52}
+.iocxr-strip figure[data-dg] img{aspect-ratio:5/3;object-fit:contain;background:#f7f9fb}
+#iocxr-root .xr-slot .th[data-dg]{object-fit:contain;background:#f7f9fb}
+#iocxr-root .xr-credit,.iocxr-strip .xr-credit{display:block;font-size:10.5px;line-height:1.5;color:#8b98a6;margin-top:3px}
+#iocxr-root .xr-credit a,.iocxr-strip .xr-credit a{color:#5b6b7a}
+.iocxr-strip .xr-src{font-size:10.5px;padding:1px 7px;border-radius:999px;font-weight:700}
+.iocxr-strip .xr-src.emb{background:#e4f0e9;color:#17603a}
+.iocxr-strip .xr-src.url{background:#e6ecf7;color:#1f3d78}
+.iocxr-strip .xr-src.web{background:#fdf1e0;color:#8a5a12}
+.iocxr-strip .xr-src.gen{background:#f0eef5;color:#4d3f70}
+
+/* ---- 影音 ---- */
+#iocxr-root .xr-vids{display:grid;grid-template-columns:repeat(auto-fill,minmax(240px,1fr));gap:12px}
+#iocxr-root .xr-vid{border:1px solid var(--xr-line);border-radius:12px;overflow:hidden;background:#000;position:relative}
+#iocxr-root .xr-vid .fac{aspect-ratio:16/9;width:100%;display:block;border:0;background:#0c1116;
+  position:relative;cursor:pointer;padding:0;overflow:hidden}
+#iocxr-root .xr-vid .fac img{width:100%;height:100%;object-fit:cover;opacity:.86;display:block}
+#iocxr-root .xr-vid .fac .pl{position:absolute;inset:0;display:grid;place-items:center}
+#iocxr-root .xr-vid .fac .pl i{width:54px;height:54px;border-radius:50%;background:rgba(224,180,74,.94);
+  display:grid;place-items:center;font-style:normal;font-size:20px;color:#10312a;box-shadow:0 4px 16px rgba(0,0,0,.4)}
+#iocxr-root .xr-vid .vt{background:#fff;padding:9px 11px;font-size:12.5px;line-height:1.5}
+#iocxr-root .xr-vid .vt b{display:block;font-size:13px;color:var(--xr-ink)}
+#iocxr-root .xr-vid .vt span{color:var(--xr-muted)}
+#iocxr-root .xr-vid iframe{aspect-ratio:16/9;width:100%;display:block;border:0}
+
+/* ---- 舞台（全景 / AR / 3D 共用）---- */
+#iocxr-root .xr-stage{position:relative;width:100%;aspect-ratio:16/9;min-height:280px;border-radius:14px;
+  overflow:hidden;background:#0c1116;border:1px solid var(--xr-line)}
+#iocxr-root .xr-stage canvas,#iocxr-root .xr-stage video{display:block;width:100%;height:100%;object-fit:cover}
+#iocxr-root .xr-stage .ovl{position:absolute;inset:0;pointer-events:none}
+#iocxr-root .xr-stage .hint{position:absolute;left:12px;bottom:12px;background:rgba(12,17,22,.72);color:#fff;
+  font-size:12px;padding:6px 11px;border-radius:8px;pointer-events:none;max-width:70%}
+#iocxr-root .xr-stage .badge{position:absolute;right:12px;top:12px;background:rgba(12,17,22,.72);color:#fff;
+  font:600 11px var(--xr-mono);padding:5px 10px;border-radius:999px;pointer-events:none}
+#iocxr-root .xr-hot{position:absolute;transform:translate(-50%,-50%);pointer-events:auto;cursor:pointer;
+  background:rgba(224,180,74,.95);color:#10312a;font:700 12px var(--sans,sans-serif);
+  border:2px solid #fff;border-radius:999px;padding:5px 11px;white-space:nowrap;box-shadow:0 3px 10px rgba(0,0,0,.35)}
+#iocxr-root .xr-hot:hover{background:#fff}
+#iocxr-root .xr-hot.done{background:var(--xr-ok);color:#fff}
+#iocxr-root .xr-stage.split .ovl{display:none}
+
+/* ---- AR 步驟 ---- */
+#iocxr-root .xr-steps{display:grid;gap:7px;margin-top:12px}
+#iocxr-root .xr-step{display:grid;grid-template-columns:30px 1fr auto;gap:10px;align-items:center;
+  border:1px solid var(--xr-line);border-radius:10px;padding:9px 12px;font-size:13.5px;background:#fff}
+#iocxr-root .xr-step .n{width:26px;height:26px;border-radius:50%;background:var(--xr-wash);
+  display:grid;place-items:center;font:700 12px var(--xr-mono);color:var(--xr-muted)}
+#iocxr-root .xr-step.cur{border-color:var(--xr-gold);background:#fdf9ef}
+#iocxr-root .xr-step.cur .n{background:var(--xr-gold);color:#10312a}
+#iocxr-root .xr-step.done .n{background:var(--xr-ok);color:#fff}
+#iocxr-root .xr-step.done{opacity:.72}
+
+/* ---- CSS 3D 拆裝 ---- */
+#iocxr-root .xr-3d{position:relative;width:100%;height:420px;border-radius:14px;background:
+  radial-gradient(120% 90% at 50% 8%,#1b2b3a 0%,#0c1116 68%);border:1px solid var(--xr-line);
+  overflow:hidden;perspective:1400px;touch-action:none;cursor:grab}
+#iocxr-root .xr-3d.drag{cursor:grabbing}
+#iocxr-root .xr-scene{position:absolute;left:50%;top:50%;width:0;height:0;transform-style:preserve-3d;
+  transition:transform .1s linear}
+#iocxr-root .xr-part{position:absolute;transform-style:preserve-3d;transition:transform .5s cubic-bezier(.2,.8,.2,1),opacity .3s}
+#iocxr-root .xr-face{position:absolute;transform-origin:50% 50%;backface-visibility:visible;
+  border:1px solid rgba(255,255,255,.18);display:grid;place-items:center;
+  font:700 11px var(--sans,sans-serif);color:rgba(255,255,255,.9);text-shadow:0 1px 3px rgba(0,0,0,.6);
+  letter-spacing:.04em;overflow:hidden}
+#iocxr-root .xr-part.ghost{opacity:.18}
+#iocxr-root .xr-part.pick{filter:drop-shadow(0 0 14px rgba(224,180,74,.9))}
+#iocxr-root .xr-tray{display:flex;gap:8px;flex-wrap:wrap;margin-top:12px}
+#iocxr-root .xr-chip{border:1px solid var(--xr-line);border-radius:10px;background:#fff;padding:7px 12px;
+  font:600 13px var(--sans,sans-serif);cursor:pointer;min-height:38px;display:flex;align-items:center;gap:7px}
+#iocxr-root .xr-chip i{width:11px;height:11px;border-radius:3px;font-style:normal;flex:none}
+#iocxr-root .xr-chip.placed{opacity:.42;text-decoration:line-through;cursor:default}
+#iocxr-root .xr-chip.sel{border-color:var(--xr-gold);background:#fdf9ef}
+
+/* ---- 模組內嵌的實境列 ---- */
+.iocxr-strip{border:1px solid var(--xr-line,#dfe5ec);border-radius:14px;background:#fff;padding:14px 16px;margin:16px 0}
+.iocxr-strip h3{margin:0 0 3px;font-size:15px}
+.iocxr-strip .lead{margin:0 0 11px;font-size:13px;color:#5b6b7a}
+.iocxr-strip .grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(196px,1fr));gap:11px}
+.iocxr-strip figure{margin:0;border:1px solid #dfe5ec;border-radius:11px;overflow:hidden;background:#f4f7fa}
+.iocxr-strip figure img{width:100%;aspect-ratio:4/3;object-fit:cover;display:block;cursor:zoom-in}
+.iocxr-strip figcaption{padding:7px 10px;font-size:12px;line-height:1.5;color:#5b6b7a}
+.iocxr-strip figcaption b{display:block;color:#1b2733;font-size:12.5px}
+#iocxr-lightbox{position:fixed;inset:0;z-index:9000;background:rgba(8,12,16,.92);display:none;
+  place-items:center;padding:24px}
+#iocxr-lightbox.on{display:grid}
+#iocxr-lightbox img{max-width:min(96vw,1400px);max-height:86vh;border-radius:12px;box-shadow:0 12px 44px rgba(0,0,0,.6)}
+#iocxr-lightbox .cap{color:#fff;font-size:13.5px;margin-top:12px;text-align:center;max-width:760px}
+#iocxr-lightbox .x{position:absolute;right:18px;top:14px;background:rgba(255,255,255,.14);color:#fff;
+  border:1px solid rgba(255,255,255,.3);border-radius:10px;padding:7px 13px;cursor:pointer;font-size:14px}
+@media (max-width:640px){
+  #iocxr-root .xr-3d{height:330px}
+  #iocxr-root .xr-stage{min-height:210px}
+}
+</style>
+<script id="iocxr-script">
+(function(){
+  "use strict";
+  if (document.getElementById("view-xr")) return;                 // 冪等防護
+  var ov = document.getElementById("view-overview");
+  if (!ov || !ov.parentNode) return;
+
+  /* ==========================================================
+     0) 工具
+     ========================================================== */
+  var D = document;
+  function el(tag, cls, html){ var e = D.createElement(tag); if (cls) e.className = cls;
+    if (html != null) e.innerHTML = html; return e; }
+  function q(sel, root){ return (root || D).querySelector(sel); }
+  function qa(sel, root){ return [].slice.call((root || D).querySelectorAll(sel)); }
+  function esc(s){ return String(s == null ? "" : s).replace(/[&<>"]/g, function(c){
+    return {"&":"&amp;","<":"&lt;",">":"&gt;","\"":"&quot;"}[c]; }); }
+  function show(v){ if (window.__show) window.__show(v);
+    else qa(".view").forEach(function(x){ x.classList.toggle("active", x.id === "view-" + v); }); }
+  /* 學習事件：有 cclog.js 就記，沒有也不會壞 */
+  function log(ccid, verb, extra){
+    try { if (window.CCLOG && ccid) {
+      var p = {ccid: ccid, verb: verb, asset: "platform.html#xr"};
+      if (extra) for (var k in extra) p[k] = extra[k];
+      window.CCLOG.log(p);
+    } } catch (e) {}
+  }
+  function mark(pillar, kind){ try { if (window.ccProg) window.ccProg.mark(pillar, kind); } catch (e) {} }
+
+  /* ==========================================================
+     1) 資料定義
+     ========================================================== */
+
+  /* 媒體槽：每一格對應一個實習畫面上的位置，並綁定 CCID 與模組 */
+  var SLOTS = [
+    /* 硬體 */
+    {k:"hw.cpu",     mod:"hardware", ccid:"C2-HW-03", t:"CPU 與腳座",       d:"實拍：處理器正反面、主機板腳座與扣具", ic:"CPU", c:"--xr-hw"},
+    {k:"hw.ram",     mod:"hardware", ccid:"C2-HW-06", t:"記憶體模組",       d:"實拍：DIMM 缺口方向、卡榫與插槽顏色", ic:"RAM", c:"--xr-hw"},
+    {k:"hw.ssd",     mod:"hardware", ccid:"C2-HW-07", t:"儲存裝置",         d:"實拍：M.2 SSD 與 2.5 吋 SATA 並排比較", ic:"SSD", c:"--xr-hw"},
+    {k:"hw.mobo",    mod:"hardware", ccid:"C2-HW-09", t:"主機板與匯流排",   d:"實拍：主機板全景，標出各插槽位置", ic:"MB",  c:"--xr-hw"},
+    {k:"hw.ports",   mod:"hardware", ccid:"C2-HW-10", t:"介面與連接埠",     d:"實拍：機殼背板 I/O，USB／HDMI／RJ45", ic:"I/O", c:"--xr-hw"},
+    {k:"hw.boot",    mod:"hardware", ccid:"C2-HW-11", t:"開機自我檢測",     d:"實拍：POST 畫面或 UEFI 設定頁", ic:"POST", c:"--xr-hw"},
+    /* 軟體 */
+    {k:"sw.layer",   mod:"software", ccid:"C3-SW-01", t:"軟體分層",         d:"截圖：工作管理員的行程與服務分層", ic:"OS",  c:"--xr-sw"},
+    {k:"sw.proc",    mod:"software", ccid:"C3-SW-03", t:"行程與執行緒",     d:"截圖：資源監視器的執行緒數與 CPU 佔用", ic:"PRC", c:"--xr-sw"},
+    {k:"sw.fs",      mod:"software", ccid:"C3-SW-06", t:"檔案系統",         d:"截圖：目錄樹、副檔名與權限設定", ic:"FS",  c:"--xr-sw"},
+    /* 網路 */
+    {k:"nw.rack",    mod:"network",  ccid:"C6-NET-02", t:"配線與機櫃",      d:"實拍：跳線架、網路線與交換器面板", ic:"LAN", c:"--xr-nw"},
+    {k:"nw.ipcfg",   mod:"network",  ccid:"C6-NET-03", t:"IP 設定畫面",     d:"截圖：ipconfig /all 或網路介面設定", ic:"IP",  c:"--xr-nw"},
+    {k:"nw.ping",    mod:"network",  ccid:"C6-NET-12", t:"診斷工具輸出",    d:"截圖：ping／tracert 的實際輸出", ic:"PNG", c:"--xr-nw"},
+    /* 邊雲 */
+    {k:"ed.room",    mod:"edgecloud",ccid:"C4-EDGE-01", t:"資料中心機房",   d:"實拍：機房冷熱通道與機櫃陣列", ic:"IDC", c:"--xr-ed"},
+    {k:"ed.edge",    mod:"edgecloud",ccid:"C4-EDGE-05", t:"邊緣裝置現場",   d:"實拍：路口攝影機、感測器閘道器", ic:"EDG", c:"--xr-ed"},
+    {k:"ed.field",   mod:"edgecloud",ccid:"C4-EDGE-08", t:"感測現場（本科情境）", d:"實拍：養殖池溶氧探頭、田間感測站、空品微型站", ic:"IoT", c:"--xr-ed"},
+    /* AI */
+    {k:"ai.data",    mod:"aicollab", ccid:"C5-AI-04", t:"訓練資料樣本",     d:"截圖：資料集樣本與標註介面", ic:"DAT", c:"--xr-ai"},
+    {k:"ai.audit",   mod:"aicollab", ccid:"C5-AI-09", t:"AI 產出查證",      d:"截圖：AI 回答與你查證的一手來源並排", ic:"AUD", c:"--xr-ai"},
+    /* 3C 拆裝 */
+    {k:"rp.bench",   mod:"repair",   ccid:"C2-HW-13", t:"工作檯與防靜電",   d:"實拍：靜電手環、防靜電墊與工具擺放", ic:"ESD", c:"--xr-hw"},
+    {k:"rp.teardown",mod:"repair",   ccid:"C2-HW-12", t:"拆機過程",         d:"實拍：拆下的元件依序排列（含螺絲分格）", ic:"FIX", c:"--xr-hw"},
+    /* 概念示意圖（SVG／可用 Canva 版本取代）*/
+    {k:"dg.memhier", mod:"hardware", ccid:"C2-HW-05", t:"記憶體階層",        d:"概念示意圖：越快越貴越小的取捨", ic:"DG", c:"--xr-hw", diagram:true},
+    {k:"dg.packet",  mod:"network",  ccid:"C6-NET-07", t:"封包的旅程",       d:"概念示意圖：連不上網的除錯順序", ic:"DG", c:"--xr-nw", diagram:true},
+    {k:"dg.edge",    mod:"edgecloud",ccid:"C4-EDGE-06", t:"邊緣 vs 雲端分工", d:"概念示意圖：判準只有反應時間與彙整範圍", ic:"DG", c:"--xr-ed", diagram:true},
+    {k:"dg.hotl",    mod:"aicollab", ccid:"C5-AI-11",  t:"HITL → HOTL 光譜", d:"概念示意圖：人機協作的兩種姿態", ic:"DG", c:"--xr-ai", diagram:true},
+    /* 全景（等距柱狀投影，2:1）*/
+    {k:"pano.case",  mod:"repair",   ccid:"C2-HW-09", t:"360° 機殼內部",    d:"手機全景模式，在機殼內部拍一張 2:1 等距柱狀全景", ic:"360", c:"--xr-hw", pano:true},
+    {k:"pano.room",  mod:"edgecloud",ccid:"C4-EDGE-01", t:"360° 機房",      d:"手機全景模式，機房通道中央拍一張 2:1 全景", ic:"360", c:"--xr-ed", pano:true}
+  ];
+
+  /* 影音：沿用整合講義 v19 已驗證的 20 支，綁模組與 CCID */
+  var VIDEOS = [
+    {id:"XBRJIxFelcg", t:"運算思維導論",              s:"教育部",       len:"2:25", mod:"overview",  ccid:"C1-CT-01"},
+    {id:"6hfOvs8pY1k", t:"Computational Thinking",    s:"TED-Ed",       len:"4:58", mod:"overview",  ccid:"C1-CT-05"},
+    {id:"kDPFgAaUWS4", t:"What is Computational Thinking", s:"Code.org", len:"—",   mod:"overview",  ccid:"C1-CT-07"},
+    {id:"OAx_6-wdslM", t:"電腦如何運作",              s:"Code.org",     len:"1:21", mod:"hardware",  ccid:"C2-HW-02"},
+    {id:"kemrnQtlyak", t:"處理器與記憶體",            s:"TECH",         len:"2:04", mod:"hardware",  ccid:"C2-HW-03"},
+    {id:"Xj0IZR_hNPM", t:"RAM 是什麼",                s:"LIS",          len:"1:48", mod:"hardware",  ccid:"C2-HW-06"},
+    {id:"FZGugFqdr60", t:"CPU 深入解析",              s:"CrashCourse",  len:"—",    mod:"hardware",  ccid:"C2-HW-04"},
+    {id:"O_mpdvGSxGQ", t:"What Is an Operating System", s:"—",          len:"2:02", mod:"software",  ccid:"C3-SW-02"},
+    {id:"Y7sCQxnr31Q", t:"OS in 3 Minutes",           s:"—",            len:"3:29", mod:"software",  ccid:"C3-SW-04"},
+    {id:"26QPDBe-NB8", t:"Operating Systems",         s:"CrashCourse",  len:"—",    mod:"software",  ccid:"C3-SW-05"},
+    {id:"MFxToC16r60", t:"資料中心機房導覽",          s:"勤英",         len:"3:10", mod:"edgecloud", ccid:"C4-EDGE-01"},
+    {id:"lPbxG34Mv-k", t:"IaaS / PaaS / SaaS",        s:"勤英",         len:"3:48", mod:"edgecloud", ccid:"C4-EDGE-03"},
+    {id:"M988_fsOSWo", t:"Cloud Computing 概論",      s:"Simplilearn",  len:"—",    mod:"edgecloud", ccid:"C4-EDGE-04"},
+    {id:"PeMlggyqz0Y", t:"Machine Learning 速覽",     s:"Fireship",     len:"2:35", mod:"aicollab",  ccid:"C5-AI-02"},
+    {id:"nbicUrB7Mcc", t:"Machine Learning 入門",     s:"Simplilearn",  len:"1:52", mod:"aicollab",  ccid:"C5-AI-03"},
+    {id:"aircAruvnKk", t:"神經網路是什麼",            s:"3Blue1Brown",  len:"—",    mod:"aicollab",  ccid:"C5-AI-06"},
+    {id:"D8QD_LIpXzQ", t:"DNS 與 Wi-Fi",              s:"—",            len:"1:56", mod:"network",   ccid:"C6-NET-05"},
+    {id:"t91fxPAMX_I", t:"TCP/IP 分層",               s:"Intellipaat",  len:"3:09", mod:"network",   ccid:"C6-NET-06"},
+    {id:"ZhEf7e4kopM", t:"The Internet: Wires",       s:"Code.org",     len:"—",    mod:"network",   ccid:"C6-NET-02"},
+    {id:"AEaKrq3SpW8", t:"The Internet #29",          s:"CrashCourse",  len:"—",    mod:"network",   ccid:"C6-NET-10"}
+  ];
+
+  var MODNAME = {overview:"總覽", hardware:"硬體", software:"軟體", network:"網路",
+                 edgecloud:"邊雲運算", aicollab:"AI 人機協作", repair:"3C 拆裝實訓"};
+
+  /* ----------------------------------------------------------
+     網路真實照片候選（Wikimedia Commons）
+     ----------------------------------------------------------
+     只收「真實物件的照片」：實體零件、機櫃、機房、現場設備。
+     螢幕截圖類的槽位（作業系統畫面、ipconfig 輸出、AI 對話…）刻意不列，
+     因為那不是實物，而且老師自己截的畫面對學生更有用。
+
+     取圖網址用 Commons 官方的 Special:FilePath——它會依檔名轉址到實際檔案，
+     不必知道 upload.wikimedia.org 的雜湊路徑，檔案改版也不會失效。
+
+     ⚠ 授權：Commons 依政策只收自由授權內容，但個別檔案是 CC0／CC BY／CC BY-SA
+     還是公有領域並不一致，署名要求也不同。本模組在每張圖下方附上來源頁連結，
+     並提供 fetch_media.py 在你自己的電腦上向 Commons API 查回實際授權與作者、
+     產生 ATTRIBUTION.md。正式對外發布前請跑一次。
+     ---------------------------------------------------------- */
+  /* 概念示意圖（SVG，由 make_diagrams.py 產生；Canva 額度回來可用 canva-briefs.md 重做取代） */
+  var DG = {"dg.edge": "data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCAxMjAwIDcyMCIgd2lkdGg9IjEyMDAiIGhlaWdodD0iNzIwIgogIHJvbGU9ImltZyIgYXJpYS1sYWJlbD0i6YKK57ejIHZzIOmbsuerr+OAgOaAjum6vOWIhuW3pe+8n+KAlOKAlOWIpOa6luWPquacieWFqeWAi+KAlOKAlOWPjeaHieaZgumWk+mcgOaxguOAgeizh+aWmeW9meaVtOevhOWcjSI+CjxkZWZzPgogIDxsaW5lYXJHcmFkaWVudCBpZD0iaGQiIHgxPSIwIiB5MT0iMCIgeDI9IjEiIHkyPSIxIj4KICAgIDxzdG9wIG9mZnNldD0iMCIgc3RvcC1jb2xvcj0iIzEwMzEyQSIvPjxzdG9wIG9mZnNldD0iMSIgc3RvcC1jb2xvcj0iIzBDMjYyMCIvPgogIDwvbGluZWFyR3JhZGllbnQ+CiAgPG1hcmtlciBpZD0iYXIiIHZpZXdCb3g9IjAgMCAxMCAxMCIgcmVmWD0iOSIgcmVmWT0iNSIgbWFya2VyV2lkdGg9IjciIG1hcmtlckhlaWdodD0iNyIgb3JpZW50PSJhdXRvIj4KICAgIDxwYXRoIGQ9Ik0wIDAgTDEwIDUgTDAgMTAgeiIgZmlsbD0iI0UwQjQ0QSIvPgogIDwvbWFya2VyPgogIDxtYXJrZXIgaWQ9ImFybSIgdmlld0JveD0iMCAwIDEwIDEwIiByZWZYPSI5IiByZWZZPSI1IiBtYXJrZXJXaWR0aD0iNiIgbWFya2VySGVpZ2h0PSI2IiBvcmllbnQ9ImF1dG8iPgogICAgPHBhdGggZD0iTTAgMCBMMTAgNSBMMCAxMCB6IiBmaWxsPSIjNUI2QjdBIi8+CiAgPC9tYXJrZXI+CjwvZGVmcz4KPHN0eWxlPgogIC50e2ZvbnQtZmFtaWx5OidOb3RvIFNhbnMgVEMnLCdQaW5nRmFuZyBUQycsJ01pY3Jvc29mdCBKaGVuZ0hlaScsc3lzdGVtLXVpLHNhbnMtc2VyaWZ9IC5te2ZvbnQtZmFtaWx5OnVpLW1vbm9zcGFjZSwnU0ZNb25vLVJlZ3VsYXInLENvbnNvbGFzLE1lbmxvLG1vbm9zcGFjZX0KICAuaDF7Zm9udC1zaXplOjQwcHg7Zm9udC13ZWlnaHQ6ODAwO2ZpbGw6I2ZmZn0KICAuaDJ7Zm9udC1zaXplOjE5cHg7ZmlsbDojRENFNkUyfQogIC5sYWJ7Zm9udC1zaXplOjI1cHg7Zm9udC13ZWlnaHQ6ODAwfQogIC5ib2R7Zm9udC1zaXplOjE5cHg7ZmlsbDojMUIyNzMzfQogIC5zbXtmb250LXNpemU6MTZweDtmaWxsOiM1QjZCN0F9CiAgLnhze2ZvbnQtc2l6ZToxNHB4O2ZpbGw6IzVCNkI3QX0KICAuY2N7Zm9udC1zaXplOjE0cHg7ZmlsbDojOEI5OEE2O2ZvbnQtZmFtaWx5OnVpLW1vbm9zcGFjZSwnU0ZNb25vLVJlZ3VsYXInLENvbnNvbGFzLE1lbmxvLG1vbm9zcGFjZX0KPC9zdHlsZT4KPHJlY3Qgd2lkdGg9IjEyMDAiIGhlaWdodD0iNzIwIiBmaWxsPSIjRjdGOUZCIi8+CjxyZWN0IHdpZHRoPSIxMjAwIiBoZWlnaHQ9IjExMiIgZmlsbD0idXJsKCNoZCkiLz4KPHJlY3QgeT0iMTA4IiB3aWR0aD0iMTIwMCIgaGVpZ2h0PSI1IiBmaWxsPSIjRTBCNDRBIi8+Cjx0ZXh0IGNsYXNzPSJ0IGgxIiB4PSI0OCIgeT0iNTUiPumCiue3oyB2cyDpm7Lnq6/jgIDmgI7purzliIblt6XvvJ88L3RleHQ+Cjx0ZXh0IGNsYXNzPSJ0IGgyIiB4PSI0OCIgeT0iODgiPuWIpOa6luWPquacieWFqeWAi+KAlOKAlOWPjeaHieaZgumWk+mcgOaxguOAgeizh+aWmeW9meaVtOevhOWcjTwvdGV4dD4KPHRleHQgY2xhc3M9InQgY2MiIHg9IjExNTIiIHk9IjY5NCIgdGV4dC1hbmNob3I9ImVuZCI+QzQtRURHRS0wNuOAgOioiOeul+apn+amguirluiIh+Wvpue/kjwvdGV4dD4KPGxpbmUgeDE9IjYwMC4wIiB5MT0iMTUwIiB4Mj0iNjAwLjAiIHkyPSI2MDAiIHN0cm9rZT0iI0UwQjQ0QSIgc3Ryb2tlLXdpZHRoPSIzIiBzdHJva2UtZGFzaGFycmF5PSI5IDciLz4KPHJlY3QgeD0iNDgiIHk9IjE1MCIgd2lkdGg9IjUyMCIgaGVpZ2h0PSIzMDAiIHJ4PSIxOCIgZmlsbD0iI0VBRjVGMiIgc3Ryb2tlPSIjMTM4QThBIiBzdHJva2Utd2lkdGg9IjEuNSIvPgo8Y2lyY2xlIGN4PSI5NCIgY3k9IjE5NiIgcj0iMjIiIGZpbGw9IiMxMzhBOEEiLz48dGV4dCBjbGFzcz0idCIgeD0iOTQiIHk9IjIwNCIgdGV4dC1hbmNob3I9Im1pZGRsZSIgZm9udC1zaXplPSIyMSIgZmlsbD0iI2ZmZiIgZm9udC13ZWlnaHQ9IjgwMCI+RTwvdGV4dD4KPHRleHQgY2xhc3M9InQgbGFiIiB4PSIxMzAiIHk9IjIwNSIgZmlsbD0iIzEzOEE4QSI+6YKK57ejIEVkZ2XjgIDlnKjnj77loLQ8L3RleHQ+CjxjaXJjbGUgY3g9IjgyIiBjeT0iMjQ2IiByPSI1IiBmaWxsPSIjMTM4QThBIi8+Cjx0ZXh0IGNsYXNzPSJ0IGJvZCIgeD0iMTAwIiB5PSIyNTIiPuWPjeaHieimgeW/q+KAlOKAlOavq+enkuWIsOenkuS5i+mWkzwvdGV4dD4KPGNpcmNsZSBjeD0iODIiIGN5PSIyODYiIHI9IjUiIGZpbGw9IiMxMzhBOEEiLz4KPHRleHQgY2xhc3M9InQgYm9kIiB4PSIxMDAiIHk9IjI5MiI+5bCx5Zyo6LOH5paZ55Si55Sf55qE5Zyw5pa56JmV55CGPC90ZXh0Pgo8Y2lyY2xlIGN4PSI4MiIgY3k9IjMyNiIgcj0iNSIgZmlsbD0iIzEzOEE4QSIvPgo8dGV4dCBjbGFzcz0idCBib2QiIHg9IjEwMCIgeT0iMzMyIj7ntrLot6/mlrfkuobkuZ/opoHog73oh6rlt7HpgYvkvZw8L3RleHQ+CjxyZWN0IHg9Ijc2IiB5PSIzNzQiIHdpZHRoPSI0NjQiIGhlaWdodD0iNTgiIHJ4PSIxMiIgZmlsbD0iI2ZmZiIgc3Ryb2tlPSIjMTM4QThBIiBzdHJva2Utd2lkdGg9IjEiLz4KPHRleHQgY2xhc3M9InQgc20iIHg9Ijk2IiB5PSIzOTkiIGZpbGw9IiMxQjI3MzMiPuS+i++8mumkiuauluaxoOa6tuawp+S9juaWvOiHqOeVjOWAvO+8jDx0c3BhbiBmb250LXdlaWdodD0iODAwIj4zIOenkuWFpzwvdHNwYW4+5ZWf5YuV5rC06LuKPC90ZXh0Pgo8dGV4dCBjbGFzcz0idCB4cyIgeD0iOTYiIHk9IjQyMCI+57ay6Lev5LiA5pa35bCx5q276a2a4oCU4oCU6YCZ56iu5LqL5LiN6IO9562J6Zuy56uv5Zue6KmxPC90ZXh0Pgo8cmVjdCB4PSI2MzIiIHk9IjE1MCIgd2lkdGg9IjUyMCIgaGVpZ2h0PSIzMDAiIHJ4PSIxOCIgZmlsbD0iI0U5RUVGNyIgc3Ryb2tlPSIjMkU1NDk2IiBzdHJva2Utd2lkdGg9IjEuNSIvPgo8Y2lyY2xlIGN4PSI2NzgiIGN5PSIxOTYiIHI9IjIyIiBmaWxsPSIjMkU1NDk2Ii8+PHRleHQgY2xhc3M9InQiIHg9IjY3OCIgeT0iMjA0IiB0ZXh0LWFuY2hvcj0ibWlkZGxlIiBmb250LXNpemU9IjIxIiBmaWxsPSIjZmZmIiBmb250LXdlaWdodD0iODAwIj5DPC90ZXh0Pgo8dGV4dCBjbGFzcz0idCBsYWIiIHg9IjcxNCIgeT0iMjA1IiBmaWxsPSIjMkU1NDk2Ij7pm7Lnq68gQ2xvdWTjgIDlnKjpgaDnq688L3RleHQ+CjxjaXJjbGUgY3g9IjY2NiIgY3k9IjI0NiIgcj0iNSIgZmlsbD0iIzJFNTQ5NiIvPgo8dGV4dCBjbGFzcz0idCBib2QiIHg9IjY4NCIgeT0iMjUyIj7opoHot6jmmYLplpPjgIHot6jlnLDpu57lvZnmlbQ8L3RleHQ+CjxjaXJjbGUgY3g9IjY2NiIgY3k9IjI4NiIgcj0iNSIgZmlsbD0iIzJFNTQ5NiIvPgo8dGV4dCBjbGFzcz0idCBib2QiIHg9IjY4NCIgeT0iMjkyIj7pgYvnrpfph4/lpKfvvIzkvYbkuI3mgKXpgJnlub7np5I8L3RleHQ+CjxjaXJjbGUgY3g9IjY2NiIgY3k9IjMyNiIgcj0iNSIgZmlsbD0iIzJFNTQ5NiIvPgo8dGV4dCBjbGFzcz0idCBib2QiIHg9IjY4NCIgeT0iMzMyIj7plbfmnJ/lhLLlrZjoiIflpKfopo/mqKHliIbmnpA8L3RleHQ+CjxyZWN0IHg9IjY2MCIgeT0iMzc0IiB3aWR0aD0iNDY0IiBoZWlnaHQ9IjU4IiByeD0iMTIiIGZpbGw9IiNmZmYiIHN0cm9rZT0iIzJFNTQ5NiIgc3Ryb2tlLXdpZHRoPSIxIi8+Cjx0ZXh0IGNsYXNzPSJ0IHNtIiB4PSI2ODAiIHk9IjM5OSIgZmlsbD0iIzFCMjczMyI+5L6L77ya5YWo5aC0IDMwIOWPo+axoDx0c3BhbiBmb250LXdlaWdodD0iODAwIj7kuIDmlbTlubQ8L3RzcGFuPueahOaKlemkjOmHj+iIh+aIkOmVt+absue3mumXnOS/gjwvdGV4dD4KPHRleHQgY2xhc3M9InQgeHMiIHg9IjY4MCIgeT0iNDIwIj7llq7kuIDlj6PmsaDnmoTmjqfliLblmajmiYvkuIrmspLmnInliKXkurrnmoTos4fmlpnvvIzlgZrkuI3lh7rkvoY8L3RleHQ+CjxwYXRoIGQ9Ik01NjggNDkwIEw2MzIgNDkwIiBzdHJva2U9IiNFMEI0NEEiIHN0cm9rZS13aWR0aD0iMyIgbWFya2VyLWVuZD0idXJsKCNhcikiLz4KPHRleHQgY2xhc3M9InQgeHMiIHg9IjYwMCIgeT0iNDc4IiB0ZXh0LWFuY2hvcj0ibWlkZGxlIj7lvZnnuL3lvozkuIrlgrM8L3RleHQ+CjxwYXRoIGQ9Ik02MzIgNTIyIEw1NjggNTIyIiBzdHJva2U9IiM1QjZCN0EiIHN0cm9rZS13aWR0aD0iMiIgbWFya2VyLWVuZD0idXJsKCNhcm0pIi8+Cjx0ZXh0IGNsYXNzPSJ0IHhzIiB4PSI2MDAiIHk9IjU0NiIgdGV4dC1hbmNob3I9Im1pZGRsZSI+5LiL55m85qih5Z6L6IiH6Kit5a6aPC90ZXh0Pgo8cmVjdCB4PSI0OCIgeT0iNTgwIiB3aWR0aD0iMTEwNCIgaGVpZ2h0PSI3OCIgcng9IjE2IiBmaWxsPSIjMTAzMTJBIiBzdHJva2U9IiMxMDMxMkEiIHN0cm9rZS13aWR0aD0iMCIvPgo8dGV4dCBjbGFzcz0idCIgeD0iNzYiIHk9IjYxNCIgZm9udC1zaXplPSIyMSIgZmlsbD0iI0UwQjQ0QSIgZm9udC13ZWlnaHQ9IjgwMCI+5ZWP6Ieq5bex5LiA5Y+l6KmxPC90ZXh0Pgo8dGV4dCBjbGFzcz0idCIgeD0iNzYiIHk9IjY0NCIgZm9udC1zaXplPSIyMCIgZmlsbD0iI2ZmZiI+44CM6YCZ5Lu25LqL5oWi5YCL5bm+56eS5pyD5oCO5qij77yf44CN4oCU4oCU5pyD5Ye65LqL5bCx5pS+6YKK57ej77yM5LiN5pyD5bCx5pS+6Zuy56uv44CCPC90ZXh0Pgo8L3N2Zz4K", "dg.hotl": "data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCAxMjAwIDcyMCIgd2lkdGg9IjEyMDAiIGhlaWdodD0iNzIwIgogIHJvbGU9ImltZyIgYXJpYS1sYWJlbD0iSElUTCDihpIgSE9UTOOAgOS6uuapn+WNlOS9nOeahOWFqeeoruWnv+aFi+KAlOKAlOmAmemWgOiqsuimgeW4tuS9oOi1sOeahOi3r++8muW+nuavj+atpeiHquW3seWIpOaWt++8jOWIsOacieiDveWKm+ebo+edoyBBSSI+CjxkZWZzPgogIDxsaW5lYXJHcmFkaWVudCBpZD0iaGQiIHgxPSIwIiB5MT0iMCIgeDI9IjEiIHkyPSIxIj4KICAgIDxzdG9wIG9mZnNldD0iMCIgc3RvcC1jb2xvcj0iIzEwMzEyQSIvPjxzdG9wIG9mZnNldD0iMSIgc3RvcC1jb2xvcj0iIzBDMjYyMCIvPgogIDwvbGluZWFyR3JhZGllbnQ+CiAgPG1hcmtlciBpZD0iYXIiIHZpZXdCb3g9IjAgMCAxMCAxMCIgcmVmWD0iOSIgcmVmWT0iNSIgbWFya2VyV2lkdGg9IjciIG1hcmtlckhlaWdodD0iNyIgb3JpZW50PSJhdXRvIj4KICAgIDxwYXRoIGQ9Ik0wIDAgTDEwIDUgTDAgMTAgeiIgZmlsbD0iI0UwQjQ0QSIvPgogIDwvbWFya2VyPgogIDxtYXJrZXIgaWQ9ImFybSIgdmlld0JveD0iMCAwIDEwIDEwIiByZWZYPSI5IiByZWZZPSI1IiBtYXJrZXJXaWR0aD0iNiIgbWFya2VySGVpZ2h0PSI2IiBvcmllbnQ9ImF1dG8iPgogICAgPHBhdGggZD0iTTAgMCBMMTAgNSBMMCAxMCB6IiBmaWxsPSIjNUI2QjdBIi8+CiAgPC9tYXJrZXI+CjwvZGVmcz4KPHN0eWxlPgogIC50e2ZvbnQtZmFtaWx5OidOb3RvIFNhbnMgVEMnLCdQaW5nRmFuZyBUQycsJ01pY3Jvc29mdCBKaGVuZ0hlaScsc3lzdGVtLXVpLHNhbnMtc2VyaWZ9IC5te2ZvbnQtZmFtaWx5OnVpLW1vbm9zcGFjZSwnU0ZNb25vLVJlZ3VsYXInLENvbnNvbGFzLE1lbmxvLG1vbm9zcGFjZX0KICAuaDF7Zm9udC1zaXplOjQwcHg7Zm9udC13ZWlnaHQ6ODAwO2ZpbGw6I2ZmZn0KICAuaDJ7Zm9udC1zaXplOjE5cHg7ZmlsbDojRENFNkUyfQogIC5sYWJ7Zm9udC1zaXplOjI1cHg7Zm9udC13ZWlnaHQ6ODAwfQogIC5ib2R7Zm9udC1zaXplOjE5cHg7ZmlsbDojMUIyNzMzfQogIC5zbXtmb250LXNpemU6MTZweDtmaWxsOiM1QjZCN0F9CiAgLnhze2ZvbnQtc2l6ZToxNHB4O2ZpbGw6IzVCNkI3QX0KICAuY2N7Zm9udC1zaXplOjE0cHg7ZmlsbDojOEI5OEE2O2ZvbnQtZmFtaWx5OnVpLW1vbm9zcGFjZSwnU0ZNb25vLVJlZ3VsYXInLENvbnNvbGFzLE1lbmxvLG1vbm9zcGFjZX0KPC9zdHlsZT4KPHJlY3Qgd2lkdGg9IjEyMDAiIGhlaWdodD0iNzIwIiBmaWxsPSIjRjdGOUZCIi8+CjxyZWN0IHdpZHRoPSIxMjAwIiBoZWlnaHQ9IjExMiIgZmlsbD0idXJsKCNoZCkiLz4KPHJlY3QgeT0iMTA4IiB3aWR0aD0iMTIwMCIgaGVpZ2h0PSI1IiBmaWxsPSIjRTBCNDRBIi8+Cjx0ZXh0IGNsYXNzPSJ0IGgxIiB4PSI0OCIgeT0iNTUiPkhJVEwg4oaSIEhPVEzjgIDkurrmqZ/ljZTkvZznmoTlhannqK7lp7/mhYs8L3RleHQ+Cjx0ZXh0IGNsYXNzPSJ0IGgyIiB4PSI0OCIgeT0iODgiPumAmemWgOiqsuimgeW4tuS9oOi1sOeahOi3r++8muW+nuavj+atpeiHquW3seWIpOaWt++8jOWIsOacieiDveWKm+ebo+edoyBBSTwvdGV4dD4KPHRleHQgY2xhc3M9InQgY2MiIHg9IjExNTIiIHk9IjY5NCIgdGV4dC1hbmNob3I9ImVuZCI+QzUtQUktMTAgLyBDNS1BSS0xMeOAgOioiOeul+apn+amguirluiIh+Wvpue/kjwvdGV4dD4KPHRleHQgY2xhc3M9InQgYm9kIiB4PSI3NiIgeT0iMTY4Ij7lkIzkuIDku7bkuovvvIzkvaDlj6/ku6XjgIzmr4/kuIDmraXpg73oh6rlt7HliKTmlrfjgI3vvIzkuZ/lj6/ku6XjgIzorpMgQUkg5YGa44CB5L2g6LKg6LKs5oqK6Zec44CN44CC5beu5Yil5LiN5Zyo6Kqw5q+U6LyD5oe277yM5Zyo5L2g5pyJ5rKS5pyJ6IO95Yqb5oqT5Ye65a6D55qE6Yyv44CCPC90ZXh0Pgo8ZGVmcz48bGluZWFyR3JhZGllbnQgaWQ9InNwIiB4MT0iMCIgeTE9IjAiIHgyPSIxIiB5Mj0iMCI+PHN0b3Agb2Zmc2V0PSIwIiBzdG9wLWNvbG9yPSIjMkU1NDk2Ii8+PHN0b3Agb2Zmc2V0PSIxIiBzdG9wLWNvbG9yPSIjQjU0OTdGIi8+PC9saW5lYXJHcmFkaWVudD48L2RlZnM+CjxyZWN0IHg9IjExMCIgeT0iMjM4IiB3aWR0aD0iOTgwIiBoZWlnaHQ9IjI4IiByeD0iMTQiIGZpbGw9InVybCgjc3ApIi8+CjxjaXJjbGUgY3g9IjExMC4wIiBjeT0iMjUyIiByPSIxNSIgZmlsbD0iI2ZmZiIgc3Ryb2tlPSIjMUIyNzMzIiBzdHJva2Utd2lkdGg9IjQiLz4KPHRleHQgY2xhc3M9InQiIHg9IjExMC4wIiB5PSIyMTgiIHRleHQtYW5jaG9yPSJtaWRkbGUiIGZvbnQtc2l6ZT0iMjAiIGZvbnQtd2VpZ2h0PSI4MDAiIGZpbGw9IiMxQjI3MzMiPkhJVEw8L3RleHQ+CjxjaXJjbGUgY3g9IjYwMC4wIiBjeT0iMjUyIiByPSIxNSIgZmlsbD0iI2ZmZiIgc3Ryb2tlPSIjMUIyNzMzIiBzdHJva2Utd2lkdGg9IjQiLz4KPHRleHQgY2xhc3M9InQiIHg9IjYwMC4wIiB5PSIyMTgiIHRleHQtYW5jaG9yPSJtaWRkbGUiIGZvbnQtc2l6ZT0iMjAiIGZvbnQtd2VpZ2h0PSI4MDAiIGZpbGw9IiMxQjI3MzMiPumBjua4oTwvdGV4dD4KPGNpcmNsZSBjeD0iMTA5MC4wIiBjeT0iMjUyIiByPSIxNSIgZmlsbD0iI2ZmZiIgc3Ryb2tlPSIjMUIyNzMzIiBzdHJva2Utd2lkdGg9IjQiLz4KPHRleHQgY2xhc3M9InQiIHg9IjEwOTAuMCIgeT0iMjE4IiB0ZXh0LWFuY2hvcj0ibWlkZGxlIiBmb250LXNpemU9IjIwIiBmb250LXdlaWdodD0iODAwIiBmaWxsPSIjMUIyNzMzIj5IT1RMPC90ZXh0Pgo8cmVjdCB4PSI3MCIgeT0iMzM2IiB3aWR0aD0iNDcwIiBoZWlnaHQ9IjIzMiIgcng9IjE2IiBmaWxsPSIjRTlFRUY3IiBzdHJva2U9IiMyRTU0OTYiIHN0cm9rZS13aWR0aD0iMS41Ii8+Cjx0ZXh0IGNsYXNzPSJ0IGxhYiIgeD0iMTAyIiB5PSIzODYiIGZpbGw9IiMyRTU0OTYiPuS6uuWcqOi/tOWciOOAjOWFp+OAjTwvdGV4dD4KPHRleHQgY2xhc3M9InQgYm9kIiB4PSIxMDIiIHk9IjQyOCI+wrcg5q+P5LiA5YCL6Zec6Y215q2l6amf77yM5L2g5YWI6Ieq5bex5Yik5pa3PC90ZXh0Pgo8dGV4dCBjbGFzcz0idCBib2QiIHg9IjEwMiIgeT0iNDY0Ij7CtyBBSSDntabnmoTnrZTmoYjvvIzkvaDpgJDpoIXmoLjlsI08L3RleHQ+Cjx0ZXh0IGNsYXNzPSJ0IGJvZCIgeD0iMTAyIiB5PSI1MDAiPsK3IOmAmeaYr+WtuOe/kuacn+ipsuacieeahOWnv+aFizwvdGV4dD4KPHRleHQgY2xhc3M9InQgeHMiIHg9IjEwMiIgeT0iNTQ4Ij7nt7TnmoTmmK/ln7rmnKzlip/jgILot7PpgY7pgJnkuIDmrrXvvIzlvozpnaLmspLmnInmnKzpjKLnm6PnnaMgQUnjgII8L3RleHQ+CjxyZWN0IHg9IjY2MCIgeT0iMzM2IiB3aWR0aD0iNDcwIiBoZWlnaHQ9IjIzMiIgcng9IjE2IiBmaWxsPSIjRkJFQUYyIiBzdHJva2U9IiNCNTQ5N0YiIHN0cm9rZS13aWR0aD0iMS41Ii8+Cjx0ZXh0IGNsYXNzPSJ0IGxhYiIgeD0iNjkyIiB5PSIzODYiIGZpbGw9IiNCNTQ5N0YiPuS6uuWcqOi/tOWciOOAjOS4iuOAjTwvdGV4dD4KPHRleHQgY2xhc3M9InQgYm9kIiB4PSI2OTIiIHk9IjQyOCI+wrcg5pS+5omL6K6TIEFJIOWBmu+8jOS9oOiyoOiyrOaKiumXnDwvdGV4dD4KPHRleHQgY2xhc3M9InQgYm9kIiB4PSI2OTIiIHk9IjQ2NCI+wrcg55yL55qE5piv55Ww5bi444CB6YKK55WM6IiH6aKo6ZqqPC90ZXh0Pgo8dGV4dCBjbGFzcz0idCBib2QiIHg9IjY5MiIgeT0iNTAwIj7CtyDpjK/kuobmmK/kvaDnmoTosqzku7vvvIzkuI3mmK8gQUkg55qEPC90ZXh0Pgo8dGV4dCBjbGFzcz0idCB4cyIgeD0iNjkyIiB5PSI1NDgiPuebo+edo+S4jeaYr+S/oeS7u++8jOaYr+acieiDveWKm+WcqOWug+mMr+eahOaZguWAmeaKk+WHuuS+huOAgjwvdGV4dD4KPHBhdGggZD0iTTU1NiA0NTIgTDY0NCA0NTIiIHN0cm9rZT0iI0UwQjQ0QSIgc3Ryb2tlLXdpZHRoPSIzIiBtYXJrZXItZW5kPSJ1cmwoI2FyKSIvPgo8cmVjdCB4PSI0OCIgeT0iNTk2IiB3aWR0aD0iMTEwNCIgaGVpZ2h0PSI3NiIgcng9IjE2IiBmaWxsPSIjMTAzMTJBIiBzdHJva2U9IiMxMDMxMkEiIHN0cm9rZS13aWR0aD0iMCIvPgo8dGV4dCBjbGFzcz0idCIgeD0iNzYiIHk9IjY0MiIgZm9udC1zaXplPSIyMCIgZmlsbD0iI2ZmZiI+5b6A5Y+z56e75YuV55qE5pa55rOV5Y+q5pyJ5LiA5YCL77yaPHRzcGFuIGZpbGw9IiNFMEI0NEEiIGZvbnQtd2VpZ2h0PSI4MDAiPuWFiOmgkOa4rOOAgeW+jOmpl+itiTwvdHNwYW4+4oCU4oCU5YWI5a+r5LiL5L2g5Lul54K655qE562U5qGI77yM5YaN5Y675bCN44CC6aCQ5ris5rqW5LqG77yM5omN5piv55yf55qE5oeC44CCPC90ZXh0Pgo8L3N2Zz4K", "dg.memhier": "data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCAxMjAwIDcyMCIgd2lkdGg9IjEyMDAiIGhlaWdodD0iNzIwIgogIHJvbGU9ImltZyIgYXJpYS1sYWJlbD0i6KiY5oa26auU6ZqO5bGk44CA54K65LuA6bq85LiN5YWo6YOo55So5pyA5b+r55qE77yf4oCU4oCU6LaK5b+r6LaK6LK06LaK5bCP77yM6LaK5oWi6LaK5L6/5a6c6LaK5aSn4oCU4oCU6Zu76IWm55qE5Y+W5o2o5YWo5Zyo6YCZ5by15ZyWIj4KPGRlZnM+CiAgPGxpbmVhckdyYWRpZW50IGlkPSJoZCIgeDE9IjAiIHkxPSIwIiB4Mj0iMSIgeTI9IjEiPgogICAgPHN0b3Agb2Zmc2V0PSIwIiBzdG9wLWNvbG9yPSIjMTAzMTJBIi8+PHN0b3Agb2Zmc2V0PSIxIiBzdG9wLWNvbG9yPSIjMEMyNjIwIi8+CiAgPC9saW5lYXJHcmFkaWVudD4KICA8bWFya2VyIGlkPSJhciIgdmlld0JveD0iMCAwIDEwIDEwIiByZWZYPSI5IiByZWZZPSI1IiBtYXJrZXJXaWR0aD0iNyIgbWFya2VySGVpZ2h0PSI3IiBvcmllbnQ9ImF1dG8iPgogICAgPHBhdGggZD0iTTAgMCBMMTAgNSBMMCAxMCB6IiBmaWxsPSIjRTBCNDRBIi8+CiAgPC9tYXJrZXI+CiAgPG1hcmtlciBpZD0iYXJtIiB2aWV3Qm94PSIwIDAgMTAgMTAiIHJlZlg9IjkiIHJlZlk9IjUiIG1hcmtlcldpZHRoPSI2IiBtYXJrZXJIZWlnaHQ9IjYiIG9yaWVudD0iYXV0byI+CiAgICA8cGF0aCBkPSJNMCAwIEwxMCA1IEwwIDEwIHoiIGZpbGw9IiM1QjZCN0EiLz4KICA8L21hcmtlcj4KPC9kZWZzPgo8c3R5bGU+CiAgLnR7Zm9udC1mYW1pbHk6J05vdG8gU2FucyBUQycsJ1BpbmdGYW5nIFRDJywnTWljcm9zb2Z0IEpoZW5nSGVpJyxzeXN0ZW0tdWksc2Fucy1zZXJpZn0gLm17Zm9udC1mYW1pbHk6dWktbW9ub3NwYWNlLCdTRk1vbm8tUmVndWxhcicsQ29uc29sYXMsTWVubG8sbW9ub3NwYWNlfQogIC5oMXtmb250LXNpemU6NDBweDtmb250LXdlaWdodDo4MDA7ZmlsbDojZmZmfQogIC5oMntmb250LXNpemU6MTlweDtmaWxsOiNEQ0U2RTJ9CiAgLmxhYntmb250LXNpemU6MjVweDtmb250LXdlaWdodDo4MDB9CiAgLmJvZHtmb250LXNpemU6MTlweDtmaWxsOiMxQjI3MzN9CiAgLnNte2ZvbnQtc2l6ZToxNnB4O2ZpbGw6IzVCNkI3QX0KICAueHN7Zm9udC1zaXplOjE0cHg7ZmlsbDojNUI2QjdBfQogIC5jY3tmb250LXNpemU6MTRweDtmaWxsOiM4Qjk4QTY7Zm9udC1mYW1pbHk6dWktbW9ub3NwYWNlLCdTRk1vbm8tUmVndWxhcicsQ29uc29sYXMsTWVubG8sbW9ub3NwYWNlfQo8L3N0eWxlPgo8cmVjdCB3aWR0aD0iMTIwMCIgaGVpZ2h0PSI3MjAiIGZpbGw9IiNGN0Y5RkIiLz4KPHJlY3Qgd2lkdGg9IjEyMDAiIGhlaWdodD0iMTEyIiBmaWxsPSJ1cmwoI2hkKSIvPgo8cmVjdCB5PSIxMDgiIHdpZHRoPSIxMjAwIiBoZWlnaHQ9IjUiIGZpbGw9IiNFMEI0NEEiLz4KPHRleHQgY2xhc3M9InQgaDEiIHg9IjQ4IiB5PSI1NSI+6KiY5oa26auU6ZqO5bGk44CA54K65LuA6bq85LiN5YWo6YOo55So5pyA5b+r55qE77yfPC90ZXh0Pgo8dGV4dCBjbGFzcz0idCBoMiIgeD0iNDgiIHk9Ijg4Ij7otorlv6votorosrTotorlsI/vvIzotormhaLotorkvr/lrpzotorlpKfigJTigJTpm7vohabnmoTlj5bmjajlhajlnKjpgJnlvLXlnJY8L3RleHQ+Cjx0ZXh0IGNsYXNzPSJ0IGNjIiB4PSIxMTUyIiB5PSI2OTQiIHRleHQtYW5jaG9yPSJlbmQiPkMyLUhXLTA144CA6KiI566X5qmf5qaC6KuW6IiH5a+m57+SPC90ZXh0Pgo8dGV4dCBjbGFzcz0idCIgeD0iODAiIHk9IjE5MCIgZm9udC1zaXplPSIxOSIgZm9udC13ZWlnaHQ9IjgwMCIgZmlsbD0iIzFCMjczMyI+5pqr5a2Y5ZmoIFJlZ2lzdGVyPC90ZXh0Pgo8dGV4dCBjbGFzcz0idCB4cyIgeD0iODAiIHk9IjIxNCI+Q1BVIOWFp+mDqDwvdGV4dD4KPHJlY3QgeD0iMzk2IiB5PSIxNzYiIHdpZHRoPSIzMCIgaGVpZ2h0PSIzNCIgcng9IjgiIGZpbGw9IiMxQjRFN0EiLz4KPHRleHQgY2xhc3M9InQgbSIgeD0iNzMyIiB5PSIxOTQiIGZvbnQtc2l6ZT0iMTgiIGZpbGw9IiMxQjI3MzMiPiZsdDsgMSBuczwvdGV4dD4KPHRleHQgY2xhc3M9InQgbSIgeD0iOTAwIiB5PSIxOTQiIGZvbnQtc2l6ZT0iMTgiIGZpbGw9IiMxQjI3MzMiPuaVuOeZviDkvY3lhYPntYQ8L3RleHQ+Cjx0ZXh0IGNsYXNzPSJ0IHhzIiB4PSIzOTYiIHk9IjE2NiI+55u45bCN5a656YePPC90ZXh0Pgo8dGV4dCBjbGFzcz0idCB4cyIgeD0iNzMyIiB5PSIxNjYiPuWtmOWPluaZgumWkzwvdGV4dD4KPHRleHQgY2xhc3M9InQgeHMiIHg9IjkwMCIgeT0iMTY2Ij7lhbjlnovlrrnph488L3RleHQ+Cjx0ZXh0IGNsYXNzPSJ0IiB4PSI4MCIgeT0iMjY4IiBmb250LXNpemU9IjE5IiBmb250LXdlaWdodD0iODAwIiBmaWxsPSIjMUIyNzMzIj7lv6vlj5YgQ2FjaGUgTDEvTDIvTDM8L3RleHQ+Cjx0ZXh0IGNsYXNzPSJ0IHhzIiB4PSI4MCIgeT0iMjkyIj5DUFUg5pm254mH5LiKPC90ZXh0Pgo8cmVjdCB4PSIzOTYiIHk9IjI1NCIgd2lkdGg9IjYwIiBoZWlnaHQ9IjM0IiByeD0iOCIgZmlsbD0iIzJFNTQ5NiIvPgo8dGV4dCBjbGFzcz0idCBtIiB4PSI3MzIiIHk9IjI3MiIgZm9udC1zaXplPSIxOCIgZmlsbD0iIzFCMjczMyI+MeKAkzIwIG5zPC90ZXh0Pgo8dGV4dCBjbGFzcz0idCBtIiB4PSI5MDAiIHk9IjI3MiIgZm9udC1zaXplPSIxOCIgZmlsbD0iIzFCMjczMyI+5pW4IE1CPC90ZXh0Pgo8dGV4dCBjbGFzcz0idCIgeD0iODAiIHk9IjM0NiIgZm9udC1zaXplPSIxOSIgZm9udC13ZWlnaHQ9IjgwMCIgZmlsbD0iIzFCMjczMyI+5Li76KiY5oa26auUIFJBTTwvdGV4dD4KPHRleHQgY2xhc3M9InQgeHMiIHg9IjgwIiB5PSIzNzAiPuaPkuWcqOS4u+apn+adv+S4ijwvdGV4dD4KPHJlY3QgeD0iMzk2IiB5PSIzMzIiIHdpZHRoPSIxMjYiIGhlaWdodD0iMzQiIHJ4PSI4IiBmaWxsPSIjNEM3NEIwIi8+Cjx0ZXh0IGNsYXNzPSJ0IG0iIHg9IjczMiIgeT0iMzUwIiBmb250LXNpemU9IjE4IiBmaWxsPSIjMUIyNzMzIj7ntIQgMTAwIG5zPC90ZXh0Pgo8dGV4dCBjbGFzcz0idCBtIiB4PSI5MDAiIHk9IjM1MCIgZm9udC1zaXplPSIxOCIgZmlsbD0iIzFCMjczMyI+OOKAkzY0IEdCPC90ZXh0Pgo8dGV4dCBjbGFzcz0idCIgeD0iODAiIHk9IjQyNCIgZm9udC1zaXplPSIxOSIgZm9udC13ZWlnaHQ9IjgwMCIgZmlsbD0iIzFCMjczMyI+5Zu65oWL56Gs56KfIFNTRDwvdGV4dD4KPHRleHQgY2xhc3M9InQgeHMiIHg9IjgwIiB5PSI0NDgiPk0uMu+8j1NBVEE8L3RleHQ+CjxyZWN0IHg9IjM5NiIgeT0iNDEwIiB3aWR0aD0iMjE2IiBoZWlnaHQ9IjM0IiByeD0iOCIgZmlsbD0iIzdDOTdDOSIvPgo8dGV4dCBjbGFzcz0idCBtIiB4PSI3MzIiIHk9IjQyOCIgZm9udC1zaXplPSIxOCIgZmlsbD0iIzFCMjczMyI+57SEIDEwMCDCtXM8L3RleHQ+Cjx0ZXh0IGNsYXNzPSJ0IG0iIHg9IjkwMCIgeT0iNDI4IiBmb250LXNpemU9IjE4IiBmaWxsPSIjMUIyNzMzIj4wLjXigJM0IFRCPC90ZXh0Pgo8dGV4dCBjbGFzcz0idCIgeD0iODAiIHk9IjUwMiIgZm9udC1zaXplPSIxOSIgZm9udC13ZWlnaHQ9IjgwMCIgZmlsbD0iIzFCMjczMyI+5YKz57Wx56Gs56KfIEhERDwvdGV4dD4KPHRleHQgY2xhc3M9InQgeHMiIHg9IjgwIiB5PSI1MjYiPuapn+aisOein+eJhzwvdGV4dD4KPHJlY3QgeD0iMzk2IiB5PSI0ODgiIHdpZHRoPSIzMDAiIGhlaWdodD0iMzQiIHJ4PSI4IiBmaWxsPSIjQUVCRkRDIi8+Cjx0ZXh0IGNsYXNzPSJ0IG0iIHg9IjczMiIgeT0iNTA2IiBmb250LXNpemU9IjE4IiBmaWxsPSIjMUIyNzMzIj7ntIQgMTAgbXM8L3RleHQ+Cjx0ZXh0IGNsYXNzPSJ0IG0iIHg9IjkwMCIgeT0iNTA2IiBmb250LXNpemU9IjE4IiBmaWxsPSIjMUIyNzMzIj4x4oCTMjAgVEI8L3RleHQ+Cjx0ZXh0IGNsYXNzPSJ0IiB4PSIxMTIwIiB5PSIxODgiIGZvbnQtc2l6ZT0iMTYiIGZvbnQtd2VpZ2h0PSI4MDAiIGZpbGw9IiM1QjZCN0EiIHRleHQtYW5jaG9yPSJtaWRkbGUiPuW/q8K36LK0wrflsI88L3RleHQ+CjxwYXRoIGQ9Ik0xMTIwIDIwNiBMMTEyMCA0ODQiIHN0cm9rZT0iI0UwQjQ0QSIgc3Ryb2tlLXdpZHRoPSIzIiBtYXJrZXItZW5kPSJ1cmwoI2FyKSIvPgo8dGV4dCBjbGFzcz0idCIgeD0iMTEyMCIgeT0iNTIyIiBmb250LXNpemU9IjE2IiBmb250LXdlaWdodD0iODAwIiBmaWxsPSIjNUI2QjdBIiB0ZXh0LWFuY2hvcj0ibWlkZGxlIj7mhaLCt+S+v+WunMK35aSnPC90ZXh0Pgo8cmVjdCB4PSI0OCIgeT0iNTY2IiB3aWR0aD0iMTEwNCIgaGVpZ2h0PSI4OCIgcng9IjE2IiBmaWxsPSIjMTAzMTJBIiBzdHJva2U9IiMxMDMxMkEiIHN0cm9rZS13aWR0aD0iMCIvPgo8dGV4dCBjbGFzcz0idCIgeD0iNzYiIHk9IjYwMiIgZm9udC1zaXplPSIyMSIgZmlsbD0iI0UwQjQ0QSIgZm9udC13ZWlnaHQ9IjgwMCI+5ZCM5LiA56iu55u06Ka677yM5Lmf6Kej6YeL5LqG6YKK6Zuy5YiG5belPC90ZXh0Pgo8dGV4dCBjbGFzcz0idCIgeD0iNzYiIHk9IjYzNCIgZm9udC1zaXplPSIxOSIgZmlsbD0iI2ZmZiI+44CM5bi455So55qE5pS+6L+R5LiA6bue44CB5bCR55So55qE5pS+6YGg5LiA6bue44CN4oCU4oCUQ1BVIOWwjeW/q+WPluWmguatpO+8jOmCiue3o+Wwjembsuerr+S5n+aYr+WmguatpOOAgjwvdGV4dD4KPC9zdmc+Cg==", "dg.packet": "data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCAxMjAwIDcyMCIgd2lkdGg9IjEyMDAiIGhlaWdodD0iNzIwIgogIHJvbGU9ImltZyIgYXJpYS1sYWJlbD0i5bCB5YyF55qE5peF56iL44CA5b6e5L2g55qE6Zu76IWm5Yiw57ay56uZ4oCU4oCU6YCj5LiN5LiK57ay5pmC77yM54Wn6YCZ5YCL6aCG5bqP5b6A5LiL5p+l77yM5LiN6KaB5LqC54ycIj4KPGRlZnM+CiAgPGxpbmVhckdyYWRpZW50IGlkPSJoZCIgeDE9IjAiIHkxPSIwIiB4Mj0iMSIgeTI9IjEiPgogICAgPHN0b3Agb2Zmc2V0PSIwIiBzdG9wLWNvbG9yPSIjMTAzMTJBIi8+PHN0b3Agb2Zmc2V0PSIxIiBzdG9wLWNvbG9yPSIjMEMyNjIwIi8+CiAgPC9saW5lYXJHcmFkaWVudD4KICA8bWFya2VyIGlkPSJhciIgdmlld0JveD0iMCAwIDEwIDEwIiByZWZYPSI5IiByZWZZPSI1IiBtYXJrZXJXaWR0aD0iNyIgbWFya2VySGVpZ2h0PSI3IiBvcmllbnQ9ImF1dG8iPgogICAgPHBhdGggZD0iTTAgMCBMMTAgNSBMMCAxMCB6IiBmaWxsPSIjRTBCNDRBIi8+CiAgPC9tYXJrZXI+CiAgPG1hcmtlciBpZD0iYXJtIiB2aWV3Qm94PSIwIDAgMTAgMTAiIHJlZlg9IjkiIHJlZlk9IjUiIG1hcmtlcldpZHRoPSI2IiBtYXJrZXJIZWlnaHQ9IjYiIG9yaWVudD0iYXV0byI+CiAgICA8cGF0aCBkPSJNMCAwIEwxMCA1IEwwIDEwIHoiIGZpbGw9IiM1QjZCN0EiLz4KICA8L21hcmtlcj4KPC9kZWZzPgo8c3R5bGU+CiAgLnR7Zm9udC1mYW1pbHk6J05vdG8gU2FucyBUQycsJ1BpbmdGYW5nIFRDJywnTWljcm9zb2Z0IEpoZW5nSGVpJyxzeXN0ZW0tdWksc2Fucy1zZXJpZn0gLm17Zm9udC1mYW1pbHk6dWktbW9ub3NwYWNlLCdTRk1vbm8tUmVndWxhcicsQ29uc29sYXMsTWVubG8sbW9ub3NwYWNlfQogIC5oMXtmb250LXNpemU6NDBweDtmb250LXdlaWdodDo4MDA7ZmlsbDojZmZmfQogIC5oMntmb250LXNpemU6MTlweDtmaWxsOiNEQ0U2RTJ9CiAgLmxhYntmb250LXNpemU6MjVweDtmb250LXdlaWdodDo4MDB9CiAgLmJvZHtmb250LXNpemU6MTlweDtmaWxsOiMxQjI3MzN9CiAgLnNte2ZvbnQtc2l6ZToxNnB4O2ZpbGw6IzVCNkI3QX0KICAueHN7Zm9udC1zaXplOjE0cHg7ZmlsbDojNUI2QjdBfQogIC5jY3tmb250LXNpemU6MTRweDtmaWxsOiM4Qjk4QTY7Zm9udC1mYW1pbHk6dWktbW9ub3NwYWNlLCdTRk1vbm8tUmVndWxhcicsQ29uc29sYXMsTWVubG8sbW9ub3NwYWNlfQo8L3N0eWxlPgo8cmVjdCB3aWR0aD0iMTIwMCIgaGVpZ2h0PSI3MjAiIGZpbGw9IiNGN0Y5RkIiLz4KPHJlY3Qgd2lkdGg9IjEyMDAiIGhlaWdodD0iMTEyIiBmaWxsPSJ1cmwoI2hkKSIvPgo8cmVjdCB5PSIxMDgiIHdpZHRoPSIxMjAwIiBoZWlnaHQ9IjUiIGZpbGw9IiNFMEI0NEEiLz4KPHRleHQgY2xhc3M9InQgaDEiIHg9IjQ4IiB5PSI1NSI+5bCB5YyF55qE5peF56iL44CA5b6e5L2g55qE6Zu76IWm5Yiw57ay56uZPC90ZXh0Pgo8dGV4dCBjbGFzcz0idCBoMiIgeD0iNDgiIHk9Ijg4Ij7pgKPkuI3kuIrntrLmmYLvvIznhafpgJnlgIvpoIbluo/lvoDkuIvmn6XvvIzkuI3opoHkuoLnjJw8L3RleHQ+Cjx0ZXh0IGNsYXNzPSJ0IGNjIiB4PSIxMTUyIiB5PSI2OTQiIHRleHQtYW5jaG9yPSJlbmQiPkM2LU5FVC0wN+OAgOioiOeul+apn+amguirluiIh+Wvpue/kjwvdGV4dD4KPHJlY3QgeD0iNTguMCIgeT0iMTkwIiB3aWR0aD0iMTk2IiBoZWlnaHQ9IjE0NiIgcng9IjE0IiBmaWxsPSIjZmZmIiBzdHJva2U9IiMyRTU0OTYiIHN0cm9rZS13aWR0aD0iMiIvPgo8cmVjdCB4PSI1OC4wIiB5PSIxOTAiIHdpZHRoPSIxOTYiIGhlaWdodD0iNyIgcng9IjMiIGZpbGw9IiMyRTU0OTYiLz4KPGNpcmNsZSBjeD0iODguMCIgY3k9IjIzMiIgcj0iMTYiIGZpbGw9IiMyRTU0OTYiLz4KPHRleHQgY2xhc3M9InQiIHg9Ijg4LjAiIHk9IjIzOSIgdGV4dC1hbmNob3I9Im1pZGRsZSIgZm9udC1zaXplPSIxNiIgZm9udC13ZWlnaHQ9IjgwMCIgZmlsbD0iI2ZmZiI+MTwvdGV4dD4KPHRleHQgY2xhc3M9InQiIHg9IjExNC4wIiB5PSIyMzkiIGZvbnQtc2l6ZT0iMTgiIGZvbnQtd2VpZ2h0PSI4MDAiIGZpbGw9IiMxQjI3MzMiPuS9oOeahOmbu+iFpjwvdGV4dD4KPHRleHQgY2xhc3M9InQgeHMiIHg9Ijc2LjAiIHk9IjI3MiI+5pyJ5rKS5pyJ5ou/5YiwIElQ77yfPC90ZXh0Pgo8dGV4dCBjbGFzcz0idCB4cyIgeD0iNzYuMCIgeT0iMjk0Ij4xNjkuMjU0IOmWi+mgrTwvdGV4dD4KPHRleHQgY2xhc3M9InQgeHMiIHg9Ijc2LjAiIHk9IjMxNiI+77ydIERIQ1Ag5aSx5pWXPC90ZXh0Pgo8cGF0aCBkPSJNMjU4LjAgMjU0IEwyNzYuMCAyNTQiIHN0cm9rZT0iI0UwQjQ0QSIgc3Ryb2tlLXdpZHRoPSIzIiBtYXJrZXItZW5kPSJ1cmwoI2FyKSIvPgo8cmVjdCB4PSIyODAuMCIgeT0iMTkwIiB3aWR0aD0iMTk2IiBoZWlnaHQ9IjE0NiIgcng9IjE0IiBmaWxsPSIjZmZmIiBzdHJva2U9IiMxMzhBOEEiIHN0cm9rZS13aWR0aD0iMiIvPgo8cmVjdCB4PSIyODAuMCIgeT0iMTkwIiB3aWR0aD0iMTk2IiBoZWlnaHQ9IjciIHJ4PSIzIiBmaWxsPSIjMTM4QThBIi8+CjxjaXJjbGUgY3g9IjMxMC4wIiBjeT0iMjMyIiByPSIxNiIgZmlsbD0iIzEzOEE4QSIvPgo8dGV4dCBjbGFzcz0idCIgeD0iMzEwLjAiIHk9IjIzOSIgdGV4dC1hbmNob3I9Im1pZGRsZSIgZm9udC1zaXplPSIxNiIgZm9udC13ZWlnaHQ9IjgwMCIgZmlsbD0iI2ZmZiI+MjwvdGV4dD4KPHRleHQgY2xhc3M9InQiIHg9IjMzNi4wIiB5PSIyMzkiIGZvbnQtc2l6ZT0iMTgiIGZvbnQtd2VpZ2h0PSI4MDAiIGZpbGw9IiMxQjI3MzMiPumgkOioremWmOmBkzwvdGV4dD4KPHRleHQgY2xhc3M9InQgeHMiIHg9IjI5OC4wIiB5PSIyNzIiPuekvuWNgOWkp+mWgOOAgjwvdGV4dD4KPHRleHQgY2xhc3M9InQgeHMiIHg9IjI5OC4wIiB5PSIyOTQiPumWmOmBk+S4jeWcqOWQjOe2suautTwvdGV4dD4KPHRleHQgY2xhc3M9InQgeHMiIHg9IjI5OC4wIiB5PSIzMTYiPuWwseWHuuS4jeWOuzwvdGV4dD4KPHBhdGggZD0iTTQ4MC4wIDI1NCBMNDk4LjAgMjU0IiBzdHJva2U9IiNFMEI0NEEiIHN0cm9rZS13aWR0aD0iMyIgbWFya2VyLWVuZD0idXJsKCNhcikiLz4KPHJlY3QgeD0iNTAyLjAiIHk9IjE5MCIgd2lkdGg9IjE5NiIgaGVpZ2h0PSIxNDYiIHJ4PSIxNCIgZmlsbD0iI2ZmZiIgc3Ryb2tlPSIjRDk5MTJGIiBzdHJva2Utd2lkdGg9IjIiLz4KPHJlY3QgeD0iNTAyLjAiIHk9IjE5MCIgd2lkdGg9IjE5NiIgaGVpZ2h0PSI3IiByeD0iMyIgZmlsbD0iI0Q5OTEyRiIvPgo8Y2lyY2xlIGN4PSI1MzIuMCIgY3k9IjIzMiIgcj0iMTYiIGZpbGw9IiNEOTkxMkYiLz4KPHRleHQgY2xhc3M9InQiIHg9IjUzMi4wIiB5PSIyMzkiIHRleHQtYW5jaG9yPSJtaWRkbGUiIGZvbnQtc2l6ZT0iMTYiIGZvbnQtd2VpZ2h0PSI4MDAiIGZpbGw9IiNmZmYiPjM8L3RleHQ+Cjx0ZXh0IGNsYXNzPSJ0IiB4PSI1NTguMCIgeT0iMjM5IiBmb250LXNpemU9IjE4IiBmb250LXdlaWdodD0iODAwIiBmaWxsPSIjMUIyNzMzIj5ETlMg5Ly65pyN5ZmoPC90ZXh0Pgo8dGV4dCBjbGFzcz0idCB4cyIgeD0iNTIwLjAiIHk9IjI3MiI+5oqK57ay5Z2A57+75oiQIElQ44CCPC90ZXh0Pgo8dGV4dCBjbGFzcz0idCB4cyIgeD0iNTIwLjAiIHk9IjI5NCI+cGluZyDpgJogSVDjgIE8L3RleHQ+Cjx0ZXh0IGNsYXNzPSJ0IHhzIiB4PSI1MjAuMCIgeT0iMzE2Ij7plovkuI3kuobntrLpoIHvvJ3pgJnoo6E8L3RleHQ+CjxwYXRoIGQ9Ik03MDIuMCAyNTQgTDcyMC4wIDI1NCIgc3Ryb2tlPSIjRTBCNDRBIiBzdHJva2Utd2lkdGg9IjMiIG1hcmtlci1lbmQ9InVybCgjYXIpIi8+CjxyZWN0IHg9IjcyNC4wIiB5PSIxOTAiIHdpZHRoPSIxOTYiIGhlaWdodD0iMTQ2IiByeD0iMTQiIGZpbGw9IiNmZmYiIHN0cm9rZT0iIzZCNEQ5RSIgc3Ryb2tlLXdpZHRoPSIyIi8+CjxyZWN0IHg9IjcyNC4wIiB5PSIxOTAiIHdpZHRoPSIxOTYiIGhlaWdodD0iNyIgcng9IjMiIGZpbGw9IiM2QjREOUUiLz4KPGNpcmNsZSBjeD0iNzU0LjAiIGN5PSIyMzIiIHI9IjE2IiBmaWxsPSIjNkI0RDlFIi8+Cjx0ZXh0IGNsYXNzPSJ0IiB4PSI3NTQuMCIgeT0iMjM5IiB0ZXh0LWFuY2hvcj0ibWlkZGxlIiBmb250LXNpemU9IjE2IiBmb250LXdlaWdodD0iODAwIiBmaWxsPSIjZmZmIj40PC90ZXh0Pgo8dGV4dCBjbGFzcz0idCIgeD0iNzgwLjAiIHk9IjIzOSIgZm9udC1zaXplPSIxOCIgZm9udC13ZWlnaHQ9IjgwMCIgZmlsbD0iIzFCMjczMyI+6Lev55Sx5Zmo5bGk5bGk6L2J6YCBPC90ZXh0Pgo8dGV4dCBjbGFzcz0idCB4cyIgeD0iNzQyLjAiIHk9IjI3MiI+dHJhY2VydDwvdGV4dD4KPHRleHQgY2xhc3M9InQgeHMiIHg9Ijc0Mi4wIiB5PSIyOTQiPueci+WNoeWcqOesrOW5vui3szwvdGV4dD4KPHBhdGggZD0iTTkyNC4wIDI1NCBMOTQyLjAgMjU0IiBzdHJva2U9IiNFMEI0NEEiIHN0cm9rZS13aWR0aD0iMyIgbWFya2VyLWVuZD0idXJsKCNhcikiLz4KPHJlY3QgeD0iOTQ2LjAiIHk9IjE5MCIgd2lkdGg9IjE5NiIgaGVpZ2h0PSIxNDYiIHJ4PSIxNCIgZmlsbD0iI2ZmZiIgc3Ryb2tlPSIjQjU0OTdGIiBzdHJva2Utd2lkdGg9IjIiLz4KPHJlY3QgeD0iOTQ2LjAiIHk9IjE5MCIgd2lkdGg9IjE5NiIgaGVpZ2h0PSI3IiByeD0iMyIgZmlsbD0iI0I1NDk3RiIvPgo8Y2lyY2xlIGN4PSI5NzYuMCIgY3k9IjIzMiIgcj0iMTYiIGZpbGw9IiNCNTQ5N0YiLz4KPHRleHQgY2xhc3M9InQiIHg9Ijk3Ni4wIiB5PSIyMzkiIHRleHQtYW5jaG9yPSJtaWRkbGUiIGZvbnQtc2l6ZT0iMTYiIGZvbnQtd2VpZ2h0PSI4MDAiIGZpbGw9IiNmZmYiPjU8L3RleHQ+Cjx0ZXh0IGNsYXNzPSJ0IiB4PSIxMDAyLjAiIHk9IjIzOSIgZm9udC1zaXplPSIxOCIgZm9udC13ZWlnaHQ9IjgwMCIgZmlsbD0iIzFCMjczMyI+57ay56uZ5Ly65pyN5ZmoPC90ZXh0Pgo8dGV4dCBjbGFzcz0idCB4cyIgeD0iOTY0LjAiIHk9IjI3MiI+5bCN5pa55o6b5LqGPC90ZXh0Pgo8dGV4dCBjbGFzcz0idCB4cyIgeD0iOTY0LjAiIHk9IjI5NCI+5Lmf5piv5LiA56iu5Y+v6IO9PC90ZXh0Pgo8cmVjdCB4PSI0OCIgeT0iMzcyIiB3aWR0aD0iMTEwNCIgaGVpZ2h0PSIxNzYiIHJ4PSIxNiIgZmlsbD0iI2ZmZiIgc3Ryb2tlPSIjREZFNUVDIiBzdHJva2Utd2lkdGg9IjEuNSIvPgo8dGV4dCBjbGFzcz0idCIgeD0iODAiIHk9IjQxMCIgZm9udC1zaXplPSIyMCIgZm9udC13ZWlnaHQ9IjgwMCIgZmlsbD0iIzFCMjczMyI+5LiJ5YCL5oyH5Luk77yM54Wn6aCG5bqP5omTPC90ZXh0Pgo8cmVjdCB4PSI4MCIgeT0iNDI4IiB3aWR0aD0iMjQwIiBoZWlnaHQ9IjI2IiByeD0iNiIgZmlsbD0iI0YwRjNGNyIvPgo8dGV4dCBjbGFzcz0idCBtIiB4PSI5MiIgeT0iNDQ4IiBmb250LXNpemU9IjE2IiBmaWxsPSIjMUIyNzMzIj5pcGNvbmZpZyAvYWxsPC90ZXh0Pgo8dGV4dCBjbGFzcz0idCBzbSIgeD0iMzQ0IiB5PSI0NDgiPuaIkeaciSBJUCDll47vvJ/plpjpgZPoqK3lsI3kuobll47vvJ88L3RleHQ+Cjx0ZXh0IGNsYXNzPSJ0IHNtIiB4PSI3MDAiIHk9IjQ0OCIgZmlsbD0iI0UyNTc0QyI+5rKSIElQIOaIliAxNjkuMjU0IOKGkiDlgZzlnKjnrKwgMSDnq5k8L3RleHQ+CjxyZWN0IHg9IjgwIiB5PSI0NjIiIHdpZHRoPSIyNDAiIGhlaWdodD0iMjYiIHJ4PSI2IiBmaWxsPSIjRjBGM0Y3Ii8+Cjx0ZXh0IGNsYXNzPSJ0IG0iIHg9IjkyIiB5PSI0ODIiIGZvbnQtc2l6ZT0iMTYiIGZpbGw9IiMxQjI3MzMiPnBpbmcgOC44LjguODwvdGV4dD4KPHRleHQgY2xhc3M9InQgc20iIHg9IjM0NCIgeT0iNDgyIj7lsIHljIXlh7rlvpfkuoblpKfploDll47vvJ88L3RleHQ+Cjx0ZXh0IGNsYXNzPSJ0IHNtIiB4PSI3MDAiIHk9IjQ4MiIgZmlsbD0iI0UyNTc0QyI+5LiN6YCaIOKGkiDlgZzlnKjnrKwgMiDnq5k8L3RleHQ+CjxyZWN0IHg9IjgwIiB5PSI0OTYiIHdpZHRoPSIyNDAiIGhlaWdodD0iMjYiIHJ4PSI2IiBmaWxsPSIjRjBGM0Y3Ii8+Cjx0ZXh0IGNsYXNzPSJ0IG0iIHg9IjkyIiB5PSI1MTYiIGZvbnQtc2l6ZT0iMTYiIGZpbGw9IiMxQjI3MzMiPnBpbmcgd3d3LmV4YW1wbGUuY29tPC90ZXh0Pgo8dGV4dCBjbGFzcz0idCBzbSIgeD0iMzQ0IiB5PSI1MTYiPuWQjeWtl+e/u+W+l+aIkOiZn+eivOWXju+8nzwvdGV4dD4KPHRleHQgY2xhc3M9InQgc20iIHg9IjcwMCIgeT0iNTE2IiBmaWxsPSIjRTI1NzRDIj5JUCDpgJrjgIHlkI3lrZfkuI3pgJog4oaSIOWBnOWcqOesrCAzIOermTwvdGV4dD4KPHJlY3QgeD0iNDgiIHk9IjU3NCIgd2lkdGg9IjExMDQiIGhlaWdodD0iODQiIHJ4PSIxNiIgZmlsbD0iIzEwMzEyQSIgc3Ryb2tlPSIjMTAzMTJBIiBzdHJva2Utd2lkdGg9IjAiLz4KPHRleHQgY2xhc3M9InQiIHg9Ijc2IiB5PSI2MDgiIGZvbnQtc2l6ZT0iMjEiIGZpbGw9IiNFMEI0NEEiIGZvbnQtd2VpZ2h0PSI4MDAiPumZpOmMr+eahOimj+efqe+8muS4gOasoeWPquaUueS4gOS7tuS6izwvdGV4dD4KPHRleHQgY2xhc3M9InQiIHg9Ijc2IiB5PSI2MzgiIGZvbnQtc2l6ZT0iMTkiIGZpbGw9IiNmZmYiPuWQjOaZguaUuSBJUOOAgeaPm+e3muOAgemHjemWi+apn++8jOWwseeul+mAmuS6huS9oOS5n+S4jeefpemBk+aYr+WTquS4gOmgheaVkeeahOKAlOKAlOS4i+asoemChOaYr+S4jeacg+S/ruOAgjwvdGV4dD4KPC9zdmc+Cg=="};
+
+  var WEB = {
+    "hw.cpu":  [{f:"CPU Socket 775 T.jpg",                            n:"LGA775 腳座：接點陣列與壓桿"},
+                {f:"Intel CPU Core i7 2600K Sandy Bridge bottom.jpg",  n:"CPU 底面金手指與防呆缺口"}],
+    /* 原本的 DDR4 DIMM 是 FAL（自由藝術授權，copyleft 比 CC BY-SA 更黏）——已移除，改用 CC BY-SA 版本 */
+    "hw.ram":  [{f:"DDR3 RAM slots – dual channel-top oblique PNr°0302.jpg", n:"雙通道插槽與兩側卡榫"}],
+    "hw.ssd":  [{f:"M.2 and mSATA SSDs comparison.jpg",                n:"M.2 與 mSATA 形式比較"},
+                {f:"Disassembled HDD and SSD.JPG",                     n:"拆開的 HDD 與 SSD 內部對照"}],
+    /* 原本的 µATX 主機板是 FAL——已移除，改用 CC BY-SA 版本 */
+    "hw.mobo": [{f:"ASRock P4i65G motherboard view.jpg",               n:"主機板俯視，各插槽清楚（較舊世代，插槽種類更多）"}],
+    "hw.ports":[{f:"Intel NUC Haswell (case rear panel).jpg",          n:"機殼背板 I/O：USB／HDMI／RJ45"},
+                {f:"Supermicro X10SLM+-LN4F server motherboard IO panel detail view.jpg", n:"伺服器板 I/O 特寫（四個 RJ45）"}],
+    "nw.rack": [{f:"Patch Panel.jpg",                                  n:"跳線架與網路線"},
+                {f:"Panduit Pan-Net Cable Management System bottom rear.JPG", n:"結構化布線與理線架"}],
+    "ed.room": [{f:"Cern datacenter.jpg",                              n:"CERN 機房：成排機櫃與通道"},
+                {f:"Racks Amravati Data Center.jpg",                   n:"資料中心機櫃陣列"}],
+    "ed.edge": [{f:"Traffic Camera Pole.jpg",                          n:"路口攝影機：典型的邊緣節點"},
+                {f:"CCTV camera and iFacility IP Audio speaker on a pole.jpg", n:"同一支桿上的多個 IP 端點"}],
+    "ed.field":[{f:"NSW EPA air quality monitoring station.jpg",       n:"環保機關實際佈設的空品監測站"},
+                {f:"Weather Station USDA.jpg",                         n:"田間農業氣象站"}],
+    "rp.bench":[{f:"Electronics workbench.jpg",                        n:"電子維修工作檯與工具擺放"},
+                {f:"Repair Cafe by Ilvy Njiokiktjien.jpg",             n:"實際維修現場的工作流程"}],
+    "rp.teardown":[{f:"Disassembled HDD and SSD.JPG",                  n:"拆解後的元件排列（僅涵蓋儲存裝置）"},
+                {f:"Laptop-hard-drive-exposed.jpg",                    n:"筆電拆開後露出的硬碟"}]
+  };
+  /* 螢幕截圖類槽位：不從網路取圖，請老師自行擷取 */
+  var SHOT_ONLY = {
+    "sw.layer":"工作管理員／活動監視器畫面", "sw.proc":"資源監視器的執行緒與 CPU 佔用",
+    "sw.fs":"檔案總管的目錄樹與權限對話框", "nw.ipcfg":"ipconfig /all 的輸出",
+    "nw.ping":"ping／tracert 的輸出", "hw.boot":"實機 POST／UEFI 畫面（用手機拍螢幕）",
+    "ai.data":"資料集樣本與標註介面", "ai.audit":"AI 回答與你查證的一手來源並排"
+  };
+  var COMMONS_FILE = "https://commons.wikimedia.org/wiki/Special:FilePath/";
+  var COMMONS_PAGE = "https://commons.wikimedia.org/wiki/File:";
+  function webURL(f, w){ return COMMONS_FILE + encodeURIComponent(f.replace(/ /g, "_")) + "?width=" + (w || 1600); }
+  function webPage(f){ return COMMONS_PAGE + encodeURIComponent(f.replace(/ /g, "_")); }
+
+  var LS_WEB = "iocxr.web";
+  function webOn(){ try { return localStorage.getItem(LS_WEB) !== "0"; } catch (e) { return true; } }
+  function setWebOn(v){ try { localStorage.setItem(LS_WEB, v ? "1" : "0"); } catch (e) {} }
+
+  /* 全景熱點：yaw/pitch 以度為單位 */
+  var PANOS = {
+    "pano.case": {name:"機殼內部", ccid:"C2-HW-09", hot:[
+      {yaw:  -8, pitch:  -6, t:"CPU 與散熱器", d:"處理器在腳座上，上方是散熱器。拆裝前務必先斷電、按住電源鍵洩放靜電。"},
+      {yaw:  34, pitch:   4, t:"記憶體插槽",   d:"DIMM 有防呆缺口，只有一個方向裝得進去；雙通道要插同色插槽。"},
+      {yaw: -52, pitch:  10, t:"電源供應器",   d:"最後才裝、第一個拆。24-pin 主板電源與 8-pin CPU 電源要分清楚。"},
+      {yaw:  96, pitch:  -2, t:"顯示卡",       d:"插在最靠近 CPU 的 PCIe x16；拆之前要先扳開卡榫。"},
+      {yaw: 150, pitch:  16, t:"儲存裝置",     d:"M.2 直接鎖在主機板上；2.5 吋 SATA 需要資料線與電源線各一。"},
+      {yaw:-118, pitch: -22, t:"機殼風道",     d:"前進後出、下進上出。風道亂了，再好的散熱器也沒用。"}
+    ]},
+    "pano.room": {name:"資料中心機房", ccid:"C4-EDGE-01", hot:[
+      {yaw:   0, pitch:  -4, t:"機櫃陣列",     d:"每個 U 是 4.445 公分。機櫃密度直接決定機房的供電與散熱設計。"},
+      {yaw:  62, pitch:   8, t:"冷熱通道",     d:"冷通道進、熱通道出。通道封閉能顯著降低製冷耗能（PUE）。"},
+      {yaw: -70, pitch:   2, t:"配線架",       d:"結構化布線：水平配線到機櫃、垂直幹線到主配線間。"},
+      {yaw: 168, pitch:  -8, t:"不斷電系統",   d:"UPS 撐的是「切換到發電機」的那幾十秒，不是撐一整天。"},
+      {yaw: -20, pitch:  34, t:"上方線槽",     d:"電力與網路分槽走線，避免電磁干擾。"}
+    ]}
+  };
+
+  /* AR 拆裝步驟 */
+  var AR_STEPS = [
+    {t:"戴上靜電手環、接地",       d:"手環夾接機殼裸金屬或接地點。半導體怕的不是電壓高，是你身上那幾千伏的靜電。", ccid:"C2-HW-13"},
+    {t:"拔除電源線，長按電源鍵 5 秒", d:"洩放主機板殘電。只關機不拔線，主機板仍有待機電。", ccid:"C2-HW-13"},
+    {t:"開側板，拍一張「原始狀態」", d:"裝回去時你會感謝現在的自己。線材走向、卡榫方向全靠這張。", ccid:"C2-HW-12"},
+    {t:"拆顯示卡：先扳卡榫再拔",   d:"PCIe 尾端有固定卡榫，沒扳開硬拔會裂插槽。", ccid:"C2-HW-12"},
+    {t:"拆記憶體：兩側卡扣同時外扳", d:"單邊施力會讓 DIMM 歪斜，金手指容易刮傷。", ccid:"C2-HW-06"},
+    {t:"拆散熱器與 CPU",           d:"散熱器對角鬆開螺絲；CPU 扣具抬起後垂直取出，不要碰針腳。", ccid:"C2-HW-03"},
+    {t:"元件依序排列、螺絲分格",   d:"拆下的順序就是裝回的逆序。螺絲分格是最便宜的除錯保險。", ccid:"C2-HW-12"},
+    {t:"回裝並開機驗證 POST",      d:"沒畫面先查：電源、記憶體、顯示輸出接在哪。POST 嗶聲是最快的線索。", ccid:"C2-HW-11"}
+  ];
+
+  /* CSS 3D 零件：安裝順序即教學重點 */
+  var PARTS = [
+    {k:"cpu",  n:"CPU",       col:"#c9d4e2", w:60,  h:60,  d:8,   x:-30, y:-92, z:16,
+     ex:[0,-170,120], ord:1, why:"CPU 要在主機板還躺平、視野最好的時候先裝。等機殼裝滿了再裝，扣具根本壓不下去。"},
+    {k:"ram",  n:"RAM ×2",    col:"#4f7ec4", w:16,  h:150, d:8,   x:60,  y:-96, z:16,
+     ex:[150,-140,110], ord:2, why:"記憶體緊鄰 CPU，先裝散熱器就會擋住卡扣。順序是 CPU → RAM → 散熱器。"},
+    {k:"ssd",  n:"M.2 SSD",   col:"#6b4d9e", w:110, h:22,  d:5,   x:-40, y:20,  z:14,
+     ex:[-190,60,110], ord:3, why:"M.2 常被顯示卡壓住。趁 PCIe 插槽還空著先鎖上，之後不用再拆卡。"},
+    {k:"gpu",  n:"顯示卡",     col:"#2f6f4f", w:230, h:46,  d:34,  x:-10, y:74,  z:30,
+     ex:[0,190,160], ord:4, why:"體積最大、遮擋最多，所以排在小零件之後。插好後要確認尾端卡榫回彈到位。"},
+    {k:"psu",  n:"電源供應器", col:"#8a6a3a", w:150, h:86,  d:140, x:-96, y:150, z:-30,
+     ex:[-230,190,-40], ord:5, why:"最後裝、第一個拆。先裝電源，線材會擋住所有其他插槽。"}
+  ];
+  var BOARD = {w:340, h:300, d:6, col:"#1f5f3f"};
+  var CASE  = {w:400, h:420, d:230};
+
+  /* ==========================================================
+     2) IndexedDB 媒體庫
+     ========================================================== */
+  var DB = (function(){
+    var NAME = "iocxr-media", STORE = "img", dbp = null;
+    function open(){
+      if (dbp) return dbp;
+      dbp = new Promise(function(res, rej){
+        if (!window.indexedDB) return rej(new Error("no-idb"));
+        var r = indexedDB.open(NAME, 1);
+        r.onupgradeneeded = function(){ var d = r.result;
+          if (!d.objectStoreNames.contains(STORE)) d.createObjectStore(STORE, {keyPath:"k"}); };
+        r.onsuccess = function(){ res(r.result); };
+        r.onerror = function(){ rej(r.error); };
+      });
+      return dbp;
+    }
+    function tx(mode){ return open().then(function(d){ return d.transaction(STORE, mode).objectStore(STORE); }); }
+    return {
+      put: function(rec){ return tx("readwrite").then(function(s){ return new Promise(function(res, rej){
+        var r = s.put(rec); r.onsuccess = function(){ res(rec); }; r.onerror = function(){ rej(r.error); }; }); }); },
+      del: function(k){ return tx("readwrite").then(function(s){ return new Promise(function(res){
+        var r = s.delete(k); r.onsuccess = r.onerror = function(){ res(); }; }); }); },
+      all: function(){ return tx("readonly").then(function(s){ return new Promise(function(res){
+        var out = {}, r = s.openCursor();
+        r.onsuccess = function(){ var c = r.result; if (!c) return res(out);
+          out[c.value.k] = c.value; c.continue(); };
+        r.onerror = function(){ res(out); }; }); }).catch(function(){ return {}; }); },
+      clear: function(){ return tx("readwrite").then(function(s){ return new Promise(function(res){
+        var r = s.clear(); r.onsuccess = r.onerror = function(){ res(); }; }); }); }
+    };
+  })();
+
+  /* 外部素材基底網址（第二層回退），存 localStorage */
+  var LS_BASE = "iocxr.baseurl";
+  function baseURL(){ try { return localStorage.getItem(LS_BASE) || ""; } catch (e) { return ""; } }
+  function setBaseURL(v){ try { v ? localStorage.setItem(LS_BASE, v) : localStorage.removeItem(LS_BASE); } catch (e) {} }
+
+  /* 內嵌媒體包：若日後把 media-pack 貼回 HTML，會出現在這裡 */
+  var BUILTIN = (window.IOCXR_MEDIA && typeof window.IOCXR_MEDIA === "object") ? window.IOCXR_MEDIA : {};
+  /* embed_media.py 烤進 HTML 的署名，與圖片成對 */
+  var BUILTIN_CRED = (window.IOCXR_CREDITS && typeof window.IOCXR_CREDITS === "object") ? window.IOCXR_CREDITS : {};
+
+  var STORE_CACHE = {};   /* k -> {k, dataURI, name, w, h, bytes, ts} */
+  /* 匯入的媒體包可附帶每一格的授權署名（例如 Commons 標註卡），顯示時優先採用 */
+  var LS_CRED = "iocxr.credits";
+  var CREDITS = (function(){ try { return JSON.parse(localStorage.getItem(LS_CRED) || "{}"); }
+                             catch (e) { return {}; } })();
+  function saveCredits(){ try { localStorage.setItem(LS_CRED, JSON.stringify(CREDITS)); } catch (e) {} }
+
+  /* ---------- 第三層：程式生成的示意圖（永遠有東西可看）---------- */
+  function genPlaceholder(slot){
+    var c = D.createElement("canvas"); c.width = 800; c.height = 600;
+    var g = c.getContext("2d");
+    var grd = g.createLinearGradient(0, 0, 800, 600);
+    grd.addColorStop(0, "#e9eef4"); grd.addColorStop(1, "#d5dde8");
+    g.fillStyle = grd; g.fillRect(0, 0, 800, 600);
+    g.strokeStyle = "rgba(43,64,90,.10)"; g.lineWidth = 1;
+    for (var x = 0; x <= 800; x += 40){ g.beginPath(); g.moveTo(x, 0); g.lineTo(x, 600); g.stroke(); }
+    for (var y = 0; y <= 600; y += 40){ g.beginPath(); g.moveTo(0, y); g.lineTo(800, y); g.stroke(); }
+    g.fillStyle = "rgba(31,47,68,.10)";
+    g.beginPath(); g.roundRect ? g.roundRect(250, 170, 300, 210, 18) : g.rect(250, 170, 300, 210); g.fill();
+    g.fillStyle = "#2b405a"; g.textAlign = "center";
+    g.font = "700 62px ui-monospace, monospace";
+    g.fillText(slot.ic || "IMG", 400, 268);
+    g.font = "700 30px 'Noto Sans TC', sans-serif";
+    g.fillText(slot.t, 400, 330);
+    g.fillStyle = "#5b6b7a"; g.font = "500 19px 'Noto Sans TC', sans-serif";
+    g.fillText("尚未匯入實拍素材", 400, 366);
+    g.font = "500 16px 'Noto Sans TC', sans-serif";
+    g.fillText("到「媒體庫」把照片拖進這一格", 400, 434);
+    g.fillStyle = "#8b98a6"; g.font = "600 14px ui-monospace, monospace";
+    g.fillText(slot.k + "　·　" + (slot.ccid || ""), 400, 466);
+    return c.toDataURL("image/png");
+  }
+
+  /* ---------- 三層回退解析 ---------- */
+  var GEN_CACHE = {};
+  function slotOf(k){ for (var i = 0; i < SLOTS.length; i++) if (SLOTS[i].k === k) return SLOTS[i]; return null; }
+  /* 回退順序：① 匯入／內嵌　② 你的外部基底網址　③ Commons 真實照片　④ 程式生成示意圖 */
+  function sourceOf(k){
+    if (STORE_CACHE[k] || BUILTIN[k]) return "emb";
+    if (DG[k]) return "dg";
+    if (baseURL()) return "url";
+    if (webOn() && WEB[k] && WEB[k].length) return "web";
+    return "gen";
+  }
+  function srcLabel(t){ return t === "emb" ? "已內嵌" : t === "dg" ? "概念示意圖"
+    : t === "url" ? "外部網址" : t === "web" ? "Commons 實照" : "示意圖"; }
+  function resolve(k){
+    var s = slotOf(k) || {k:k, t:k, ic:"IMG"};
+    if (STORE_CACHE[k]) return STORE_CACHE[k].dataURI;
+    if (BUILTIN[k]) return BUILTIN[k];
+    if (DG[k]) return DG[k];
+    var b = baseURL();
+    if (b) return b.replace(/\/+$/, "") + "/" + k.replace(/\./g, "_") + ".jpg";
+    if (webOn() && WEB[k] && WEB[k].length) return webURL(WEB[k][0].f, 1600);
+    if (!GEN_CACHE[k]) GEN_CACHE[k] = genPlaceholder(s);
+    return GEN_CACHE[k];
+  }
+  function genFor(k){
+    var s = slotOf(k) || {k:k, t:k, ic:"IMG"};
+    if (!GEN_CACHE[k]) GEN_CACHE[k] = genPlaceholder(s);
+    return GEN_CACHE[k];
+  }
+  /* <img> 專用：載入失敗就依序往下掉，最後一定落在程式生成的示意圖，永不破圖 */
+  function bindImg(img, k){
+    var s = slotOf(k) || {k:k, t:k, ic:"IMG"};
+    var chain = [], i = 0;
+    if (STORE_CACHE[k]) chain.push({u:STORE_CACHE[k].dataURI, t:"emb"});
+    else if (BUILTIN[k]) chain.push({u:BUILTIN[k], t:"emb"});
+    if (DG[k]) chain.push({u:DG[k], t:"dg"});
+    if (baseURL()) chain.push({u:baseURL().replace(/\/+$/, "") + "/" + k.replace(/\./g, "_") + ".jpg", t:"url"});
+    if (webOn() && WEB[k]) WEB[k].forEach(function(w){ chain.push({u:webURL(w.f, 1600), t:"web", f:w.f}); });
+    chain.push({u:genFor(k), t:"gen"});
+
+    function tag(t, f){
+      var fig = img.closest && img.closest("figure");
+      if (!fig) return;
+      var b = q(".xr-src", fig);
+      if (b){ b.className = "xr-src " + t; b.textContent = srcLabel(t); }
+      var cr = q(".xr-credit", fig);
+      if (cr){
+        cr.innerHTML = (t === "emb" && (CREDITS[k] || BUILTIN_CRED[k]))
+          ? "圖片來源：" + esc(CREDITS[k] || BUILTIN_CRED[k])
+          : t === "dg"
+          ? "課程自製概念示意圖（SVG，可縮放、離線可用）"
+          : (t === "web" && f)
+          ? '圖片來源：<a href="' + webPage(f) + '" target="_blank" rel="noopener">Wikimedia Commons · ' +
+            esc(f) + " ↗</a>（授權與作者見來源頁）"
+          : t === "emb" ? "圖片來源：本課程自行拍攝／匯入"
+          : t === "url" ? "圖片來源：課程外部素材庫" : "此為程式生成示意圖，非實物照片";
+      }
+    }
+    function step(){
+      if (i >= chain.length) return;
+      var c = chain[i++];
+      img.src = c.u;
+      tag(c.t, c.f);
+    }
+    img.alt = s.t + "（" + k + "）";
+    img.loading = "lazy";
+    img.referrerPolicy = "no-referrer";
+    img.onerror = function(){ if (i < chain.length) step(); else img.onerror = null; };
+    step();
+    return img;
+  }
+
+  /* ---------- 匯入：壓縮成 JPEG data URI ---------- */
+  function importFile(file, maxW, quality){
+    return new Promise(function(res, rej){
+      if (!/^image\//.test(file.type)) return rej(new Error("不是圖片檔"));
+      var fr = new FileReader();
+      fr.onload = function(){
+        var im = new Image();
+        im.onload = function(){
+          var w = im.naturalWidth, h = im.naturalHeight, m = maxW || 1600;
+          if (w > m){ h = Math.round(h * m / w); w = m; }
+          var c = D.createElement("canvas"); c.width = w; c.height = h;
+          c.getContext("2d").drawImage(im, 0, 0, w, h);
+          var uri = c.toDataURL("image/jpeg", quality || 0.82);
+          res({dataURI:uri, w:w, h:h, bytes:Math.round(uri.length * 0.75), name:file.name});
+        };
+        im.onerror = function(){ rej(new Error("圖片解碼失敗")); };
+        im.src = fr.result;
+      };
+      fr.onerror = function(){ rej(new Error("讀檔失敗")); };
+      fr.readAsDataURL(file);
+    });
+  }
+
+  /* ==========================================================
+     3) 版面
+     ========================================================== */
+  var view = el("section", "view");
+  view.id = "view-xr";
+  view.innerHTML =
+    '<div id="iocxr-root">' +
+      '<div class="xr-hd">' +
+        '<h2>🥽 實境實習中心</h2>' +
+        '<p>真實影音 · 360° 全景 · AR 相機疊合 · 3D 虛擬拆裝　—　沒有實體機器也能練，有機器時當作隨身指引。</p>' +
+      '</div>' +
+      '<div class="xr-row" style="margin-top:-4px">' +
+        '<button class="xr-btn sm" data-back>← 返回首頁</button>' +
+        '<span class="xr-pill" id="xrCap"></span>' +
+      '</div>' +
+      '<div class="xr-seg" role="tablist">' +
+        '<button role="tab" aria-selected="true"  data-xp="pano">🌐 360° 全景</button>' +
+        '<button role="tab" aria-selected="false" data-xp="ar">📷 AR 拆裝導引</button>' +
+        '<button role="tab" aria-selected="false" data-xp="d3">🧊 3D 虛擬拆裝</button>' +
+        '<button role="tab" aria-selected="false" data-xp="video">🎬 影音教材</button>' +
+        '<button role="tab" aria-selected="false" data-xp="lib">🗂 媒體庫</button>' +
+      '</div>' +
+      '<div class="xr-pane on" id="xp-pano"></div>' +
+      '<div class="xr-pane"    id="xp-ar"></div>' +
+      '<div class="xr-pane"    id="xp-d3"></div>' +
+      '<div class="xr-pane"    id="xp-video"></div>' +
+      '<div class="xr-pane"    id="xp-lib"></div>' +
+    '</div>';
+
+  /* 掛在與 view-overview 同一個容器（.wrap）的最後——不要用「文件中最後一個 .view」，
+     那有可能是別的注入模組放在 .wrap 之外的節點，會跑到頁尾 footer 底下 */
+  ov.parentNode.appendChild(view);
+
+  /* 燈箱 */
+  var lb = el("div"); lb.id = "iocxr-lightbox";
+  lb.innerHTML = '<button class="x" type="button">✕ 關閉</button><div style="display:grid;justify-items:center">' +
+                 '<img alt=""><div class="cap"></div></div>';
+  D.body.appendChild(lb);
+  lb.addEventListener("click", function(e){ if (e.target === lb || e.target.classList.contains("x")) lb.classList.remove("on"); });
+  D.addEventListener("keydown", function(e){ if (e.key === "Escape") lb.classList.remove("on"); });
+  function openLB(src, cap){ q("img", lb).src = src; q(".cap", lb).textContent = cap || ""; lb.classList.add("on"); }
+
+  /* 首頁入口卡 */
+  (function homeCard(){
+    var anchor = q('[data-goto="repair"]');
+    var host = anchor && anchor.closest ? anchor.closest(".ncard, .card, .panel, div") : null;
+    var grid = host && host.parentNode ? host.parentNode : null;
+    var card = el("div", host ? host.className : "panel");
+    card.setAttribute("data-iocxr-card", "1");
+    card.innerHTML =
+      '<h3 style="margin:0 0 6px">🥽 實境實習中心</h3>' +
+      '<p style="margin:0 0 10px;font-size:13.5px;color:#5b6b7a">360° 全景走訪機殼與機房、AR 相機疊合拆裝步驟、' +
+      '3D 虛擬拆裝，以及 20 支對應教材的真實影音。</p>' +
+      '<button class="btn primary nc-go" data-goto="xr">前往實境實習 →</button>';
+    if (grid) grid.appendChild(card); else ov.appendChild(card);
+    qa("[data-goto]", card).forEach(function(b){
+      b.addEventListener("click", function(){ show(b.getAttribute("data-goto")); });
+    });
+  })();
+
+  /* 返回鍵 */
+  qa("[data-back]", view).forEach(function(b){ b.addEventListener("click", function(){ show("overview"); }); });
+
+  /* 分頁 */
+  var panes = qa(".xr-seg button", view);
+  panes.forEach(function(b){
+    b.addEventListener("click", function(){
+      panes.forEach(function(x){ x.setAttribute("aria-selected", "false"); });
+      b.setAttribute("aria-selected", "true");
+      qa(".xr-pane", view).forEach(function(p){ p.classList.remove("on"); });
+      q("#xp-" + b.getAttribute("data-xp"), view).classList.add("on");
+      if (b.getAttribute("data-xp") === "pano") PANO.resize();
+    });
+  });
+
+  /* 能力偵測徽章 */
+  (function caps(){
+    var c = [];
+    c.push((function(){ try { var cv = D.createElement("canvas");
+      return (cv.getContext("webgl") || cv.getContext("experimental-webgl")) ? "WebGL ✓" : "WebGL ✗"; }
+      catch (e) { return "WebGL ✗"; } })());
+    c.push((navigator.mediaDevices && navigator.mediaDevices.getUserMedia) ? "相機 ✓" : "相機 ✗");
+    c.push(window.DeviceOrientationEvent ? "陀螺儀 ✓" : "陀螺儀 ✗");
+    c.push(navigator.xr ? "WebXR ✓" : "WebXR ✗");
+    c.push(location.protocol === "https:" || location.hostname === "localhost" ? "安全內容 ✓" : "非 HTTPS（相機／XR 受限）");
+    q("#xrCap", view).textContent = c.join("　·　");
+  })();
+
+  /* ==========================================================
+     4) 360° 全景（WebGL・拖曳／陀螺儀／分屏 VR／WebXR）
+     ========================================================== */
+  var PANO = (function(){
+    var cur = "pano.case", yaw = 0, pitch = 0, fov = 78, split = false, gyro = false;
+    var gl = null, prog = null, tex = null, uRot = null, uTan = null, canvas = null, host = null;
+    var texKey = null, raf = 0, xrSession = null;
+
+    function build(){
+      var p = q("#xp-pano", view);
+      p.innerHTML =
+        '<div class="xr-card">' +
+          '<h3>360° 全景走訪</h3>' +
+          '<p class="lead">拖曳畫面環顧四周；手機可開陀螺儀，轉動身體就是轉動視角。點金色標記看重點說明。' +
+            '匯入你自己拍的 2:1 全景照片後，這裡就是<b>你的</b>機殼與機房。</p>' +
+          '<div class="xr-row">' +
+            '<select class="xr-btn" id="xrPanoSel"></select>' +
+            '<button class="xr-btn sm" id="xrGyro">📱 陀螺儀</button>' +
+            '<button class="xr-btn sm" id="xrSplit">👓 分屏 VR</button>' +
+            '<button class="xr-btn sm" id="xrXR" disabled>🥽 進入 VR（WebXR）</button>' +
+            '<button class="xr-btn sm" id="xrFs">⛶ 全螢幕</button>' +
+            '<span class="xr-pill" id="xrPanoSrc"></span>' +
+          '</div>' +
+          '<div class="xr-stage" id="xrPanoStage">' +
+            '<canvas id="xrPanoCv"></canvas>' +
+            '<div class="ovl" id="xrPanoOvl"></div>' +
+            '<div class="badge" id="xrPanoBadge">拖曳環顧</div>' +
+            '<div class="hint" id="xrPanoHint">滑鼠拖曳／雙指滑動環顧　·　滾輪縮放</div>' +
+          '</div>' +
+          '<div class="xr-note" id="xrPanoInfo"><b>提示：</b>點畫面上的金色標記，會顯示該處的實習重點。</div>' +
+        '</div>';
+
+      var sel = q("#xrPanoSel", p);
+      sel.innerHTML = Object.keys(PANOS).map(function(k){
+        return '<option value="' + k + '">' + esc(PANOS[k].name) + '</option>'; }).join("");
+      sel.addEventListener("change", function(){ cur = sel.value; texKey = null; ensureTex(); renderHots();
+        log(PANOS[cur].ccid, "simulated", {asset:"xr#pano/" + cur}); });
+
+      host = q("#xrPanoStage", p); canvas = q("#xrPanoCv", p);
+      q("#xrGyro", p).addEventListener("click", toggleGyro);
+      q("#xrSplit", p).addEventListener("click", function(){ split = !split;
+        host.classList.toggle("split", split); this.classList.toggle("pri", split);
+        q("#xrPanoBadge", p).textContent = split ? "分屏 VR（放進 Cardboard）" : "拖曳環顧"; resize(); });
+      q("#xrFs", p).addEventListener("click", function(){
+        if (D.fullscreenElement) D.exitFullscreen(); else if (host.requestFullscreen) host.requestFullscreen(); });
+      q("#xrXR", p).addEventListener("click", enterXR);
+
+      if (navigator.xr && navigator.xr.isSessionSupported){
+        navigator.xr.isSessionSupported("immersive-vr").then(function(ok){
+          if (ok) q("#xrXR", p).disabled = false;
+        }).catch(function(){});
+      }
+      initGL(); bindDrag(); ensureTex(); renderHots(); resize();
+      window.addEventListener("resize", resize);
+      /* 進入分頁前 view 是隱藏的，量到的尺寸會是 0——用 ResizeObserver 在真正顯示時補畫 */
+      if (window.ResizeObserver){
+        var ro = new ResizeObserver(function(){
+          var r = host.getBoundingClientRect();
+          if (r.width > 4 && Math.abs(canvas.width - Math.round(r.width * Math.min(window.devicePixelRatio || 1, 2))) > 2) resize();
+        });
+        ro.observe(host);
+      }
+    }
+
+    /* ---- WebGL ---- */
+    var VS = "attribute vec2 aPos;varying vec2 vUv;void main(){vUv=aPos;gl_Position=vec4(aPos,0.0,1.0);}";
+    var FS = "precision highp float;varying vec2 vUv;uniform sampler2D uTex;uniform mat3 uRot;uniform vec2 uTan;" +
+             "void main(){vec3 d=normalize(uRot*vec3(vUv.x*uTan.x,vUv.y*uTan.y,-1.0));" +
+             "float u=atan(d.x,-d.z)*0.15915494+0.5;float v=acos(clamp(d.y,-1.0,1.0))*0.31830989;" +
+             "gl_FragColor=texture2D(uTex,vec2(u,v));}";
+    function sh(t, src){ var s = gl.createShader(t); gl.shaderSource(s, src); gl.compileShader(s); return s; }
+    function initGL(){
+      try { gl = canvas.getContext("webgl", {antialias:false, alpha:false}) ||
+                 canvas.getContext("experimental-webgl"); } catch (e) { gl = null; }
+      if (!gl){ q("#xrPanoHint").textContent = "此瀏覽器不支援 WebGL，已改用靜態預覽"; fallback2D(); return; }
+      prog = gl.createProgram();
+      gl.attachShader(prog, sh(gl.VERTEX_SHADER, VS));
+      gl.attachShader(prog, sh(gl.FRAGMENT_SHADER, FS));
+      gl.linkProgram(prog); gl.useProgram(prog);
+      var buf = gl.createBuffer();
+      gl.bindBuffer(gl.ARRAY_BUFFER, buf);
+      gl.bufferData(gl.ARRAY_BUFFER, new Float32Array([-1,-1, 1,-1, -1,1, 1,1]), gl.STATIC_DRAW);
+      var a = gl.getAttribLocation(prog, "aPos");
+      gl.enableVertexAttribArray(a); gl.vertexAttribPointer(a, 2, gl.FLOAT, false, 0, 0);
+      uRot = gl.getUniformLocation(prog, "uRot"); uTan = gl.getUniformLocation(prog, "uTan");
+      tex = gl.createTexture();
+      gl.bindTexture(gl.TEXTURE_2D, tex);
+      gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_S, gl.REPEAT);
+      gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_T, gl.CLAMP_TO_EDGE);
+      gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MIN_FILTER, gl.LINEAR);
+      gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MAG_FILTER, gl.LINEAR);
+    }
+    function fallback2D(){
+      var im = new Image(); im.onload = function(){
+        var c2 = canvas.getContext("2d"); if (!c2) return;
+        canvas.width = 1024; canvas.height = 512; c2.drawImage(im, 0, 0, 1024, 512);
+      }; im.src = panoSrc();
+    }
+    function panoSrc(){
+      var k = cur;
+      if (STORE_CACHE[k]) return STORE_CACHE[k].dataURI;
+      if (BUILTIN[k]) return BUILTIN[k];
+      var b = baseURL();
+      if (b) return b.replace(/\/+$/, "") + "/" + k.replace(/\./g, "_") + ".jpg";
+      return genPano(k);
+    }
+    function ensureTex(){
+      var src = panoSrc();
+      var srcTag = STORE_CACHE[cur] ? "emb" : (BUILTIN[cur] ? "emb" : (baseURL() ? "url" : "gen"));
+      var badge = q("#xrPanoSrc", view);
+      if (badge) badge.textContent = srcTag === "emb" ? "素材：你匯入的全景"
+        : srcTag === "url" ? "素材：外部網址" : "素材：程式生成示意（可匯入取代）";
+      if (!gl){ fallback2D(); return; }
+      if (texKey === src) return;
+      texKey = src;
+      /* WebGL1 對「非 2 的次方」貼圖搭配 REPEAT 會整片渲染成黑色。
+         使用者匯入的全景尺寸不可控，所以一律先重繪到 2048×1024 的 POT 畫布再上傳。 */
+      function upload(image){
+        var pot = D.createElement("canvas"); pot.width = 2048; pot.height = 1024;
+        pot.getContext("2d").drawImage(image, 0, 0, 2048, 1024);
+        gl.bindTexture(gl.TEXTURE_2D, tex);
+        gl.pixelStorei(gl.UNPACK_FLIP_Y_WEBGL, false);
+        gl.texImage2D(gl.TEXTURE_2D, 0, gl.RGB, gl.RGB, gl.UNSIGNED_BYTE, pot);
+        draw();
+      }
+      var im = new Image(); im.crossOrigin = "anonymous";
+      im.onload = function(){ upload(im); };
+      im.onerror = function(){
+        texKey = null;
+        var g2 = genPano(cur);
+        if (g2 !== src){ var i2 = new Image(); i2.onload = function(){ upload(i2); }; i2.src = g2; }
+      };
+      im.src = src;
+    }
+    function rotMat(y, p){
+      var cy = Math.cos(y), sy = Math.sin(y), cp = Math.cos(p), sp = Math.sin(p);
+      /* R = Ry(yaw) * Rx(pitch)，column-major */
+      return new Float32Array([ cy, 0, -sy,   sy*sp, cp, cy*sp,   sy*cp, -sp, cy*cp ]);
+    }
+    function resize(){
+      if (!canvas || !host) return;
+      var r = host.getBoundingClientRect();
+      var dpr = Math.min(window.devicePixelRatio || 1, 2);
+      canvas.width  = Math.max(2, Math.round(r.width  * dpr));
+      canvas.height = Math.max(2, Math.round(r.height * dpr));
+      draw(); renderHots();
+    }
+    function tans(w, h){
+      var ty = Math.tan(fov * Math.PI / 360);
+      return [ty * (w / h), ty];
+    }
+    function draw(){
+      if (!gl || !canvas.width) return;
+      var W = canvas.width, H = canvas.height;
+      gl.useProgram(prog);
+      gl.bindTexture(gl.TEXTURE_2D, tex);
+      if (split){
+        var t1 = tans(W / 2, H);
+        gl.viewport(0, 0, W / 2, H);
+        gl.uniformMatrix3fv(uRot, false, rotMat(yaw - 0.012, pitch)); gl.uniform2f(uTan, t1[0], t1[1]);
+        gl.drawArrays(gl.TRIANGLE_STRIP, 0, 4);
+        gl.viewport(W / 2, 0, W / 2, H);
+        gl.uniformMatrix3fv(uRot, false, rotMat(yaw + 0.012, pitch));
+        gl.drawArrays(gl.TRIANGLE_STRIP, 0, 4);
+      } else {
+        var t = tans(W, H);
+        gl.viewport(0, 0, W, H);
+        gl.uniformMatrix3fv(uRot, false, rotMat(yaw, pitch)); gl.uniform2f(uTan, t[0], t[1]);
+        gl.drawArrays(gl.TRIANGLE_STRIP, 0, 4);
+      }
+    }
+    function schedule(){ if (raf) return; raf = requestAnimationFrame(function(){ raf = 0; draw(); renderHots(); }); }
+
+    /* ---- 互動 ---- */
+    function bindDrag(){
+      var down = false, lx = 0, ly = 0;
+      function start(x, y){ down = true; lx = x; ly = y; }
+      function move(x, y){
+        if (!down) return;
+        var r = host.getBoundingClientRect();
+        yaw   -= (x - lx) / r.width  * (fov * Math.PI / 180) * 1.6;
+        pitch += (y - ly) / r.height * (fov * Math.PI / 180) * 1.2;
+        pitch = Math.max(-1.45, Math.min(1.45, pitch));
+        lx = x; ly = y; schedule();
+      }
+      host.addEventListener("mousedown", function(e){ start(e.clientX, e.clientY); });
+      window.addEventListener("mousemove", function(e){ move(e.clientX, e.clientY); });
+      window.addEventListener("mouseup", function(){ down = false; });
+      host.addEventListener("touchstart", function(e){ if (e.touches[0]) start(e.touches[0].clientX, e.touches[0].clientY); }, {passive:true});
+      host.addEventListener("touchmove", function(e){ if (e.touches[0]){ move(e.touches[0].clientX, e.touches[0].clientY); e.preventDefault(); } }, {passive:false});
+      host.addEventListener("touchend", function(){ down = false; });
+      host.addEventListener("wheel", function(e){ fov = Math.max(38, Math.min(100, fov + (e.deltaY > 0 ? 3 : -3)));
+        e.preventDefault(); schedule(); }, {passive:false});
+    }
+    function toggleGyro(){
+      var btn = q("#xrGyro", view);
+      if (gyro){ gyro = false; btn.classList.remove("pri"); btn.textContent = "📱 陀螺儀"; return; }
+      function attach(){
+        gyro = true; btn.classList.add("pri"); btn.textContent = "📱 陀螺儀（開）";
+        window.addEventListener("deviceorientation", onOri);
+      }
+      var DOE = window.DeviceOrientationEvent;
+      if (DOE && typeof DOE.requestPermission === "function"){
+        DOE.requestPermission().then(function(s){ if (s === "granted") attach();
+          else q("#xrPanoInfo", view).innerHTML = "<b>陀螺儀權限被拒。</b>仍可用拖曳環顧。"; })
+          .catch(function(){});
+      } else if (DOE) attach();
+      else q("#xrPanoInfo", view).innerHTML = "<b>此裝置沒有陀螺儀。</b>請用滑鼠或手指拖曳環顧。";
+    }
+    function onOri(e){
+      if (!gyro || e.alpha == null) return;
+      yaw   = -(e.alpha || 0) * Math.PI / 180;
+      pitch = Math.max(-1.45, Math.min(1.45, ((e.beta || 0) - 90) * Math.PI / 180));
+      schedule();
+    }
+
+    /* ---- 熱點 ---- */
+    function renderHots(){
+      var ovl = q("#xrPanoOvl", view); if (!ovl || !host) return;
+      if (split){ ovl.innerHTML = ""; return; }
+      var r = host.getBoundingClientRect(), t = tans(r.width, r.height);
+      var cy = Math.cos(yaw), sy = Math.sin(yaw), cp = Math.cos(pitch), sp = Math.sin(pitch);
+      var list = (PANOS[cur] || {hot:[]}).hot;
+      var html = "";
+      list.forEach(function(h, i){
+        var hy = h.yaw * Math.PI / 180, hp = h.pitch * Math.PI / 180;
+        var wx = -Math.sin(hy) * Math.cos(hp), wy = Math.sin(hp), wz = -Math.cos(hy) * Math.cos(hp);
+        /* 轉到相機空間：R 轉置 */
+        var cxv =  cy * wx        + 0  * wy + (-sy) * wz;
+        var cyv =  (sy*sp) * wx   + cp * wy + (cy*sp) * wz;
+        var czv =  (sy*cp) * wx   + (-sp) * wy + (cy*cp) * wz;
+        if (czv > -0.05) return;                                     /* 在背後 */
+        var nx = (cxv / -czv) / t[0], ny = (cyv / -czv) / t[1];
+        if (Math.abs(nx) > 1.05 || Math.abs(ny) > 1.05) return;
+        var px = (nx * 0.5 + 0.5) * r.width, py = (0.5 - ny * 0.5) * r.height;
+        html += '<button class="xr-hot" type="button" data-h="' + i + '" style="left:' +
+                px.toFixed(1) + 'px;top:' + py.toFixed(1) + 'px">◉ ' + esc(h.t) + '</button>';
+      });
+      ovl.innerHTML = html;
+      qa(".xr-hot", ovl).forEach(function(b){
+        b.addEventListener("click", function(){
+          var h = list[+b.getAttribute("data-h")];
+          b.classList.add("done");
+          q("#xrPanoInfo", view).innerHTML = "<b>" + esc(h.t) + "：</b>" + esc(h.d);
+          log(PANOS[cur].ccid, "viewed", {asset:"xr#pano/" + cur + "/" + h.t});
+        });
+      });
+    }
+
+    /* ---- WebXR immersive-vr（實驗性；不支援時上方按鈕保持停用）---- */
+    function enterXR(){
+      if (!navigator.xr || !gl) return;
+      var info = q("#xrPanoInfo", view);
+      navigator.xr.requestSession("immersive-vr").then(function(s){
+        xrSession = s;
+        return gl.makeXRCompatible().then(function(){
+          var layer = new XRWebGLLayer(s, gl);
+          s.updateRenderState({baseLayer: layer});
+          return s.requestReferenceSpace("local");
+        }).then(function(ref){
+          info.innerHTML = "<b>已進入 VR。</b>取下頭戴裝置或按裝置的退出鍵即可回到頁面。";
+          s.addEventListener("end", function(){ xrSession = null; resize();
+            info.innerHTML = "<b>已離開 VR。</b>"; });
+          s.requestAnimationFrame(function onXR(t, frame){
+            if (!xrSession) return;
+            var pose = frame.getViewerPose(ref);
+            var lay = s.renderState.baseLayer;
+            gl.bindFramebuffer(gl.FRAMEBUFFER, lay.framebuffer);
+            gl.clear(gl.COLOR_BUFFER_BIT);
+            if (pose) pose.views.forEach(function(v){
+              var vp = lay.getViewport(v);
+              gl.viewport(vp.x, vp.y, vp.width, vp.height);
+              var m = v.transform.matrix;                       /* 4x4 column-major：取旋轉 3x3 */
+              gl.uniformMatrix3fv(uRot, false, new Float32Array([m[0],m[1],m[2], m[4],m[5],m[6], m[8],m[9],m[10]]));
+              var p = v.projectionMatrix;                        /* tan = 1/p[0], 1/p[5] */
+              gl.uniform2f(uTan, 1 / p[0], 1 / p[5]);
+              gl.drawArrays(gl.TRIANGLE_STRIP, 0, 4);
+            });
+            s.requestAnimationFrame(onXR);
+          });
+          log(PANOS[cur].ccid, "simulated", {asset:"xr#webxr/" + cur});
+        });
+      }).catch(function(err){
+        info.innerHTML = "<b>無法進入 WebXR：</b>" + esc(err && err.message ? err.message : err) +
+                         "　→ 可改用「👓 分屏 VR」搭配 Cardboard。";
+      });
+    }
+
+    /* ---- 程式生成的等距柱狀全景（沒素材也看得到東西）---- */
+    var PGEN = {};
+    function genPano(k){
+      if (PGEN[k]) return PGEN[k];
+      var W = 2048, H = 1024, c = D.createElement("canvas"); c.width = W; c.height = H;
+      var g = c.getContext("2d");
+      function X(yawDeg){ return ((yawDeg / 360) + 0.5) * W; }
+      function Y(pitchDeg){ return (0.5 - pitchDeg / 180) * H; }
+      function slab(y0, y1, pa, pb, fill){
+        g.fillStyle = fill;
+        var x0 = X(y0), x1 = X(y1);
+        if (x1 < x0){ g.fillRect(x0, Y(pb), W - x0, Y(pa) - Y(pb)); g.fillRect(0, Y(pb), x1, Y(pa) - Y(pb)); }
+        else g.fillRect(x0, Y(pb), x1 - x0, Y(pa) - Y(pb));
+      }
+      if (k === "pano.room"){
+        var sky = g.createLinearGradient(0, 0, 0, H);
+        sky.addColorStop(0, "#121b24"); sky.addColorStop(.42, "#1d2b38");
+        sky.addColorStop(.58, "#22323f"); sky.addColorStop(1, "#0e1319");
+        g.fillStyle = sky; g.fillRect(0, 0, W, H);
+        for (var i = 0; i < 24; i++){                                  /* 機櫃陣列 */
+          var a = -180 + i * 15, hgt = 30 + (i % 3) * 3;
+          slab(a, a + 12, -26, hgt, i % 2 ? "#1b2733" : "#16202a");
+          for (var u = 0; u < 14; u++){                                /* 設備指示燈 */
+            g.fillStyle = (u * 7 + i) % 5 === 0 ? "#34a36b" : (u % 4 === 0 ? "#e0b44a" : "#2b3a49");
+            var xx = X(a + 2 + (u % 2) * 5), yy = Y(hgt - 3 - u * 3.6);
+            g.fillRect(xx, yy, 16, 5);
+          }
+        }
+        for (var L = 0; L < 12; L++){                                  /* 天花板燈帶 */
+          slab(-180 + L * 30, -180 + L * 30 + 16, 52, 62, "rgba(230,240,255,.20)");
+        }
+        slab(-180, 180, -90, -34, "#0b0f14");                          /* 地板 */
+        for (var f = 0; f < 40; f++) slab(-180 + f * 9, -180 + f * 9 + 4.4, -88, -36, "#10161d");
+      } else {
+        var g2 = g.createLinearGradient(0, 0, 0, H);
+        g2.addColorStop(0, "#0d1418"); g2.addColorStop(.5, "#16222a"); g2.addColorStop(1, "#090d11");
+        g.fillStyle = g2; g.fillRect(0, 0, W, H);
+        slab(-40, 40, -34, 30, "#12402c");                              /* 主機板 */
+        for (var t2 = 0; t2 < 60; t2++){                                /* 走線 */
+          g.strokeStyle = "rgba(120,200,160,.22)"; g.lineWidth = 2;
+          g.beginPath(); g.moveTo(X(-38 + t2 * 1.3), Y(28)); g.lineTo(X(-38 + t2 * 1.3), Y(-30)); g.stroke();
+        }
+        slab(-14, 2, -10, 12, "#8e99a6");  slab(-11, -1, -6, 8, "#5d6874");   /* CPU + 散熱器 */
+        slab(24, 30, -14, 26, "#3f6fb5");  slab(32, 38, -14, 26, "#3f6fb5");  /* RAM */
+        slab(80, 118, -20, 4,  "#20402f");  slab(84, 114, -14, -2, "#2f6f4f"); /* 顯示卡 */
+        slab(-70, -40, -6, 26, "#5a4a2e");                                     /* 電源 */
+        slab(140, 165, 6, 22, "#4a3f66");                                      /* SSD */
+        for (var fn = 0; fn < 3; fn++){                                        /* 風扇 */
+          var fa = -150 + fn * 14;
+          slab(fa, fa + 11, -14, 14, "#1b232b");
+          g.strokeStyle = "rgba(200,220,240,.35)"; g.lineWidth = 3;
+          g.beginPath(); g.arc(X(fa + 5.5), Y(0), 46, 0, Math.PI * 2); g.stroke();
+        }
+        slab(-180, 180, -90, -32, "#0a0f13");
+      }
+      /* 水平參考線與方位刻度，幫助學生定位 */
+      g.strokeStyle = "rgba(255,255,255,.10)"; g.lineWidth = 2;
+      g.beginPath(); g.moveTo(0, Y(0)); g.lineTo(W, Y(0)); g.stroke();
+      g.fillStyle = "rgba(255,255,255,.34)"; g.font = "600 22px ui-monospace, monospace"; g.textAlign = "center";
+      for (var d2 = -180; d2 < 180; d2 += 45) g.fillText(d2 + "°", X(d2), Y(-2) + 30);
+      g.fillStyle = "rgba(255,255,255,.5)"; g.font = "700 30px 'Noto Sans TC', sans-serif";
+      g.fillText("程式生成示意全景　·　可在媒體庫匯入你自己拍的 2:1 全景照片取代", X(0), Y(-46));
+      PGEN[k] = c.toDataURL("image/jpeg", 0.86);
+      return PGEN[k];
+    }
+
+    return {build:build, resize:resize, refresh:function(){ texKey = null; ensureTex(); }};
+  })();
+
+  /* ==========================================================
+     5) AR 相機疊合（拆裝導引）
+     ========================================================== */
+  var AR = (function(){
+    var stream = null, vid = null, step = 0, started = false;
+
+    function build(){
+      var p = q("#xp-ar", view);
+      p.innerHTML =
+        '<div class="xr-card">' +
+          '<h3>AR 拆裝導引 <span class="xr-pill">相機疊合</span></h3>' +
+          '<p class="lead">用手機或筆電後鏡頭對著<b>真實的機器</b>，畫面上會疊出目前這一步該做什麼、要注意什麼。' +
+            '一邊拆一邊看提示，不用低頭翻講義。每一步可拍照存證，交作業直接用。</p>' +
+          '<div class="xr-row">' +
+            '<button class="xr-btn pri" id="xrArStart">📷 啟用相機</button>' +
+            '<button class="xr-btn sm" id="xrArStop" disabled>停止</button>' +
+            '<button class="xr-btn sm" id="xrArPrev" disabled>← 上一步</button>' +
+            '<button class="xr-btn sm" id="xrArNext" disabled>下一步 →</button>' +
+            '<button class="xr-btn sm" id="xrArShot" disabled>📸 拍照存證</button>' +
+            '<span class="xr-pill" id="xrArProg">0 / ' + AR_STEPS.length + '</span>' +
+          '</div>' +
+          '<div class="xr-stage" id="xrArStage">' +
+            '<video id="xrArVid" playsinline muted autoplay></video>' +
+            '<div class="ovl" id="xrArOvl"></div>' +
+            '<div class="badge">AR 疊合</div>' +
+            '<div class="hint" id="xrArHint">按「啟用相機」開始。沒有相機也可以看右下的步驟清單。</div>' +
+          '</div>' +
+          '<div class="xr-note" id="xrArNote"><b>沒有實體機器？</b>切到「🧊 3D 虛擬拆裝」一樣能練同一套順序。</div>' +
+          '<div class="xr-steps" id="xrArSteps"></div>' +
+        '</div>';
+
+      vid = q("#xrArVid", p);
+      renderSteps();
+      q("#xrArStart", p).addEventListener("click", start);
+      q("#xrArStop", p).addEventListener("click", stop);
+      q("#xrArPrev", p).addEventListener("click", function(){ go(step - 1); });
+      q("#xrArNext", p).addEventListener("click", function(){ go(step + 1); });
+      q("#xrArShot", p).addEventListener("click", snap);
+    }
+
+    function start(){
+      var hint = q("#xrArHint", view), note = q("#xrArNote", view);
+      if (!navigator.mediaDevices || !navigator.mediaDevices.getUserMedia){
+        note.className = "xr-note bad";
+        note.innerHTML = "<b>此瀏覽器不支援相機存取。</b>請改用「🧊 3D 虛擬拆裝」，或以手機開啟本頁。";
+        return;
+      }
+      if (location.protocol !== "https:" && location.hostname !== "localhost" && location.protocol !== "file:"){
+        note.className = "xr-note bad";
+        note.innerHTML = "<b>相機需要 HTTPS。</b>把本檔放上 GitHub Pages 即符合；本機測試請用 localhost。";
+        return;
+      }
+      navigator.mediaDevices.getUserMedia({video:{facingMode:{ideal:"environment"}, width:{ideal:1280}}, audio:false})
+        .then(function(s){
+          stream = s; vid.srcObject = s; started = true;
+          q("#xrArStop", view).disabled = false;
+          q("#xrArNext", view).disabled = false;
+          q("#xrArShot", view).disabled = false;
+          q("#xrArStart", view).disabled = true;
+          hint.textContent = "把鏡頭對著機器，依畫面提示操作";
+          note.className = "xr-note ok";
+          note.innerHTML = "<b>相機已啟用。</b>影像只在你的裝置上處理，不會上傳到任何地方。";
+          go(0);
+          log("C2-HW-13", "simulated", {asset:"xr#ar/start"});
+        })
+        .catch(function(err){
+          note.className = "xr-note bad";
+          note.innerHTML = "<b>無法取得相機：</b>" + esc(err && err.name ? err.name : err) +
+            "。可能是權限被拒或沒有可用鏡頭——步驟清單仍可單獨使用。";
+        });
+    }
+    function stop(){
+      if (stream){ stream.getTracks().forEach(function(t){ t.stop(); }); stream = null; }
+      started = false; vid.srcObject = null;
+      q("#xrArStop", view).disabled = true; q("#xrArStart", view).disabled = false;
+      q("#xrArShot", view).disabled = true;
+      q("#xrArHint", view).textContent = "相機已停止";
+    }
+    function go(i){
+      step = Math.max(0, Math.min(AR_STEPS.length - 1, i));
+      var s = AR_STEPS[step];
+      q("#xrArProg", view).textContent = (step + 1) + " / " + AR_STEPS.length;
+      q("#xrArPrev", view).disabled = step === 0;
+      q("#xrArNext", view).disabled = step === AR_STEPS.length - 1;
+      q("#xrArOvl", view).innerHTML =
+        '<div style="position:absolute;left:0;right:0;top:0;padding:12px 14px;' +
+          'background:linear-gradient(180deg,rgba(12,17,22,.86),rgba(12,17,22,0));color:#fff">' +
+          '<div style="font:700 11px ui-monospace,monospace;color:#e0b44a;letter-spacing:.12em">STEP ' +
+            (step + 1) + ' / ' + AR_STEPS.length + '　' + esc(s.ccid) + '</div>' +
+          '<div style="font-size:17px;font-weight:700;margin-top:2px">' + esc(s.t) + '</div>' +
+          '<div style="font-size:12.5px;opacity:.92;margin-top:3px;max-width:640px">' + esc(s.d) + '</div>' +
+        '</div>' +
+        '<div style="position:absolute;left:50%;top:52%;transform:translate(-50%,-50%);' +
+          'width:min(56%,320px);aspect-ratio:1;border:3px dashed rgba(224,180,74,.85);border-radius:18px"></div>' +
+        '<div style="position:absolute;left:50%;bottom:14%;transform:translateX(-50%);color:#e0b44a;' +
+          'font:700 12px \'Noto Sans TC\',sans-serif;text-shadow:0 2px 6px rgba(0,0,0,.8)">將目標元件對進框內</div>';
+      renderSteps();
+      log(s.ccid, "simulated", {asset:"xr#ar/step" + (step + 1)});
+      if (step === AR_STEPS.length - 1) mark("hw", "sim");
+    }
+    function renderSteps(){
+      q("#xrArSteps", view).innerHTML = AR_STEPS.map(function(s, i){
+        return '<div class="xr-step ' + (i === step && started ? "cur" : (i < step ? "done" : "")) + '">' +
+          '<span class="n">' + (i + 1) + '</span>' +
+          '<span><b>' + esc(s.t) + '</b><br><span style="color:#5b6b7a;font-size:12.5px">' + esc(s.d) + '</span></span>' +
+          '<span class="xr-pill">' + esc(s.ccid) + '</span></div>';
+      }).join("");
+    }
+    function snap(){
+      if (!started || !vid.videoWidth) return;
+      var c = D.createElement("canvas");
+      c.width = vid.videoWidth; c.height = vid.videoHeight;
+      var g = c.getContext("2d");
+      g.drawImage(vid, 0, 0);
+      var s = AR_STEPS[step];
+      g.fillStyle = "rgba(12,17,22,.78)"; g.fillRect(0, 0, c.width, 96);
+      g.fillStyle = "#e0b44a"; g.font = "700 20px ui-monospace, monospace";
+      g.fillText("STEP " + (step + 1) + " / " + AR_STEPS.length + "　" + s.ccid, 22, 36);
+      g.fillStyle = "#fff"; g.font = "700 30px 'Noto Sans TC', sans-serif";
+      g.fillText(s.t, 22, 76);
+      var a = D.createElement("a");
+      a.href = c.toDataURL("image/jpeg", 0.88);
+      a.download = "AR拆裝_step" + (step + 1) + ".jpg";
+      D.body.appendChild(a); a.click(); D.body.removeChild(a);
+      log(s.ccid, "reviewed", {asset:"xr#ar/snapshot" + (step + 1)});
+    }
+    return {build:build, stop:stop};
+  })();
+
+  /* ==========================================================
+     6) 3D 虛擬拆裝（CSS 3D，無需 WebGL）
+     ========================================================== */
+  var D3 = (function(){
+    var rx = -16, ry = 28, explode = 0, placed = {}, sel = null, scene = null, mode = "explore";
+
+    function face(w, h, tf, col, label){
+      /* 窄長面（例如 RAM）把字轉成直排，否則會被裁掉 */
+      var vert = label && w < h / 2 ? "writing-mode:vertical-rl;text-orientation:upright;letter-spacing:0;" : "";
+      var tiny = label && (w < 34 && h < 34) ? "font-size:0;" : "";
+      return '<div class="xr-face" style="width:' + w + 'px;height:' + h + 'px;' +
+        'left:' + (-w / 2) + 'px;top:' + (-h / 2) + 'px;background:' + col + ';transform:' + tf + ';' +
+        vert + tiny + '">' + (label || "") + "</div>";
+    }
+    function box(w, h, d, col, label){
+      function shade(f){ return "color-mix(in srgb," + col + " " + f + "%, #000)"; }
+      var c1 = shade(100), c2 = shade(78), c3 = shade(62);
+      return face(w, h, "translateZ(" + (d / 2) + "px)", c1, label) +
+             face(w, h, "translateZ(" + (-d / 2) + "px) rotateY(180deg)", c3, "") +
+             face(d, h, "translateX(" + (-w / 2) + "px) rotateY(-90deg)", c2, "") +
+             face(d, h, "translateX(" + (w / 2) + "px) rotateY(90deg)", c2, "") +
+             face(w, d, "translateY(" + (-h / 2) + "px) rotateX(90deg)", c2, "") +
+             face(w, d, "translateY(" + (h / 2) + "px) rotateX(-90deg)", c3, "");
+    }
+
+    function build(){
+      var p = q("#xp-d3", view);
+      p.innerHTML =
+        '<div class="xr-card">' +
+          '<h3>3D 虛擬拆裝 <span class="xr-pill">沒有實體機器也能練</span></h3>' +
+          '<p class="lead">拖曳旋轉、滑桿做爆炸圖。切到「安裝模式」後，' +
+            '<b>順序錯了會告訴你為什麼錯</b>——順序本身就是這一課的重點。</p>' +
+          '<div class="xr-row">' +
+            '<button class="xr-btn pri" id="xr3Mode">🔧 切換到安裝模式</button>' +
+            '<label style="display:flex;align-items:center;gap:8px;font-size:13px;color:#5b6b7a">爆炸圖' +
+              '<input type="range" id="xr3Ex" min="0" max="100" value="0" style="width:150px"></label>' +
+            '<button class="xr-btn sm" id="xr3Reset">↺ 重設視角</button>' +
+            '<span class="xr-pill" id="xr3Prog"></span>' +
+          '</div>' +
+          '<div class="xr-3d" id="xr3Stage"><div class="xr-scene" id="xr3Scene"></div></div>' +
+          '<div class="xr-tray" id="xr3Tray"></div>' +
+          '<div class="xr-note" id="xr3Note"><b>探索模式：</b>拖曳看各面，拉爆炸圖看元件相對位置。' +
+            '準備好了就切到安裝模式。</div>' +
+        '</div>';
+
+      scene = q("#xr3Scene", p);
+      renderScene(); renderTray(); apply();
+
+      var st = q("#xr3Stage", p), down = false, lx = 0, ly = 0;
+      function s0(x, y){ down = true; lx = x; ly = y; st.classList.add("drag"); }
+      function mv(x, y){ if (!down) return; ry += (x - lx) * 0.5; rx -= (y - ly) * 0.4;
+        rx = Math.max(-82, Math.min(82, rx)); lx = x; ly = y; apply(); }
+      st.addEventListener("mousedown", function(e){ s0(e.clientX, e.clientY); });
+      window.addEventListener("mousemove", function(e){ mv(e.clientX, e.clientY); });
+      window.addEventListener("mouseup", function(){ down = false; st.classList.remove("drag"); });
+      st.addEventListener("touchstart", function(e){ if (e.touches[0]) s0(e.touches[0].clientX, e.touches[0].clientY); }, {passive:true});
+      st.addEventListener("touchmove", function(e){ if (e.touches[0]){ mv(e.touches[0].clientX, e.touches[0].clientY); e.preventDefault(); } }, {passive:false});
+      st.addEventListener("touchend", function(){ down = false; });
+
+      q("#xr3Ex", p).addEventListener("input", function(){ explode = +this.value / 100; apply(); });
+      q("#xr3Reset", p).addEventListener("click", function(){ rx = -16; ry = 28; apply(); });
+      q("#xr3Mode", p).addEventListener("click", toggleMode);
+    }
+
+    function renderScene(){
+      var h = "";
+      h += '<div class="xr-part" data-p="case" style="transform:translate3d(0,0,0)">' +
+           box(CASE.w, CASE.h, CASE.d, "#39424d", "") + "</div>";
+      /* 主機板 z=0：所有元件的 z 都比它大，才會顯示在板子「前面」而不是被擋住 */
+      h += '<div class="xr-part" data-p="mobo" style="transform:translate3d(-14px,-10px,0px)">' +
+           box(BOARD.w, BOARD.h, BOARD.d, BOARD.col, "MAINBOARD") + "</div>";
+      PARTS.forEach(function(pt){
+        h += '<div class="xr-part" data-p="' + pt.k + '" style="transform:translate3d(' +
+             pt.x + "px," + pt.y + "px," + pt.z + 'px)">' + box(pt.w, pt.h, pt.d, pt.col, pt.n) + "</div>";
+      });
+      scene.innerHTML = h;
+      qa(".xr-part", scene).forEach(function(node){
+        node.addEventListener("click", function(e){
+          var k = node.getAttribute("data-p");
+          if (mode === "install"){ tryPlace(k); e.stopPropagation(); return; }
+          var pt = null; PARTS.forEach(function(x){ if (x.k === k) pt = x; });
+          if (pt) note("<b>" + esc(pt.n) + "：</b>" + esc(pt.why));
+          else if (k === "mobo") note("<b>主機板：</b>所有元件的地基。CPU、記憶體、擴充卡、儲存都掛在它身上。");
+          else note("<b>機殼：</b>提供結構、風道與接地。拆裝的第一步永遠是斷電開側板。");
+        });
+      });
+    }
+    function apply(){
+      if (!scene) return;
+      /* 爆炸圖越開，整體縮得越小，確保零件永遠留在舞台內 */
+      var sc = 0.72 - 0.22 * explode;
+      scene.style.transform = "scale(" + sc.toFixed(3) + ") rotateX(" + rx + "deg) rotateY(" + ry + "deg)";
+      qa(".xr-part", scene).forEach(function(node){
+        var k = node.getAttribute("data-p"), pt = null;
+        PARTS.forEach(function(x){ if (x.k === k) pt = x; });
+        if (!pt){
+          if (k === "case") node.style.opacity = String(0.16 + explode * 0.1);
+          return;
+        }
+        var ex = pt.ex, f = explode;
+        var X = pt.x + ex[0] * f, Y = pt.y + ex[1] * f, Z = pt.z + ex[2] * f;
+        node.style.transform = "translate3d(" + X + "px," + Y + "px," + Z + "px)";
+        if (mode === "install") node.classList.toggle("ghost", !placed[k]);
+        else node.classList.remove("ghost");
+        node.classList.toggle("pick", sel === k);
+      });
+      var done = PARTS.filter(function(x){ return placed[x.k]; }).length;
+      q("#xr3Prog", view).textContent = mode === "install" ? ("已安裝 " + done + " / " + PARTS.length) : "探索模式";
+    }
+    function renderTray(){
+      var t = q("#xr3Tray", view);
+      if (mode !== "install"){ t.innerHTML = ""; return; }
+      t.innerHTML = PARTS.map(function(pt){
+        return '<button class="xr-chip ' + (placed[pt.k] ? "placed" : (sel === pt.k ? "sel" : "")) +
+          '" data-c="' + pt.k + '"' + (placed[pt.k] ? " disabled" : "") + '>' +
+          '<i style="background:' + pt.col + '"></i>' + esc(pt.n) + "</button>";
+      }).join("");
+      qa(".xr-chip", t).forEach(function(b){
+        b.addEventListener("click", function(){ tryPlace(b.getAttribute("data-c")); });
+      });
+    }
+    function nextOrd(){
+      var n = 1; PARTS.forEach(function(x){ if (placed[x.k]) n = Math.max(n, x.ord + 1); });
+      return n;
+    }
+    function tryPlace(k){
+      if (mode !== "install") return;
+      var pt = null; PARTS.forEach(function(x){ if (x.k === k) pt = x; });
+      if (!pt || placed[k]) return;
+      var want = nextOrd();
+      log(pt.k === "cpu" ? "C2-HW-03" : pt.k === "ram" ? "C2-HW-06" : pt.k === "ssd" ? "C2-HW-07" : "C2-HW-12",
+          "predicted", {asset:"xr#3d/place/" + k});
+      if (pt.ord === want){
+        placed[k] = true; sel = null;
+        note('<b class="ok">✓ ' + esc(pt.n) + " 安裝正確。</b>" + esc(pt.why), "ok");
+        if (PARTS.every(function(x){ return placed[x.k]; })){
+          note("<b>🎉 全部安裝完成。</b>順序是 CPU → 記憶體 → M.2 → 顯示卡 → 電源：" +
+               "小的、被遮住的先裝，大的、會擋路的後裝。拆機時就是完全相反的順序。", "ok");
+          mark("hw", "sim");
+          log("C2-HW-12", "answered", {level:"near", conf:3, correct:1, asset:"xr#3d/complete"});
+        }
+      } else {
+        var blocker = null;
+        PARTS.forEach(function(x){ if (!placed[x.k] && x.ord === want) blocker = x; });
+        note("<b class=\"bad\">✗ 順序不對。</b>現在應該先裝「" + esc(blocker ? blocker.n : "前一個元件") +
+             "」。" + esc(pt.why), "bad");
+        log("C2-HW-12", "answered", {level:"near", conf:3, correct:0, asset:"xr#3d/place/" + k});
+      }
+      renderTray(); apply();
+    }
+    function toggleMode(){
+      mode = mode === "install" ? "explore" : "install";
+      placed = {}; sel = null;
+      q("#xr3Mode", view).textContent = mode === "install" ? "🔎 回到探索模式" : "🔧 切換到安裝模式";
+      note(mode === "install"
+        ? "<b>安裝模式：</b>元件變半透明。從下方零件列依<b>正確順序</b>點選安裝——先想清楚再點，順序錯會說明原因。"
+        : "<b>探索模式：</b>拖曳看各面，拉爆炸圖看元件相對位置。");
+      renderTray(); apply();
+    }
+    function note(html, kind){
+      var n = q("#xr3Note", view);
+      n.className = "xr-note" + (kind ? " " + kind : "");
+      n.innerHTML = html;
+    }
+    return {build:build};
+  })();
+
+  /* ==========================================================
+     7) 影音（延遲載入的 facade，離線也不會卡）
+     ========================================================== */
+  function videoCard(v){
+    var thumb = "https://i.ytimg.com/vi/" + v.id + "/hqdefault.jpg";
+    var d = el("div", "xr-vid");
+    d.innerHTML =
+      '<button class="fac" type="button" aria-label="播放 ' + esc(v.t) + '">' +
+        '<img alt="" loading="lazy" src="' + thumb + '">' +
+        '<span class="pl"><i>▶</i></span>' +
+      '</button>' +
+      '<div class="vt"><b>' + esc(v.t) + '</b>' +
+        '<span>' + esc(v.s) + '　·　' + esc(v.len) + '　·　' + esc(v.ccid) + '</span></div>';
+    var img = q("img", d);
+    img.onerror = function(){ img.onerror = null;
+      img.src = genPlaceholder({k:v.id, t:v.t, ic:"▶", ccid:v.ccid}); };
+    q(".fac", d).addEventListener("click", function(){
+      var f = D.createElement("iframe");
+      f.src = "https://www.youtube-nocookie.com/embed/" + v.id + "?rel=0&autoplay=1&modestbranding=1";
+      f.title = v.t; f.allow = "accelerometer; autoplay; encrypted-media; picture-in-picture; fullscreen";
+      f.setAttribute("allowfullscreen", "");
+      f.referrerPolicy = "strict-origin-when-cross-origin";
+      this.replaceWith(f);
+      log(v.ccid, "viewed", {asset:"youtube:" + v.id});
+    });
+    return d;
+  }
+  function buildVideos(){
+    var p = q("#xp-video", view);
+    var groups = {};
+    VIDEOS.forEach(function(v){ (groups[v.mod] = groups[v.mod] || []).push(v); });
+    var html = '<div class="xr-card"><h3>影音教材 <span class="xr-pill">20 支・依模組分組</span></h3>' +
+      '<p class="lead">縮圖點下去才會載入播放器（隱私增強模式 youtube-nocookie）。' +
+      '沒網路時縮圖會自動換成示意圖，頁面不會卡住。</p></div>';
+    Object.keys(groups).forEach(function(m){
+      html += '<div class="xr-card"><h3>' + esc(MODNAME[m] || m) + '</h3>' +
+              '<div class="xr-vids" data-vg="' + m + '"></div></div>';
+    });
+    p.innerHTML = html;
+    Object.keys(groups).forEach(function(m){
+      var host = q('[data-vg="' + m + '"]', p);
+      groups[m].forEach(function(v){ host.appendChild(videoCard(v)); });
+    });
+  }
+
+  /* ==========================================================
+     8) 媒體庫
+     ========================================================== */
+  function buildLib(){
+    var p = q("#xp-lib", view);
+    p.innerHTML =
+      '<div class="xr-card">' +
+        '<h3>媒體庫 <span class="xr-pill">三層回退：內嵌 → 外部 URL → 程式生成</span></h3>' +
+        '<p class="lead">把你的 3C 拆機實拍、機房照片、OpenStax 原書圖、操作截圖拖進對應格子。' +
+          '圖片會自動縮到 1600px、轉 JPEG 存進瀏覽器（IndexedDB），' +
+          '<b>不會上傳到任何地方</b>。完成後按「產生內嵌程式碼」貼回 HTML，就永久內建、離線可用。</p>' +
+        '<div class="xr-drop" id="xrDrop">把圖片拖到這裡，或<u>點擊選檔</u>　—　可一次多張，' +
+          '檔名若含槽位代號（例如 <code>hw_cpu.jpg</code>）會自動對號入座' +
+          '<input type="file" id="xrFile" accept="image/*" multiple hidden></div>' +
+        '<div class="xr-row" style="margin-top:12px">' +
+          '<label style="font-size:13px;color:#5b6b7a">外部素材基底網址（第二層）</label>' +
+          '<input class="xr-btn" id="xrBase" style="min-width:290px" placeholder="https://你的帳號.github.io/repo/media">' +
+          '<button class="xr-btn sm" id="xrBaseSave">套用</button>' +
+          '<span class="xr-pill" id="xrBaseState"></span>' +
+        '</div>' +
+        '<div class="xr-note">回退順序：<b>① 你匯入的內嵌圖 → ② 你的外部基底網址 → ③ Wikimedia Commons 真實照片 → ④ 程式生成示意圖</b>。' +
+          '四層都有東西，所以<b>畫面永遠不會破圖</b>。第二層抓的是 <code>基底網址/槽位代號.jpg</code>（點改底線，例如 <code>hw_cpu.jpg</code>）。</div>' +
+        '<div class="xr-row">' +
+          '<label style="display:flex;align-items:center;gap:7px;font-size:13.5px">' +
+            '<input type="checkbox" id="xrWebOn"> 第三層：線上抓 Wikimedia Commons 真實照片</label>' +
+          '<button class="xr-btn sm" id="xrWebCheck">🔎 檢查所有來源是否可載入</button>' +
+          '<button class="xr-btn sm" id="xrWebList">📄 來源與授權清單</button>' +
+          '<span class="xr-pill" id="xrWebStat"></span>' +
+        '</div>' +
+        '<div class="xr-note warn" id="xrWebWarn"></div>' +
+        '<div id="xrWebPanel" style="display:none"></div>' +
+        '<div class="xr-row">' +
+          '<button class="xr-btn" id="xrExport">⬇ 匯出 media-pack.json</button>' +
+          '<button class="xr-btn" id="xrImportPack">⬆ 匯入 media-pack.json</button>' +
+          '<button class="xr-btn pri" id="xrEmbed">📦 產生內嵌程式碼</button>' +
+          '<button class="xr-btn sm" id="xrWipe">清空全部匯入</button>' +
+          '<span class="xr-pill" id="xrLibStat"></span>' +
+          '<input type="file" id="xrPackFile" accept="application/json,.json" hidden>' +
+        '</div>' +
+        '<div class="xr-slots" id="xrSlots"></div>' +
+      '</div>';
+
+    var drop = q("#xrDrop", p), file = q("#xrFile", p);
+    drop.addEventListener("click", function(){ file.click(); });
+    file.addEventListener("change", function(){ handle(this.files); this.value = ""; });
+    ["dragenter","dragover"].forEach(function(ev){ drop.addEventListener(ev, function(e){
+      e.preventDefault(); drop.classList.add("hot"); }); });
+    ["dragleave","drop"].forEach(function(ev){ drop.addEventListener(ev, function(e){
+      e.preventDefault(); drop.classList.remove("hot"); }); });
+    drop.addEventListener("drop", function(e){ handle(e.dataTransfer.files); });
+
+    var baseIn = q("#xrBase", p);
+    baseIn.value = baseURL();
+    q("#xrBaseSave", p).addEventListener("click", function(){
+      setBaseURL(baseIn.value.trim()); renderSlots(); PANO.refresh(); refreshStrips(); });
+    q("#xrExport", p).addEventListener("click", exportPack);
+    q("#xrImportPack", p).addEventListener("click", function(){ q("#xrPackFile", p).click(); });
+    q("#xrPackFile", p).addEventListener("change", function(){ importPack(this.files[0]); this.value = ""; });
+    q("#xrEmbed", p).addEventListener("click", embedCode);
+    q("#xrWipe", p).addEventListener("click", function(){
+      if (!confirm("確定清空所有已匯入的圖片？（外部網址與程式生成不受影響）")) return;
+      DB.clear().then(function(){ STORE_CACHE = {}; renderSlots(); PANO.refresh(); refreshStrips(); });
+    });
+
+    var webChk = q("#xrWebOn", p);
+    webChk.checked = webOn();
+    webChk.addEventListener("change", function(){
+      setWebOn(this.checked); renderSlots(); refreshStrips(); webWarn(); });
+    q("#xrWebCheck", p).addEventListener("click", checkWeb);
+    q("#xrWebList", p).addEventListener("click", function(){
+      var panel = q("#xrWebPanel", p);
+      if (panel.style.display === "block"){ panel.style.display = "none"; return; }
+      panel.style.display = "block";
+      var rows = [];
+      Object.keys(WEB).forEach(function(k){
+        WEB[k].forEach(function(w, i){
+          rows.push("<tr><td><code>" + k + "</code></td><td>" + (i ? "備援" : "主要") + "</td>" +
+            '<td><a href="' + webPage(w.f) + '" target="_blank" rel="noopener">' + esc(w.f) + " ↗</a></td>" +
+            "<td>" + esc(w.n) + "</td></tr>");
+        });
+      });
+      Object.keys(SHOT_ONLY).forEach(function(k){
+        rows.push('<tr><td><code>' + k + '</code></td><td colspan="3" style="color:#b5497f">' +
+          "螢幕截圖類，不取用網路圖片——請自行擷取：" + esc(SHOT_ONLY[k]) + "</td></tr>");
+      });
+      panel.innerHTML =
+        '<div class="xr-note"><b>授權說明：</b>Wikimedia Commons 依政策只收自由授權內容，' +
+        "但個別檔案是 CC0／CC BY／CC BY-SA 或公有領域並不一致，署名要求也不同。" +
+        "每張圖下方都附了來源頁連結；<b>正式對外發布前，請在自己的電腦跑一次 " +
+        "<code>fetch_media.py</code></b>——它會向 Commons API 查回每個檔案的實際授權與作者、" +
+        "下載圖片、產生 <code>ATTRIBUTION.md</code> 與可離線內嵌的 <code>media-pack.json</code>。</div>" +
+        '<div class="tablewrap" style="overflow:auto"><table style="width:100%;border-collapse:collapse;font-size:12.5px">' +
+        '<tr><th style="text-align:left;padding:6px 9px">槽位</th><th style="text-align:left;padding:6px 9px">順位</th>' +
+        '<th style="text-align:left;padding:6px 9px">Commons 檔名</th><th style="text-align:left;padding:6px 9px">說明</th></tr>' +
+        rows.join("") + "</table></div>";
+      qa("td", panel).forEach(function(td){ td.style.padding = "6px 9px";
+        td.style.borderBottom = "1px solid #dfe5ec"; td.style.verticalAlign = "top"; });
+    });
+    webWarn();
+    renderSlots();
+  }
+
+  function webWarn(){
+    var w = q("#xrWebWarn", view); if (!w) return;
+    w.className = "xr-note " + (webOn() ? "warn" : "");
+    w.innerHTML = webOn()
+      ? "<b>第三層已開啟：需要網路。</b>教室斷網或離線使用時，這些圖會自動掉回程式生成的示意圖（不會破圖，但也看不到實照）。" +
+        "要真正離線可用，請跑 <code>fetch_media.py</code> 下載後匯入，或把照片自己拍一拍拖進來——<b>你自己的機器照片永遠比網路圖好教</b>。"
+      : "<b>第三層已關閉。</b>只用你匯入的圖與程式生成的示意圖，完全離線。";
+  }
+
+  /* 我無法在產出這份檔案時驗證這些網址（工具禁止抓取 commons.wikimedia.org），
+     所以把驗證交給瀏覽器：實際載一次，回報哪些成功、哪些失敗。 */
+  function checkWeb(){
+    var stat = q("#xrWebStat", view), panel = q("#xrWebPanel", view);
+    var jobs = [];
+    Object.keys(WEB).forEach(function(k){
+      WEB[k].forEach(function(w, i){
+        jobs.push(new Promise(function(res){
+          var im = new Image();
+          var done = function(ok){ res({k:k, f:w.f, rank:i ? "備援" : "主要", ok:ok,
+                                        wpx:im.naturalWidth, hpx:im.naturalHeight}); };
+          im.onload = function(){ done(true); };
+          im.onerror = function(){ done(false); };
+          im.referrerPolicy = "no-referrer";
+          im.src = webURL(w.f, 480);
+        }));
+      });
+    });
+    stat.textContent = "檢查中… 0 / " + jobs.length;
+    var n = 0;
+    jobs.forEach(function(p2){ p2.then(function(){ n++; stat.textContent = "檢查中… " + n + " / " + jobs.length; }); });
+    Promise.all(jobs).then(function(rs){
+      var ok = rs.filter(function(r){ return r.ok; }), bad = rs.filter(function(r){ return !r.ok; });
+      stat.textContent = "可載入 " + ok.length + " / " + rs.length;
+      panel.style.display = "block";
+      panel.innerHTML =
+        '<div class="xr-note ' + (bad.length ? "bad" : "ok") + '"><b>來源檢查結果：' +
+          ok.length + " 個可載入，" + bad.length + " 個失敗。</b>" +
+          (bad.length ? "失敗的通常是檔名變更或已被刪除——把它從清單移除，或改用你自己的照片。" : "全部可用。") +
+          "（這一步只驗證「圖抓不抓得到」，不驗證授權；授權請跑 fetch_media.py 或點來源頁確認。）</div>" +
+        '<div class="tablewrap" style="overflow:auto"><table style="width:100%;border-collapse:collapse;font-size:12.5px">' +
+        '<tr><th style="text-align:left;padding:6px 9px">狀態</th><th style="text-align:left;padding:6px 9px">槽位</th>' +
+        '<th style="text-align:left;padding:6px 9px">順位</th><th style="text-align:left;padding:6px 9px">檔名</th>' +
+        '<th style="text-align:left;padding:6px 9px">尺寸</th></tr>' +
+        rs.map(function(r){
+          return "<tr><td>" + (r.ok ? "✅" : "❌") + "</td><td><code>" + r.k + "</code></td><td>" + r.rank +
+            '</td><td><a href="' + webPage(r.f) + '" target="_blank" rel="noopener">' + esc(r.f) + " ↗</a></td><td>" +
+            (r.ok ? r.wpx + "×" + r.hpx : "—") + "</td></tr>";
+        }).join("") + "</table></div>";
+      qa("td", panel).forEach(function(td){ td.style.padding = "6px 9px";
+        td.style.borderBottom = "1px solid #dfe5ec"; });
+    });
+  }
+
+  function guessSlot(name){
+    var n = name.toLowerCase().replace(/[^a-z0-9]+/g, "_");
+    for (var i = 0; i < SLOTS.length; i++){
+      var key = SLOTS[i].k.replace(/\./g, "_");
+      if (n.indexOf(key) >= 0) return SLOTS[i].k;
+    }
+    return null;
+  }
+  function handle(files){
+    var list = [].slice.call(files || []);
+    if (!list.length) return;
+    var pending = list.map(function(f){
+      var k = guessSlot(f.name);
+      var sl = k ? slotOf(k) : null;
+      return importFile(f, sl && sl.pano ? 2048 : 1600, 0.82).then(function(r){
+        if (!k){
+          var free = SLOTS.filter(function(s){ return !STORE_CACHE[s.k]; })[0];
+          k = free ? free.k : SLOTS[0].k;
+        }
+        var rec = {k:k, dataURI:r.dataURI, name:r.name, w:r.w, h:r.h, bytes:r.bytes, ts:Date.now()};
+        STORE_CACHE[k] = rec;
+        return DB.put(rec).catch(function(){});
+      }).catch(function(e){ console.warn("[iocxr] 匯入失敗", f.name, e); });
+    });
+    Promise.all(pending).then(function(){ renderSlots(); PANO.refresh(); refreshStrips(); });
+  }
+
+  function renderSlots(){
+    var host = q("#xrSlots", view); if (!host) return;
+    host.innerHTML = SLOTS.map(function(s){
+      var src = sourceOf(s.k), rec = STORE_CACHE[s.k];
+      return '<figure class="xr-slot" data-k="' + s.k + '">' +
+        '<img class="th" data-src="' + s.k + '" alt="">' +
+        '<figcaption class="mt"><b>' + esc(s.t) + (s.pano ? " 〔2:1 全景〕" : "") + "</b>" +
+          '<span class="k">' + s.k + "　" + esc(s.ccid) + "</span>" +
+          '<span class="xr-src ' + src + '">' + srcLabel(src) + "</span> " +
+          '<span style="color:#5b6b7a">' + esc(s.d) + "</span>" +
+          (SHOT_ONLY[s.k] ? '<span class="k" style="color:#b5497f">螢幕截圖類·請自行擷取：' +
+                            esc(SHOT_ONLY[s.k]) + "</span>" : "") +
+          '<span class="xr-credit"></span>' +
+          (rec ? '<span class="k">' + esc(rec.name) + "　" + rec.w + "×" + rec.h + "　" +
+                 Math.round(rec.bytes / 1024) + " KB</span>" : "") +
+        "</figcaption>" +
+        '<div class="ops">' +
+          '<button class="xr-btn sm" data-act="pick">' + (rec ? "換一張" : "匯入") + "</button>" +
+          (rec ? '<button class="xr-btn sm" data-act="del">移除</button>' : "") +
+          '<button class="xr-btn sm" data-act="view">預覽</button>' +
+        "</div></figure>";
+    }).join("");
+    qa("img.th", host).forEach(function(img){ bindImg(img, img.getAttribute("data-src")); });
+    qa(".xr-slot", host).forEach(function(fig){
+      var k = fig.getAttribute("data-k");
+      qa("[data-act]", fig).forEach(function(b){
+        b.addEventListener("click", function(){
+          var act = b.getAttribute("data-act");
+          if (act === "view") return openLB(resolve(k), (slotOf(k) || {}).t + "　" + k);
+          if (act === "del") return DB.del(k).then(function(){ delete STORE_CACHE[k];
+            delete CREDITS[k]; saveCredits();
+            renderSlots(); PANO.refresh(); refreshStrips(); });
+          var inp = D.createElement("input"); inp.type = "file"; inp.accept = "image/*";
+          inp.addEventListener("change", function(){
+            var f = inp.files[0]; if (!f) return;
+            importFile(f, (slotOf(k) || {}).pano ? 2048 : 1600, 0.82).then(function(r){
+              var rec = {k:k, dataURI:r.dataURI, name:r.name, w:r.w, h:r.h, bytes:r.bytes, ts:Date.now()};
+              STORE_CACHE[k] = rec; return DB.put(rec).catch(function(){});
+            }).then(function(){ renderSlots(); PANO.refresh(); refreshStrips(); });
+          });
+          inp.click();
+        });
+      });
+    });
+    var n = Object.keys(STORE_CACHE).length;
+    var kb = 0; for (var k2 in STORE_CACHE) kb += STORE_CACHE[k2].bytes;
+    var st = q("#xrLibStat", view);
+    if (st) st.textContent = "已匯入 " + n + " / " + SLOTS.length + " 格　·　" + Math.round(kb / 1024) + " KB";
+    var bs = q("#xrBaseState", view);
+    if (bs) bs.textContent = baseURL() ? "第二層已啟用" : "第二層未設定";
+  }
+
+  function exportPack(){
+    var pack = {schema:"iocxr-media/1.0", ts:new Date().toISOString(), items:{}};
+    for (var k in STORE_CACHE) pack.items[k] = STORE_CACHE[k].dataURI;
+    var blob = new Blob([JSON.stringify(pack)], {type:"application/json"});
+    var a = D.createElement("a"); a.href = URL.createObjectURL(blob);
+    a.download = "media-pack.json"; D.body.appendChild(a); a.click(); D.body.removeChild(a);
+  }
+  function importPack(f){
+    if (!f) return;
+    var fr = new FileReader();
+    fr.onload = function(){
+      try {
+        var p = JSON.parse(fr.result), items = p.items || p;
+        if (p.credits) { Object.keys(p.credits).forEach(function(k){ CREDITS[k] = p.credits[k]; }); saveCredits(); }
+        var jobs = Object.keys(items).map(function(k){
+          var rec = {k:k, dataURI:items[k], name:"media-pack", w:0, h:0,
+                     bytes:Math.round(String(items[k]).length * 0.75), ts:Date.now()};
+          STORE_CACHE[k] = rec; return DB.put(rec).catch(function(){});
+        });
+        Promise.all(jobs).then(function(){ renderSlots(); PANO.refresh(); refreshStrips(); });
+      } catch (e){ alert("media-pack.json 格式不正確"); }
+    };
+    fr.readAsText(f);
+  }
+  function embedCode(){
+    var pack = {};
+    for (var k in STORE_CACHE) pack[k] = STORE_CACHE[k].dataURI;
+    if (!Object.keys(pack).length){ alert("目前沒有已匯入的圖片。先拖幾張進來再產生。"); return; }
+    var code = "<scr" + "ipt>window.IOCXR_MEDIA=" + JSON.stringify(pack) + ";</scr" + "ipt>";
+    var blob = new Blob([code], {type:"text/plain;charset=utf-8"});
+    var a = D.createElement("a"); a.href = URL.createObjectURL(blob);
+    a.download = "iocxr-media-embed.html.txt"; D.body.appendChild(a); a.click(); D.body.removeChild(a);
+    var n = q("#xrLibStat", view);
+    if (n) n.textContent = "已產生內嵌程式碼（" + Math.round(code.length / 1024) + " KB）——" +
+      "貼到本檔 </head> 之前，即永久內建";
+  }
+
+  /* ==========================================================
+     9) 各模組頁面的「實境素材」列
+     ========================================================== */
+  function stripFor(mod){
+    var slots = SLOTS.filter(function(s){ return s.mod === mod && !s.pano; });
+    var vids  = VIDEOS.filter(function(v){ return v.mod === mod; });
+    if (!slots.length && !vids.length) return null;
+    var d = el("div", "iocxr-strip");
+    d.setAttribute("data-iocxr-strip", mod);
+    d.innerHTML =
+      "<h3>📷 實境素材　<span style=\"font-weight:400;font-size:13px;color:#5b6b7a\">" +
+        esc(MODNAME[mod] || mod) + "</span></h3>" +
+      '<p class="lead">真實照片與影音對照這一段的操作。' +
+        '<button class="xr-btn sm" data-xrgo="lib" style="margin-left:4px">管理素材</button> ' +
+        '<button class="xr-btn sm" data-xrgo="pano">360° 全景</button></p>' +
+      '<div class="grid" data-g="img"></div>' +
+      (vids.length ? '<div class="grid" style="margin-top:11px" data-g="vid"></div>' : "");
+    var gi = q('[data-g="img"]', d);
+    slots.forEach(function(s){
+      var fig = el("figure");
+      if (s.diagram) fig.setAttribute("data-dg", "1");
+      fig.innerHTML = "<img alt=\"\"><figcaption><b>" + esc(s.t) + "</b>" + esc(s.d) +
+        ' <span class="xr-src ' + sourceOf(s.k) + '">' + srcLabel(sourceOf(s.k)) + "</span>" +
+        '<span class="xr-credit"></span></figcaption>';
+      var img = q("img", fig);
+      bindImg(img, s.k);
+      img.addEventListener("click", function(){ openLB(resolve(s.k), s.t + "　" + s.d);
+        log(s.ccid, "viewed", {asset:"xr#img/" + s.k}); });
+      gi.appendChild(fig);
+    });
+    if (vids.length){
+      var gv = q('[data-g="vid"]', d);
+      vids.forEach(function(v){ gv.appendChild(videoCard(v)); });
+    }
+    qa("[data-xrgo]", d).forEach(function(b){
+      b.addEventListener("click", function(){
+        show("xr");
+        var t = q('.xr-seg button[data-xp="' + b.getAttribute("data-xrgo") + '"]', view);
+        if (t) t.click();
+      });
+    });
+    return d;
+  }
+  function mountStrips(){
+    Object.keys(MODNAME).forEach(function(mod){
+      if (mod === "overview") return;
+      var v = D.getElementById("view-" + mod);
+      if (!v || q('[data-iocxr-strip="' + mod + '"]', v)) return;
+      var s = stripFor(mod);
+      if (s) v.appendChild(s);
+    });
+  }
+  function refreshStrips(){
+    qa("[data-iocxr-strip]").forEach(function(old){
+      var mod = old.getAttribute("data-iocxr-strip");
+      var fresh = stripFor(mod);
+      if (fresh) old.parentNode.replaceChild(fresh, old);
+    });
+  }
+
+  /* ==========================================================
+     10) 啟動
+     ========================================================== */
+  PANO.build(); AR.build(); D3.build(); buildVideos(); buildLib(); mountStrips();
+  DB.all().then(function(m){
+    STORE_CACHE = m || {};
+    if (Object.keys(STORE_CACHE).length){ renderSlots(); PANO.refresh(); refreshStrips(); }
+  }).catch(function(){});
+  window.IOCXR = {slots:SLOTS, videos:VIDEOS, resolve:resolve, db:DB, pano:PANO, version:"1.0.0"};
+})();
+
+</script>
+<!-- ===== /XR ===== -->
 </body>
 </html>
