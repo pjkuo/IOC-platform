@@ -11020,9 +11020,20 @@ body.iocui-preview #iocui-nav{box-shadow:inset 0 3px 0 #1f4e8c}
     T_ID.forEach(function (s) {
       qa(s).forEach(function (e) { if (!e.classList.contains("iocui-teacher-only")) { e.classList.add("iocui-teacher-only"); n++; } });
     });
-    /* tt-panel 裡的「✕ 收起教師工具」會把平台切回學生模式、跟本層的開關互打——
-       收掉，教師一律用導覽列右上角那顆切換 */
-    qa("#tt-panel .ttp-close").forEach(function (e) { e.classList.add("iocui-gone"); });
+    /* tt-panel 的「✕」原本會把整個平台切回學生模式、跟本層的開關互打。
+       改接成「只收起這塊面板」——克隆節點甩掉舊監聽，行為單純化 */
+    qa("#tt-panel .ttp-close").forEach(function (e) {
+      if (e.getAttribute("data-iocui-fixed")) return;
+      var neo = e.cloneNode(true);
+      neo.setAttribute("data-iocui-fixed", "1");
+      neo.textContent = "✕ 收起面板";
+      e.parentNode.replaceChild(neo, e);
+      neo.addEventListener("click", function (ev) {
+        /* 面板本身掛了事件委派，會把這個點擊當成舊的 turnOff——擋掉冒泡 */
+        ev.stopPropagation();
+        var p = q("#tt-panel"); if (p) p.style.display = "none";   /* 行內樣式壓過 display:block */
+      });
+    });
     /* 只掃「可以按的東西」，資訊性的標籤不動 */
     qa("button, .xr-btn, .segbtn, a[role=button]").forEach(function (b) {
       if (b.classList.contains("iocui-teacher-only")) return;
@@ -11167,6 +11178,557 @@ body.iocui-preview #iocui-nav{box-shadow:inset 0 3px 0 #1f4e8c}
     
     state: function () { return JSON.parse(JSON.stringify(ST)); },
     reset: function () { try { localStorage.removeItem(LS); } catch (e) {} }
+  };
+})();
+
+</script>
+<!-- ===== 注入：成績中心（教師版限定；學生版建置完全不含本模組）===== -->
+<style id="iocrep-style">
+#view-report{--rp-surface:#fcfcfb;--rp-ink:#0b0b0b;--rp-ink2:#52514e;--rp-muted:#898781;
+  --rp-grid:#e1e0d9;--rp-axis:#c3c2b7;--rp-s1:#2a78d6;--rp-s1-track:#cde2fb;
+  --rp-good:#006300;--rp-crit:#d03b3b;--rp-line:#dfe5ec}
+#view-report .rp-head{display:flex;align-items:baseline;gap:12px;flex-wrap:wrap;margin-bottom:4px}
+#view-report .rp-head h2{margin:0}
+#view-report .rp-head .rp-sub{font-size:12.5px;color:var(--rp-muted)}
+#view-report .rp-bar{display:flex;gap:8px;flex-wrap:wrap;align-items:center;
+  border:1px solid var(--rp-line);border-radius:12px;background:#fff;padding:10px 12px;margin:10px 0 14px}
+#view-report .rp-bar .btn{min-height:38px}
+#view-report .rp-msg{font-size:12.5px;color:var(--rp-ink2)}
+#view-report .rp-msg.err{color:var(--rp-crit)}
+#view-report .rp-live-dot{display:inline-block;width:9px;height:9px;border-radius:50%;
+  background:var(--rp-muted);margin-right:5px;vertical-align:1px}
+#view-report .btn.live-on .rp-live-dot{background:#0ca30c;animation:rp-pulse 1.6s infinite}
+@keyframes rp-pulse{0%,100%{opacity:1}50%{opacity:.35}}
+
+/* 統計磚 */
+#view-report .rp-tiles{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:10px;margin:12px 0}
+#view-report .rp-tile{border:1px solid var(--rp-line);border-radius:12px;background:var(--rp-surface);padding:12px 14px}
+#view-report .rp-tile .t-lab{font-size:12px;color:var(--rp-ink2)}
+#view-report .rp-tile .t-val{font:600 26px/1.25 system-ui,-apple-system,"Segoe UI",sans-serif;color:var(--rp-ink)}
+#view-report .rp-tile .t-note{font-size:11.5px;color:var(--rp-muted);margin-top:2px}
+#view-report .rp-tile svg{display:block;margin-top:6px}
+
+/* 圖卡 */
+#view-report .rp-grid2{display:grid;grid-template-columns:repeat(auto-fit,minmax(300px,1fr));gap:12px;margin:12px 0}
+#view-report .rp-card{border:1px solid var(--rp-line);border-radius:12px;background:var(--rp-surface);padding:13px 15px}
+#view-report .rp-card h3{margin:0 0 2px;font-size:14.5px;color:var(--rp-ink)}
+#view-report .rp-card .c-sub{font-size:12px;color:var(--rp-muted);margin-bottom:8px}
+#view-report .rp-card svg{display:block;width:100%;height:auto}
+#view-report .rp-card svg text{font-family:system-ui,-apple-system,"Segoe UI",sans-serif}
+
+/* 表格 */
+#view-report table.rp-t{width:100%;border-collapse:collapse;font-size:12.5px;margin-top:6px}
+#view-report table.rp-t th,#view-report table.rp-t td{border-bottom:1px solid var(--rp-line);
+  padding:6px 9px;text-align:left;vertical-align:top}
+#view-report table.rp-t th{color:var(--rp-ink2);font-weight:600}
+#view-report table.rp-t td.num,#view-report table.rp-t th.num{text-align:right;font-variant-numeric:tabular-nums}
+#view-report .rp-flag{color:var(--rp-crit);font-weight:600}
+#view-report .rp-up{color:var(--rp-good);font-weight:600}
+#view-report .rp-empty{color:var(--rp-muted);font-size:13px;padding:14px 0;text-align:center}
+#view-report details.rp-more summary{cursor:pointer;font-size:12.5px;color:var(--rp-ink2);
+  min-height:34px;display:flex;align-items:center}
+
+/* 列印報表：只印成績中心 */
+@media print{
+  html.iocrep-printing body>*{display:none!important}
+  html.iocrep-printing body>div.wrap{display:block!important}
+  html.iocrep-printing div.wrap>*{display:none!important}
+  html.iocrep-printing #view-report{display:block!important}
+  html.iocrep-printing #view-report .rp-bar,
+  html.iocrep-printing #view-report .rp-noprint{display:none!important}
+  html.iocrep-printing #view-report .rp-card{break-inside:avoid}
+}
+</style>
+<script id="iocrep-script">
+/* iocrep.js — 成績中心（教師版限定）
+ *
+ * 記錄學生評量結果：即時（本節課看板、自動更新）＋ 歷史（本機累積存檔、趨勢），
+ * 並輸出統計報表（列印成 PDF、CSV 總表與明細、JSON 備份）。
+ *
+ * 資料來源沿用平台既有管線：CCLOUD.fetchAll(kind) 讀同一份 GAS 試算表，
+ * kind = "quiz"（隨堂，匿名）/ "exam"（課後，具名）/ "repair"（3C 實訓）。
+ * 本模組不新增任何後端——雲端還是那一份試算表；「歷史」是把每次載入的紀錄
+ * 去重後累積在教師這台電腦的 localStorage，跨堂課、跨週都留著，並可 JSON
+ * 備份搬到別台電腦。
+ *
+ * 學生版建置完全不含本檔（build_sites.py 直接不打包，非隱藏）。
+ */
+(function () {
+  "use strict";
+  if (window.IOCREP) return;
+
+  var LS = "iocrep.v1";
+  var D = document;
+  function q(s, r) { return (r || D).querySelector(s); }
+  function qa(s, r) { return [].slice.call((r || D).querySelectorAll(s)); }
+  function el(t, c, h) { var e = D.createElement(t); if (c) e.className = c; if (h != null) e.innerHTML = h; return e; }
+  function esc(s) { return String(s == null ? "" : s).replace(/[&<>"]/g, function (c) {
+    return { "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;" }[c]; }); }
+  function fmtT(ts) { var d = new Date(ts); function p(n){return (n<10?"0":"")+n;}
+    return d.getFullYear() + "/" + p(d.getMonth()+1) + "/" + p(d.getDate()) + " " + p(d.getHours()) + ":" + p(d.getMinutes()); }
+  function dayKey(ts) { var d = new Date(ts); function p(n){return (n<10?"0":"")+n;}
+    return d.getFullYear() + "-" + p(d.getMonth()+1) + "-" + p(d.getDate()); }
+
+  /* ---------------- 本機歷史存檔 ---------------- */
+  var ST = { arc: [], loads: [] };
+  try { ST = JSON.parse(localStorage.getItem(LS)) || ST; } catch (e) {}
+  if (!ST.arc) ST.arc = []; if (!ST.loads) ST.loads = [];
+  var KEYS = {};                                     /* 去重索引 */
+  /* 用「原始」欄位算鍵——ts 缺漏時不能拿補上去的載入時間當鍵，
+     否則每次重新載入同一批無時戳紀錄都會再算一筆（實際踩過） */
+  function recKey(r) { return [r.kind, r._ots != null ? r._ots : (r.ts || ""),
+                               r.id || "", r.name || "", r.score].join("|"); }
+  ST.arc.forEach(function (r) { KEYS[recKey(r)] = 1; });
+
+  function save() {
+    /* 超過容量就從最舊的砍——localStorage 塞爆會直接 throw */
+    for (var tries = 0; tries < 4; tries++) {
+      try { localStorage.setItem(LS, JSON.stringify(ST)); return true; }
+      catch (e) { ST.arc = ST.arc.slice(Math.floor(ST.arc.length / 4)); }
+    }
+    return false;
+  }
+  function ingest(rows, kind) {
+    var added = 0;
+    (rows || []).forEach(function (r) {
+      if (!r || typeof r !== "object") return;
+      if (!r.kind) r.kind = kind;
+      if (!r.ts) { r._ots = ""; r.ts = Date.now(); }   /* 記住它原本沒有時戳 */
+      var k = recKey(r);
+      if (KEYS[k]) return;
+      KEYS[k] = 1; ST.arc.push(r); added++;
+    });
+    if (added) save();
+    return added;
+  }
+
+  var DEMO = false;                                  /* 示範資料只進記憶體，不進存檔 */
+  var demoArc = [];
+  function allRecs() { return DEMO ? ST.arc.concat(demoArc) : ST.arc; }
+  function byKind(k) { return allRecs().filter(function (r) { return r.kind === k; }); }
+
+  /* ---------------- 統計 ---------------- */
+  function nums(a) { return a.filter(function (x) { return typeof x === "number" && isFinite(x); }); }
+  function mean(a) { a = nums(a); return a.length ? a.reduce(function (s, x) { return s + x; }, 0) / a.length : 0; }
+  function median(a) { a = nums(a).slice().sort(function (x, y) { return x - y; });
+    if (!a.length) return 0; var m = a.length >> 1; return a.length % 2 ? a[m] : (a[m-1]+a[m])/2; }
+  function stdev(a) { a = nums(a); if (a.length < 2) return 0; var m = mean(a);
+    return Math.sqrt(a.reduce(function (s, x) { return s + (x-m)*(x-m); }, 0) / (a.length - 1)); }
+  function r1(x) { return Math.round(x * 10) / 10; }
+
+  /* 課後評量：每位學生取最高分（允許補考重作的自然規則） */
+  function examByStudent() {
+    var m = {};
+    byKind("exam").forEach(function (r) {
+      var id = r.id || r.name || "?";
+      var cur = m[id];
+      if (!cur || (r.score || 0) > (cur.best || 0)) {
+        m[id] = { id: r.id || "", name: r.name || "", cls: r.cls || "",
+                  best: r.score || 0, grade: r.grade || "", last: r.ts, n: (cur ? cur.n : 0) };
+      }
+      m[id].n = (m[id].n || 0) + (cur && cur !== m[id] ? 0 : 0);
+    });
+    /* 次數另計 */
+    var cnt = {};
+    byKind("exam").forEach(function (r) { var id = r.id || r.name || "?"; cnt[id] = (cnt[id] || 0) + 1;
+      if (m[id] && r.ts > m[id].last) m[id].last = r.ts; });
+    Object.keys(m).forEach(function (id) { m[id].n = cnt[id] || 1; });
+    return Object.keys(m).map(function (id) { return m[id]; });
+  }
+  var CATN = { hw: "硬體", sw: "軟體", nw: "網路", ed: "邊雲", ai: "AI" };
+  var CTN = { de: "拆解", pa: "找規律", ab: "抽象化", al: "演算法" };
+  function aggPairs(recs, field, names) {
+    var agg = {};
+    recs.forEach(function (r) { var o = r[field] || {}; Object.keys(o).forEach(function (k) {
+      if (!names[k]) return; var v = o[k] || {};
+      agg[k] = agg[k] || { c: 0, t: 0 }; agg[k].c += v.c || 0; agg[k].t += v.t || 0; }); });
+    return Object.keys(names).filter(function (k) { return agg[k] && agg[k].t; })
+      .map(function (k) { return { k: k, n: names[k], p: agg[k].c / agg[k].t, c: agg[k].c, t: agg[k].t }; });
+  }
+  function quizItems() {                             /* 逐題難易：彙整 items[].right */
+    var m = {};
+    byKind("quiz").forEach(function (r) { (r.items || []).forEach(function (it) {
+      if (!it || !it.stem) return;
+      var o = m[it.stem] = m[it.stem] || { stem: it.stem, cat: it.cat, c: 0, t: 0 };
+      o.t++; if (it.right) o.c++; }); });
+    return Object.keys(m).map(function (k) { return m[k]; }).filter(function (o) { return o.t >= 2; });
+  }
+
+  /* ---------------- SVG 圖（規格：細標記、髮絲格線、文字用文字色） ---------------- */
+  var C = { s1: "#2a78d6", track: "#cde2fb", grid: "#e1e0d9", axis: "#c3c2b7",
+            ink: "#0b0b0b", ink2: "#52514e", muted: "#898781" };
+  function svgOpen(w, h) { return '<svg viewBox="0 0 ' + w + " " + h + '" role="img" width="100%">'; }
+
+  /* 直方圖／每日長條：柱寬 ≤24、頂端 4px 圓角、相鄰留 2px 面色縫、值標在柱頂 */
+  function colChart(bins, W, H, fmt) {
+    W = W || 340; H = H || 170;
+    var padL = 8, padB = 22, padT = 16, innerW = W - padL - 8, innerH = H - padT - padB;
+    var max = Math.max.apply(null, bins.map(function (b) { return b.v; }).concat([1]));
+    var slot = innerW / bins.length, bw = Math.min(24, slot - 8);
+    var s = svgOpen(W, H);
+    [0.5, 1].forEach(function (g) {
+      var y = padT + innerH * (1 - g);
+      s += '<line x1="' + padL + '" y1="' + y + '" x2="' + (W-8) + '" y2="' + y + '" stroke="' + C.grid + '" stroke-width="1"/>';
+    });
+    bins.forEach(function (b, i) {
+      var h = Math.max(2, innerH * b.v / max), x = padL + slot * i + (slot - bw) / 2, y = padT + innerH - h;
+      var r = Math.min(4, h);
+      s += '<path d="M' + x + " " + (y+r) + " q0 -" + r + " " + r + " -" + r + " h" + (bw - 2*r) +
+           " q" + r + " 0 " + r + " " + r + " v" + (h-r) + " h-" + bw + ' z" fill="' + C.s1 + '">' +
+           "<title>" + esc(b.l) + "：" + (fmt ? fmt(b.v) : b.v) + "</title></path>";
+      if (b.v) s += '<text x="' + (x + bw/2) + '" y="' + (y - 4) + '" text-anchor="middle" font-size="10.5" fill="' + C.ink2 + '">' + (fmt ? fmt(b.v) : b.v) + "</text>";
+      s += '<text x="' + (padL + slot * i + slot/2) + '" y="' + (H - 7) + '" text-anchor="middle" font-size="10.5" fill="' + C.muted + '">' + esc(b.l) + "</text>";
+    });
+    s += '<line x1="' + padL + '" y1="' + (padT + innerH) + '" x2="' + (W-8) + '" y2="' + (padT + innerH) + '" stroke="' + C.axis + '" stroke-width="1"/>';
+    return s + "</svg>";
+  }
+
+  /* 橫向答對率條：同一量值單一色相；未滿的軌道用同色淺階；值標在條尾 */
+  function rateBars(rows, W) {
+    W = W || 340;
+    var rowH = 30, padL = 64, H = rows.length * rowH + 6;
+    var innerW = W - padL - 46;
+    var s = svgOpen(W, H);
+    rows.forEach(function (r, i) {
+      var y = i * rowH + 8, bw = 12;
+      s += '<text x="' + (padL - 8) + '" y="' + (y + bw - 2) + '" text-anchor="end" font-size="12" fill="' + C.ink2 + '">' + esc(r.n) + "</text>";
+      s += '<rect x="' + padL + '" y="' + y + '" width="' + innerW + '" height="' + bw + '" rx="4" fill="' + C.track + '"/>';
+      var w = Math.max(3, innerW * r.p);
+      s += '<rect x="' + padL + '" y="' + y + '" width="' + w + '" height="' + bw + '" rx="4" fill="' + C.s1 + '">' +
+           "<title>" + esc(r.n) + "：" + Math.round(r.p*100) + "%（" + r.c + "/" + r.t + "）</title></rect>";
+      s += '<text x="' + (padL + innerW + 6) + '" y="' + (y + bw - 2) + '" font-size="11.5" fill="' + C.ink + '">' + Math.round(r.p*100) + "%</text>";
+    });
+    return s + "</svg>";
+  }
+
+  /* 趨勢折線：2px 圓端、端點 ≥8px 標記＋2px 面色環、端點直標 */
+  function lineChart(pts, W, H, fmt) {
+    W = W || 340; H = H || 150;
+    var padL = 30, padB = 20, padT = 12, innerW = W - padL - 34, innerH = H - padT - padB;
+    var max = Math.max.apply(null, pts.map(function (p) { return p.v; }).concat([1]));
+    var s = svgOpen(W, H);
+    [0, 0.5, 1].forEach(function (g) {
+      var y = padT + innerH * (1 - g);
+      s += '<line x1="' + padL + '" y1="' + y + '" x2="' + (W-34) + '" y2="' + y + '" stroke="' + (g ? C.grid : C.axis) + '" stroke-width="1"/>';
+      s += '<text x="' + (padL - 5) + '" y="' + (y + 3.5) + '" text-anchor="end" font-size="10" fill="' + C.muted + '">' + Math.round(max * g) + "</text>";
+    });
+    function X(i) { return pts.length > 1 ? padL + innerW * i / (pts.length - 1) : padL + innerW / 2; }
+    function Y(v) { return padT + innerH * (1 - v / max); }
+    var d = pts.map(function (p, i) { return (i ? "L" : "M") + X(i) + " " + Y(p.v); }).join(" ");
+    s += '<path d="' + d + '" fill="none" stroke="' + C.s1 + '" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>';
+    pts.forEach(function (p, i) {
+      s += '<circle cx="' + X(i) + '" cy="' + Y(p.v) + '" r="4" fill="' + C.s1 + '" stroke="#fcfcfb" stroke-width="2">' +
+           "<title>" + esc(p.l) + "：" + (fmt ? fmt(p.v) : p.v) + "</title></circle>";
+      if (i === 0 || i === pts.length - 1 || pts.length <= 7)
+        s += '<text x="' + X(i) + '" y="' + (H - 6) + '" text-anchor="middle" font-size="9.5" fill="' + C.muted + '">' + esc(p.l) + "</text>";
+    });
+    var lastP = pts[pts.length - 1];
+    if (lastP) s += '<text x="' + (X(pts.length-1) + 7) + '" y="' + (Y(lastP.v) + 3.5) + '" font-size="11" fill="' + C.ink + '">' + (fmt ? fmt(lastP.v) : lastP.v) + "</text>";
+    return s + "</svg>";
+  }
+
+  function spark(vals, W, H) {
+    W = W || 120; H = H || 26;
+    var max = Math.max.apply(null, vals.concat([1]));
+    function X(i) { return vals.length > 1 ? 2 + (W-14) * i / (vals.length - 1) : W/2; }
+    function Y(v) { return 2 + (H-4) * (1 - v / max); }
+    var d = vals.map(function (v, i) { return (i ? "L" : "M") + X(i) + " " + Y(v); }).join(" ");
+    return svgOpen(W, H).replace('width="100%"', 'width="' + W + '"') +
+      '<path d="' + d + '" fill="none" stroke="' + C.muted + '" stroke-width="1.5" stroke-linecap="round"/>' +
+      '<circle cx="' + X(vals.length-1) + '" cy="' + Y(vals[vals.length-1]) + '" r="3.5" fill="' + C.s1 + '" stroke="#fcfcfb" stroke-width="2"/></svg>';
+  }
+
+  /* ---------------- 畫面 ---------------- */
+  var view, LIVE = null;
+
+  function build() {
+    if (q("#view-report")) return;
+    var ov = q("#view-overview"); if (!ov) return;
+    view = el("section", "view"); view.id = "view-report";
+    view.innerHTML =
+      '<div class="subbar"><button class="btn back" data-back>← 返回首頁</button>' +
+      '<span class="crumb">📊 成績中心</span></div>' +
+      '<div class="rp-head"><h2>成績中心</h2>' +
+      '<span class="rp-sub" id="rpStamp"></span></div>' +
+      '<div class="rp-bar rp-noprint">' +
+        '<button class="btn primary" id="rpLoad">⟳ 載入雲端資料</button>' +
+        '<button class="btn" id="rpLive"><span class="rp-live-dot"></span>即時模式：關</button>' +
+        '<button class="btn" id="rpPrint">🖨 列印報表（存成 PDF）</button>' +
+        '<button class="btn" id="rpCsvSum">⬇ 班級總表 CSV</button>' +
+        '<button class="btn" id="rpCsvRaw">⬇ 全部明細 CSV</button>' +
+        '<button class="btn" id="rpBk">⬇ 備份 JSON</button>' +
+        '<button class="btn" id="rpRe">⬆ 匯入備份</button>' +
+        '<button class="btn" id="rpDemo">🧪 示範資料</button>' +
+        '<button class="btn" id="rpWipe">🗑 清除本機歷史</button>' +
+        '<input type="file" id="rpFile" accept="application/json,.json" hidden>' +
+        '<span class="rp-msg" id="rpMsg"></span>' +
+      "</div>" +
+      '<div id="rpBody"></div>';
+    ov.parentNode.appendChild(view);
+    qa("[data-back]", view).forEach(function (b) {
+      b.addEventListener("click", function () { if (window.IOCUI) IOCUI.jump("overview"); });
+    });
+    wire();
+    render();
+    navBtn();
+  }
+
+  function navBtn() {
+    var inner = q("#iocui-nav .n-in"); if (!inner || q('#iocui-nav [data-jump="report"]')) return;
+    var b = el("button", "", "📊 成績中心");
+    b.setAttribute("data-jump", "report");
+    b.addEventListener("click", function () {
+      if (window.IOCUI) IOCUI.jump("report");
+      qa("#iocui-nav [data-jump]").forEach(function (x) {
+        x.classList.toggle("on", x === b);
+      });
+      render();
+    });
+    var tag = q("#iocui-nav .n-tag");
+    if (tag) inner.insertBefore(b, tag); else inner.appendChild(b);
+  }
+
+  function msg(t, err) { var m = q("#rpMsg"); if (m) { m.textContent = t || ""; m.classList.toggle("err", !!err); } }
+
+  /* ---------------- 載入 ---------------- */
+  function fetchKind(kind) {
+    return new Promise(function (res) {
+      if (!window.CCLOUD || !CCLOUD.fetchAll) { res({ kind: kind, err: "平台雲端模組不存在" }); return; }
+      CCLOUD.fetchAll(kind, function (data, err) { res({ kind: kind, rows: data || [], err: err }); });
+    });
+  }
+  var loading = false;
+  function loadAll(silent) {
+    if (loading) return Promise.resolve();
+    if (!window.CCLOUD || !CCLOUD.getUrl || !CCLOUD.getUrl()) {
+      msg("尚未設定雲端網址——到「即時評量 → 統計分析」設定 GAS 網址，或先按 🧪 示範資料看看報表長什麼樣。", true);
+      return Promise.resolve();
+    }
+    loading = true; if (!silent) msg("載入中…");
+    return Promise.all([fetchKind("quiz"), fetchKind("exam"), fetchKind("repair")]).then(function (rs) {
+      loading = false;
+      var added = 0, errs = [];
+      rs.forEach(function (r) { if (r.err) errs.push(r.kind + "：" + r.err); else added += ingest(r.rows, r.kind); });
+      ST.loads.push({ ts: Date.now(), added: added });
+      ST.loads = ST.loads.slice(-200); save();
+      msg(errs.length ? errs.join("；") : ("✔ " + fmtT(Date.now()) + " 載入完成，新增 " + added + " 筆（累積 " + ST.arc.length + " 筆）"), !!errs.length);
+      render();
+    });
+  }
+
+  function wire() {
+    q("#rpLoad").addEventListener("click", function () { loadAll(false); });
+    q("#rpLive").addEventListener("click", function () {
+      if (LIVE) { clearInterval(LIVE); LIVE = null; this.classList.remove("live-on");
+        this.innerHTML = '<span class="rp-live-dot"></span>即時模式：關'; msg("即時模式已停止"); return; }
+      var self = this;
+      LIVE = setInterval(function () { loadAll(true); }, 30000);
+      self.classList.add("live-on");
+      self.innerHTML = '<span class="rp-live-dot"></span>即時模式：每 30 秒更新';
+      loadAll(false);
+    });
+    q("#rpPrint").addEventListener("click", function () {
+      D.documentElement.classList.add("iocrep-printing");
+      var off = function () { D.documentElement.classList.remove("iocrep-printing");
+        window.removeEventListener("afterprint", off); };
+      window.addEventListener("afterprint", off);
+      setTimeout(function () { window.print(); }, 60);
+    });
+    q("#rpCsvSum").addEventListener("click", csvSummary);
+    q("#rpCsvRaw").addEventListener("click", csvRaw);
+    q("#rpBk").addEventListener("click", function () {
+      dl("成績中心備份_" + dayKey(Date.now()) + ".json", JSON.stringify(ST));
+    });
+    q("#rpRe").addEventListener("click", function () { q("#rpFile").click(); });
+    q("#rpFile").addEventListener("change", function () {
+      var f = this.files[0]; this.value = ""; if (!f) return;
+      var fr = new FileReader();
+      fr.onload = function () {
+        try {
+          var o = JSON.parse(fr.result);
+          var n = ingest(o.arc || o, null);
+          msg("✔ 匯入完成，新增 " + n + " 筆（累積 " + ST.arc.length + " 筆）"); render();
+        } catch (e) { msg("備份檔格式不正確", true); }
+      };
+      fr.readAsText(f);
+    });
+    q("#rpDemo").addEventListener("click", function () {
+      DEMO = !DEMO;
+      if (DEMO && !demoArc.length) demoArc = makeDemo();
+      this.classList.toggle("primary", DEMO);
+      msg(DEMO ? "示範模式：畫面混入虛構資料（只在記憶體，不會存檔、不會進匯出）" : "已關閉示範模式");
+      render();
+    });
+    q("#rpWipe").addEventListener("click", function () {
+      if (!confirm("清除教師這台電腦累積的歷史成績存檔？（雲端試算表不受影響，重新載入可再取回目前雲端上的資料）")) return;
+      ST.arc = []; ST.loads = []; KEYS = {}; save(); render(); msg("已清除本機歷史");
+    });
+  }
+
+  /* ---------------- 匯出 ---------------- */
+  function csv(s) { return '"' + String(s == null ? "" : s).replace(/"/g, '""') + '"'; }
+  function dl(name, text) {
+    var a = D.createElement("a");
+    a.href = URL.createObjectURL(new Blob(["﻿" + text], { type: "text/plain;charset=utf-8" }));
+    a.download = name; D.body.appendChild(a); a.click(); D.body.removeChild(a);
+  }
+  function csvSummary() {
+    var rows = examByStudent().sort(function (a, b) { return b.best - a.best; });
+    var head = ["學號", "姓名", "班級", "課後最高分", "等第", "作答次數", "最近活動"];
+    dl("班級總表_" + dayKey(Date.now()) + ".csv",
+      head.map(csv).join(",") + "\n" +
+      rows.map(function (r) { return [r.id, r.name, r.cls, r.best, r.grade, r.n, fmtT(r.last)].map(csv).join(","); }).join("\n") + "\n");
+  }
+  function csvRaw() {
+    var head = ["kind", "時間", "學號", "姓名", "班級", "分數", "等第", "範圍", "難度", "題數"];
+    dl("成績明細_" + dayKey(Date.now()) + ".csv",
+      head.map(csv).join(",") + "\n" +
+      ST.arc.map(function (r) {
+        return [r.kind, fmtT(r.ts), r.id, r.name, r.cls, r.score, r.grade, r.scope, r.level, r.count].map(csv).join(",");
+      }).join("\n") + "\n");
+  }
+
+  /* ---------------- 主渲染 ---------------- */
+  function render() {
+    var body = q("#rpBody"); if (!body) return;
+    var stamp = q("#rpStamp");
+    if (stamp) stamp.textContent = ST.loads.length
+      ? "上次載入 " + fmtT(ST.loads[ST.loads.length-1].ts) + "・本機累積 " + ST.arc.length + " 筆" + (DEMO ? "・🧪 示範模式" : "")
+      : "尚未載入過雲端資料" + (DEMO ? "・🧪 示範模式" : "");
+
+    var recs = allRecs();
+    if (!recs.length) {
+      body.innerHTML = '<div class="rp-empty">還沒有資料。按「⟳ 載入雲端資料」抓全班紀錄，' +
+        "或按「🧪 示範資料」先看報表長什麼樣子。</div>";
+      return;
+    }
+    var today = dayKey(Date.now());
+    var todayRecs = recs.filter(function (r) { return dayKey(r.ts) === today; });
+    var exam = examByStudent();
+    var bests = exam.map(function (r) { return r.best; });
+    var quiz = byKind("quiz");
+
+    /* 今日各小時份數 → 磚上的 sparkline */
+    var hours = []; for (var h = 8; h <= 17; h++) hours.push(todayRecs.filter(function (r) {
+      return new Date(r.ts).getHours() === h; }).length);
+
+    var html = "";
+    /* --- 即時看板 --- */
+    html += '<div class="rp-tiles">' +
+      tile("今日繳交", todayRecs.length, "份（隨堂＋課後＋實訓）", spark(hours)) +
+      tile("今日課後交卷", uniq(todayRecs.filter(function (r) { return r.kind === "exam"; })), "人") +
+      tile("課後平均（每人最高）", exam.length ? r1(mean(bests)) : "—", exam.length ? "中位 " + r1(median(bests)) + "・σ " + r1(stdev(bests)) : "尚無資料") +
+      tile("不及格", exam.filter(function (r) { return r.best < 60; }).length, "人（課後最高分 < 60）") +
+      "</div>";
+
+    /* --- 圖卡 --- */
+    html += '<div class="rp-grid2">';
+    if (exam.length) {
+      var bins = [[0,59,"0–59"],[60,69,"60–69"],[70,79,"70–79"],[80,89,"80–89"],[90,100,"90–100"]]
+        .map(function (b) { return { l: b[2], v: bests.filter(function (s) { return s >= b[0] && s <= b[1]; }).length }; });
+      html += card("課後評量・分數分布", exam.length + " 位學生，每人取最高分", colChart(bins));
+      var cats = aggPairs(byKind("exam"), "cat", CATN);
+      if (cats.length) html += card("課後評量・主軸答對率", "全部作答彙整", rateBars(cats));
+    }
+    if (quiz.length) {
+      var cts = aggPairs(quiz, "ct", CTN);
+      if (cts.length) html += card("隨堂練習・運算思維構面", quiz.length + " 份（匿名）", rateBars(cts));
+    }
+    var days = trendDays(recs);
+    if (days.length >= 2) html += card("每日繳交趨勢", "近 " + days.length + " 個有資料的日子",
+      lineChart(days.map(function (d) { return { l: d.k.slice(5), v: d.n }; })));
+    html += "</div>";
+
+    /* --- 最難題目 --- */
+    var items = quizItems().sort(function (a, b) { return a.c/a.t - b.c/b.t; }).slice(0, 8);
+    if (items.length) {
+      html += '<div class="rp-card"><h3>隨堂最難的題目</h3><div class="c-sub">答對率最低的 ' + items.length + ' 題（作答 ≥ 2 次）——下週上課先講這幾題</div>' +
+        '<table class="rp-t"><tr><th>題目</th><th>主軸</th><th class="num">答對率</th><th class="num">作答數</th></tr>' +
+        items.map(function (it) {
+          var p = Math.round(100 * it.c / it.t);
+          return "<tr><td>" + esc(it.stem) + "</td><td>" + esc(CATN[it.cat] || it.cat || "") +
+            '</td><td class="num' + (p < 50 ? " rp-flag" : "") + '">' + p + '%</td><td class="num">' + it.t + "</td></tr>";
+        }).join("") + "</table></div>";
+    }
+
+    /* --- 學生名冊 --- */
+    if (exam.length) {
+      var roster = exam.slice().sort(function (a, b) { return a.best - b.best; });
+      html += '<div class="rp-card"><h3>學生名冊（課後評量）</h3><div class="c-sub">依最高分低→高排序，需要關注的在最上面</div>' +
+        '<table class="rp-t"><tr><th>學號</th><th>姓名</th><th>班級</th><th class="num">最高分</th><th>等第</th><th class="num">次數</th><th>最近活動</th></tr>' +
+        roster.map(function (r) {
+          return "<tr><td>" + esc(r.id) + "</td><td>" + esc(r.name) + "</td><td>" + esc(r.cls) +
+            '</td><td class="num' + (r.best < 60 ? " rp-flag" : "") + '">' + r.best +
+            "</td><td>" + esc(r.grade) + '</td><td class="num">' + r.n + "</td><td>" + fmtT(r.last) + "</td></tr>";
+        }).join("") + "</table></div>";
+    }
+
+    /* --- 即時動態 --- */
+    var feed = recs.slice().sort(function (a, b) { return b.ts - a.ts; }).slice(0, 12);
+    var KN = { quiz: "隨堂", exam: "課後", repair: "3C 實訓" };
+    html += '<details class="rp-more rp-noprint"' + (LIVE ? " open" : "") + '><summary>最新動態（' + feed.length + ' 筆）</summary>' +
+      '<table class="rp-t"><tr><th>時間</th><th>類別</th><th>學生</th><th class="num">分數</th></tr>' +
+      feed.map(function (r) {
+        return "<tr><td>" + fmtT(r.ts) + "</td><td>" + (KN[r.kind] || r.kind) + "</td><td>" +
+          esc(r.name || r.id || "匿名") + '</td><td class="num">' + (r.score != null ? r.score : "—") + "</td></tr>";
+      }).join("") + "</table></details>";
+
+    body.innerHTML = html;
+  }
+
+  function uniq(rs) { var s = {}; rs.forEach(function (r) { s[r.id || r.name || r.ts] = 1; }); return Object.keys(s).length; }
+  function tile(lab, val, note, sparkSvg) {
+    return '<div class="rp-tile"><div class="t-lab">' + esc(lab) + '</div><div class="t-val">' + val +
+      '</div><div class="t-note">' + esc(note || "") + "</div>" + (sparkSvg || "") + "</div>";
+  }
+  function card(h, sub, svg) {
+    return '<div class="rp-card"><h3>' + esc(h) + '</h3><div class="c-sub">' + esc(sub) + "</div>" + svg + "</div>";
+  }
+  function trendDays(recs) {
+    var m = {};
+    recs.forEach(function (r) { var k = dayKey(r.ts); m[k] = (m[k] || 0) + 1; });
+    return Object.keys(m).sort().slice(-14).map(function (k) { return { k: k, n: m[k] }; });
+  }
+
+  /* ---------------- 示範資料（虛構，只在記憶體） ---------------- */
+  function makeDemo() {
+    var out = [], now = Date.now(), names = ["王小明","林雅婷","陳建宏","張淑芬","李志豪","吳佩珊","劉家豪","蔡欣怡","楊宗翰","許美玲","鄭凱文","謝雅雯","洪士杰","郭怡君","曾冠宇","賴思穎"];
+    names.forEach(function (n, i) {
+      var base = 45 + (i * 37) % 55;
+      for (var a = 0; a < 1 + (i % 2); a++) {
+        var sc = Math.min(100, base + a * 8 + (i % 5));
+        out.push({ kind: "exam", ts: now - (5 - a) * 86400000 - i * 3600000, id: "S" + (11200 + i),
+          name: n, cls: "環工一甲", score: sc, grade: sc >= 90 ? "A" : sc >= 80 ? "B" : sc >= 70 ? "C" : sc >= 60 ? "D" : "E",
+          scope: "all", level: "all", count: 20,
+          cat: { hw: { c: 3 + i % 2, t: 4 }, sw: { c: 2 + i % 3, t: 4 }, nw: { c: 2, t: 4 }, ed: { c: 1 + i % 3, t: 4 }, ai: { c: 2 + i % 2, t: 4 } } });
+      }
+    });
+    var stems = ["ping 得通 8.8.8.8 卻打不開網頁，最可能是？","RAM 與 SSD 誰是揮發性？","開機先跑 POST 還是載入 OS？","邊緣運算的判準是什麼？","DNS 的工作是？","二進位 1011 是十進位多少？"];
+    for (var d = 0; d < 6; d++) for (var s2 = 0; s2 < 5; s2++) {
+      out.push({ kind: "quiz", ts: now - d * 86400000 - s2 * 500000, score: 50 + ((d*7+s2*13) % 50), count: 6,
+        ct: { de: { c: 1 + s2 % 2, t: 2 }, pa: { c: 1, t: 2 }, ab: { c: s2 % 2, t: 1 }, al: { c: 1, t: 1 } },
+        items: stems.map(function (st, j) { return { stem: st, cat: ["nw","hw","hw","ed","nw","ct"][j], right: ((d + s2 + j) % 3) > 0 }; }) });
+    }
+    for (var r3 = 0; r3 < 9; r3++) out.push({ kind: "repair", ts: now - r3 * 43200000,
+      id: "S" + (11200 + r3), name: names[r3], score: 60 + (r3 * 11) % 40 });
+    return out;
+  }
+
+  /* ---------------- 啟動 ---------------- */
+  var tries = 0;
+  (function boot() {
+    tries++;
+    if (q("#view-overview") && q("#iocui-nav")) { build(); return; }
+    if (tries < 60) setTimeout(boot, 200);
+    else if (q("#view-overview")) build();
+  })();
+
+  window.IOCREP = {
+    version: "1.0",
+    ingest: ingest,
+    load: function () { return loadAll(false); },
+    records: function () { return allRecs().slice(); },
+    render: render
   };
 })();
 
