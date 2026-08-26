@@ -11526,9 +11526,9 @@ body.iocui-preview #iocui-nav{box-shadow:inset 0 3px 0 #1f4e8c}
       if (LIVE) { clearInterval(LIVE); LIVE = null; this.classList.remove("live-on");
         this.innerHTML = '<span class="rp-live-dot"></span>即時模式：關'; msg("即時模式已停止"); return; }
       var self = this;
-      LIVE = setInterval(function () { loadAll(true); }, 30000);
+      LIVE = setInterval(function () { loadAll(true); }, 15000);
       self.classList.add("live-on");
-      self.innerHTML = '<span class="rp-live-dot"></span>即時模式：每 30 秒更新';
+      self.innerHTML = '<span class="rp-live-dot"></span>即時模式：每 15 秒更新';
       loadAll(false);
     });
     q("#rpPrint").addEventListener("click", function () {
