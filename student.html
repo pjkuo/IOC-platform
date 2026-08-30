@@ -4893,6 +4893,19 @@ function makeTrouble(mountId, bank){
    +"@keyframes ccoPop{from{opacity:0;transform:translateY(8px) scale(.97)}to{opacity:1;transform:none}}"
    +"@keyframes ccoDraw{to{stroke-dashoffset:0}}"
    +"@media(max-width:720px){.cco-grid.c3,.cco-grid.c2{grid-template-columns:1fr}.cco-brand{display:none}}"
+   +".cco-s4{display:grid;grid-template-columns:repeat(2,1fr);gap:12px;margin-top:12px}"
+   +".cco-s4 .st{background:var(--card);border:1px solid var(--line);border-radius:16px;padding:13px 16px 12px;border-left:6px solid var(--ax,var(--gold))}"
+   +".cco-s4 .hd{display:flex;align-items:center;gap:10px;margin-bottom:6px}"
+   +".cco-s4 .num{font:800 13.5px var(--mono);color:var(--ax,var(--gold));letter-spacing:.08em;white-space:nowrap}"
+   +".cco-s4 .ic{font-size:27px;line-height:1}"
+   +".cco-s4 h4{margin:0;font-size:clamp(18px,2.5vw,21px);line-height:1.25;color:#fff;font-weight:800}"
+   +".cco-s4 .row{display:grid;grid-template-columns:auto 1fr;gap:3px 10px;font-size:clamp(15px,1.95vw,16.5px);line-height:1.55}"
+   +".cco-s4 .lb{font-weight:800;color:var(--gold);white-space:nowrap}"
+   +".cco-s4 .tx{color:#e2eee8}.cco-s4 .tx b{color:#fff}"
+   +".cco-s4 .st.hw{--ax:var(--hw)}.cco-s4 .st.sw{--ax:var(--sw)}.cco-s4 .st.nw{--ax:var(--nw)}.cco-s4 .st.gd{--ax:var(--gold)}"
+   +".cco-s4chain{display:flex;flex-wrap:wrap;align-items:center;gap:8px;margin-top:2px;font-size:clamp(14.5px,1.9vw,16.5px);color:#cfe0d8;font-weight:700}"
+   +".cco-s4chain i{font-style:normal;color:var(--gold)}"
+   +"@media(max-width:720px){.cco-s4{grid-template-columns:1fr}}"
    +"@media(prefers-reduced-motion:reduce){.cco-anim .cco-slide,.cco-anim .cco-pop,.cco-anim .cco-draw{animation:none!important;opacity:1!important;stroke-dashoffset:0!important}}";
   var styleEl=document.createElement("style"); styleEl.textContent=css; document.head.appendChild(styleEl);
 
@@ -4990,17 +5003,23 @@ function makeTrouble(mountId, bank){
      +'<p class="cco-lead">整學期，我們就繞著這三根柱子轉。</p>',
     say:"這門課的骨架，是三大支柱。硬體是電腦的身體，看得見摸得到。軟體是大腦下的指令，指揮硬體做事。網路是對外的神經，讓電腦連到外面的世界。整個學期，我們就繞著這三根柱子轉。"},
 
-   {eb:"第二段 · 怎麼上",t:"每個單元，四步走",
-    html:'<div class="cco-flow">'
-     +'<div class="cco-step"><span class="ic">🎯</span><b>認識目標</b><span>知道要學什麼</span></div>'
-     +'<div class="cco-arrow">→</div>'
-     +'<div class="cco-step"><span class="ic">🧪</span><b>互動模擬</b><span>動手玩玩看</span></div>'
-     +'<div class="cco-arrow">→</div>'
-     +'<div class="cco-step"><span class="ic">📖</span><b>教學講義</b><span>把觀念補齊</span></div>'
-     +'<div class="cco-arrow">→</div>'
-     +'<div class="cco-step"><span class="ic">✍️</span><b>課後評量</b><span>檢核學會了</span></div></div>'
-     +'<p class="cco-lead">流程固定，你很快就會習慣，學起來更安心。</p>',
-    say:"每一個單元，我們都用同樣的四步走：先認識目標，再用互動模擬動手玩，接著看圖文講義把觀念補齊，最後用課後評量檢核。流程固定，你很快就會習慣，學起來也更安心。"},
+   {eb:"第二段 · 怎麼上",t:'每個單元，<span class="u">四步走</span>',
+    html:'<div class="cco-s4chain"><i>🎯 認識目標</i> → <i>🧪 互動模擬</i> → <i>📖 教學講義</i> → <i>✍️ 課後評量</i>　（先思考 → 動手 → 懂為什麼 → 後驗證）</div>'
+     +'<div class="cco-s4">'
+     +'<div class="st hw cco-pop d1"><div class="hd"><span class="ic">🎯</span><div><div class="num">STEP 1</div><h4>認識目標</h4></div></div>'
+     +'<div class="row"><span class="lb">功能</span><span class="tx">單元開頭一頁，用<b>生活比喻</b>說明這次要學會的 2～3 件事，並提出一個先想想看的問題。</span>'
+     +'<span class="lb">意義</span><span class="tx">先知道終點，學習才有方向；這就是「<b>先思考</b>」的起點。</span></div></div>'
+     +'<div class="st sw cco-pop d2"><div class="hd"><span class="ic">🧪</span><div><div class="num">STEP 2</div><h4>互動模擬</h4></div></div>'
+     +'<div class="row"><span class="lb">功能</span><span class="tx">在畫面上<b>動手</b>組裝零件、設定系統、追封包、找故障；做錯可以重來，不扣分。</span>'
+     +'<span class="lb">意義</span><span class="tx">做中學，把抽象觀念變成<b>手感</b>；錯誤是最好的老師。</span></div></div>'
+     +'<div class="st nw cco-pop d3"><div class="hd"><span class="ic">📖</span><div><div class="num">STEP 3</div><h4>教學講義</h4></div></div>'
+     +'<div class="row"><span class="lb">功能</span><span class="tx">圖文講義可<b>放大字、朗讀</b>，把剛才動手碰到的名詞與原理講清楚。</span>'
+     +'<span class="lb">意義</span><span class="tx">先動手再看理論，才真的懂「<b>為什麼</b>」——高職到大一最關鍵的一步。</span></div></div>'
+     +'<div class="st gd cco-pop d3"><div class="hd"><span class="ic">✍️</span><div><div class="num">STEP 4</div><h4>課後評量</h4></div></div>'
+     +'<div class="row"><span class="lb">功能</span><span class="tx">即時小考，<b>立刻</b>看到對錯與解析；成績自動記錄，不用另外交作業。</span>'
+     +'<span class="lb">意義</span><span class="tx">檢核自己是不是真的會了，找出還沒懂的地方；這就是「<b>後驗證</b>」。</span></div></div></div>'
+     +'<p class="cco-lead" style="margin:10px 0 0">每個單元都走同樣四步，很快就會習慣；<b>不會不要緊，做錯才學得到。</b></p>',
+    say:"每一個單元，我們都用同樣的四步走。第一步，認識目標：用生活比喻告訴你這次要學會什麼，先想想看；這是先思考的起點。第二步，互動模擬：在畫面上動手組裝、設定、找故障，做錯可以重來，不扣分；做中學，把觀念變成手感。第三步，教學講義：可以放大字、可以朗讀，把剛才動手碰到的名詞和原理講清楚；先動手再看理論，才真的懂為什麼。第四步，課後評量：即時小考，馬上看到對錯和解析，成績自動記錄；檢核自己是不是真的會了，這就是後驗證。流程固定，你很快就會習慣。不會不要緊，會做錯，才學得到。"},
 
    {eb:"第二段 · 核心方法",t:'先思考、<span class="u">後驗證</span>',
     html:'<p class="cco-quote">先自己想，<span class="u">再用 AI 核對</span>。</p>'
@@ -5349,7 +5368,7 @@ function makeTrouble(mountId, bank){
    {k:"第一段・你從哪裡來",t:"你已經會的，*比你想的多*",pts:["Excel 試算與報表","文書、簡報、資料整理分類","基本程式與資料庫概念","檢定的*動手經驗*——你最大的本錢"],say:"先肯定自己。你在高職資料處理科，已經練了不少真功夫：Excel 算表做報表、文書簡報、把雜亂資料整理分類，還碰過程式和資料庫。這些動手經驗，正是你最大的本錢。"},
    {k:"第一段・銜接",t:"強項，與要再長的地方",svg:bridgeSVG,pts:["強項：*動手快*、實作有直覺、不怕操作","成長點：抽象觀念、英文詞彙、信心","高職教你*怎麼做*，大一還要你懂*為什麼*"],say:"從高職到大一，最大的不同是：高職教你怎麼做，大一還要你懂為什麼。你的強項是動手快、不怕操作；要再長的是抽象、英文和信心。這門課用很多生活比喻，陪你補起來。"},
    {k:"第二段・這門課",t:"三大支柱：硬體・軟體・網路",pts:["*硬體*＝身體：看得見摸得到","*軟體*＝指令：指揮硬體做事","*網路*＝神經：連到外面世界"],say:"這門課的骨架是三大支柱。硬體是電腦的身體，軟體是大腦下的指令，網路是對外的神經。整學期，我們就繞著這三根柱子轉。"},
-   {k:"第二段・怎麼上",t:"每個單元，*四步走*",pts:["認識目標 → 互動模擬 → 教學講義 → 課後評量","流程固定，學起來更安心"],say:"每個單元都用同樣的四步走：先認識目標，再用互動模擬動手玩，接著看講義把觀念補齊，最後用課後評量檢核。流程固定，你很快就習慣。"},
+   {k:"第二段・怎麼上",t:"每個單元，*四步走*",pts:["*① 認識目標*：生活比喻說明要學什麼——先思考的起點","*② 互動模擬*：動手組裝、設定、找故障，做錯可重來——做中學","*③ 教學講義*：放大字、朗讀，把原理講清楚——懂為什麼","*④ 課後評量*：即時小考看解析，成績自動記錄——後驗證"],say:"每個單元都用同樣的四步走。第一步認識目標，用生活比喻說明這次要學什麼，先想想看。第二步互動模擬，動手組裝、設定、找故障，做錯可以重來，做中學。第三步教學講義，可以放大字、朗讀，把原理講清楚，懂為什麼。第四步課後評量，即時小考馬上看解析，成績自動記錄，這就是後驗證。流程固定，你很快就習慣。"},
    {k:"第二段・核心方法",t:"先思考、*後驗證*",pts:["先自己想 → 用 AI／模擬核對 → 修正","*AI 是夥伴，不是答案機器*"],say:"這門課從頭到尾只有一個核心方法：先思考、後驗證。先自己想一個答案，再用 AI 或模擬核對，最後修正。AI 是陪你檢查的夥伴，不是替你思考的答案機器。"},
    {check:1,t:"這門課的核心方法是哪一個？",opts:["先驗證再思考","先思考、後驗證","只看 AI 的答案","完全不用 AI"],ans:1,exp:"先自己思考，再用 AI 驗證；AI 是夥伴，不是答案機器。",say:"來想一題：這門課的核心方法是哪一個？先想再點選。"},
    {k:"第二段・工具",t:"這些工具，隨時幫你",pts:["自主上課模式：語音講授、可調語速","互動模擬、講義朗讀＋放大字","卡住就按*問號提示*"],say:"平台準備了幾個工具：自主上課模式用語音幫你講課，互動模擬讓你動手，講義能放大字、能朗讀，卡住就按問號給你提示。工具都是來幫你的。"},
