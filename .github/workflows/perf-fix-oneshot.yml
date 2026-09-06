@@ -1,0 +1,38 @@
+name: perf-fix-oneshot
+on:
+  push:
+    branches: [main]
+permissions:
+  contents: write
+jobs:
+  patch:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Apply GAS deferral patch
+        run: |
+          python3 - <<'PYEOF'
+          helper = 'function zt(){var wtDeferred=function(q,cb){var go=function(){wt(q,cb)};"complete"===n.readyState?setTimeout(go,300+1700*Math.random()):c.addEventListener("load",function(){setTimeout(go,300+1700*Math.random())})};'
+          pre = '<link rel="preconnect" href="https://script.google.com" crossorigin/> <meta name="cc-cloud-url"'
+          for fn in ['student.html', 'teacher.html']:
+              s = open(fn, encoding='utf-8').read()
+              if 'wtDeferred' in s:
+                  print(fn, 'already patched, skip')
+                  continue
+              assert s.count('function zt(){') == 1, fn
+              assert s.count('Q()&&wt({action:"cfg"}') == 1, fn
+              assert s.count('<meta name="cc-cloud-url"') == 1, fn
+              s = s.replace('function zt(){', helper, 1)
+              s = s.replace('Q()&&wt({action:"cfg"}', 'Q()&&wtDeferred({action:"cfg"}', 1)
+              s = s.replace('<meta name="cc-cloud-url"', pre, 1)
+              open(fn, 'w', encoding='utf-8').write(s)
+              print(fn, 'patched')
+          PYEOF
+      - name: Commit and self-remove
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git rm -q .github/workflows/perf-fix-oneshot.yml
+          git add -A
+          git commit -m "perf: defer initial GAS cfg JSONP until after window load (+0.3-2s jitter), add preconnect" -m "首次載入不再被 script.google.com 阻塞 window load(原 +4.6s);50 人同開時 cfg ping 隨機分散,降低 GAS 併發壓力。One-shot workflow self-removed." -m "Co-Authored-By: Claude Fable 5 <noreply@anthropic.com>" -m "Claude-Session: https://claude.ai/code/session_01Lrs7dXC4mxdS82MGrZ2SGU"
+          git push
