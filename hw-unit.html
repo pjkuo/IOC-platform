@@ -1,0 +1,482 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+<meta charset="utf-8"/>
+<meta name="viewport" content="width=device-width,initial-scale=1"/>
+<link rel="preconnect" href="https://script.google.com" crossorigin/>
+<meta name="cc-cloud-url" content="https://script.google.com/macros/s/AKfycbz7wHWbc7go-OVR0Q_g_NBzDqwzV9-leqL1CRe1S9wGkLLjvJIAm-KrZj80s1KJ_VdGVg/exec"/>
+<script id="ioccloud-cfg">window.CC_GAS_URL=function(){try{var t=document.querySelector('meta[name="cc-cloud-url"]'),e=t&&t.getAttribute("content")||"";return/^https?:\/\//.test(e)?e:""}catch(t){return""}}()</script>
+<title>硬體單元｜課前練習與課後作業</title>
+<meta name="description" content="計算機概論模擬平台・電腦系統硬體單元：輸入→處理→輸出，儲存接住每一步。課前趣味預測 8 題、課後作業 12 題（計分＋把握度，成績上雲端）。"/>
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Crect width='100' height='100' rx='18' fill='%2310312a'/%3E%3Ctext x='50' y='68' font-size='52' text-anchor='middle' fill='%23e0b44a'%3E▢%3C/text%3E%3C/svg%3E"/>
+<style>
+:root{--board:#10312a;--board2:#0c2620;--gold:#e0b44a;--ok:#34a36b;--fail:#e2574c;--warn:#d9912f;--ink:#1b2733;--muted:#5b6b7a;--line:#dfe5ec;--bg:#eef1f5;--hw:#2e5496;--hwd:#21407a;--indigo:#29297a;--sans:"Noto Sans TC","PingFang TC","Microsoft JhengHei",system-ui,sans-serif}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--ink);font-family:var(--sans);font-size:17px;line-height:1.65;-webkit-font-smoothing:antialiased}
+.wrap{max-width:860px;margin:0 auto;padding:0 16px 72px}
+header{background:linear-gradient(135deg,var(--board),var(--board2));color:#fff;padding:20px 0 16px;border-bottom:4px solid var(--gold)}
+header .wrap{padding-bottom:0}
+h1{margin:0 0 4px;font-size:24px;letter-spacing:.5px}
+.sub{opacity:.92;font-size:14.5px}
+.topnav{display:flex;flex-wrap:wrap;gap:8px;margin-top:12px}
+.topnav a{display:inline-flex;align-items:center;gap:6px;font:700 14px/1 var(--sans);color:#fff;text-decoration:none;background:rgba(255,255,255,.12);border:1px solid rgba(255,255,255,.35);border-radius:999px;padding:9px 14px;min-height:38px;transition:.18s}
+.topnav a:hover{background:rgba(255,255,255,.24);border-color:var(--gold)}
+.card{background:#fff;border:1px solid var(--line);border-radius:16px;padding:18px 20px;margin-top:16px;box-shadow:0 2px 10px rgba(16,49,42,.06)}
+.card h2{margin:0 0 6px;font-size:19px;color:var(--hwd)}
+.kicker{font:800 12.5px/1 var(--sans);letter-spacing:.08em;color:var(--warn);text-transform:uppercase}
+.grid2{display:grid;grid-template-columns:1fr 1fr;gap:14px;margin-top:16px}
+@media(max-width:640px){.grid2{grid-template-columns:1fr}}
+.mode{position:relative;border:2px solid var(--line);border-radius:16px;background:#fff;padding:18px 20px 16px;box-shadow:0 2px 10px rgba(16,49,42,.06)}
+.mode.pre{border-color:#9db8e0}.mode.hw{border-color:var(--gold)}
+.mode .mi{font-size:30px}
+.mode h3{margin:6px 0 4px;font-size:20px;color:var(--hwd)}
+.mode ul{margin:8px 0 14px;padding-left:20px;color:var(--muted);font-size:15px}
+.mode li{margin:2px 0}
+.btn{display:inline-flex;align-items:center;justify-content:center;gap:8px;font:700 16.5px/1 var(--sans);border:none;border-radius:12px;padding:0 20px;min-height:46px;cursor:pointer;transition:.15s;text-decoration:none}
+.btn:active{transform:scale(.97)}
+.btn-navy{background:var(--hw);color:#fff}.btn-navy:hover{background:var(--hwd)}
+.btn-gold{background:var(--gold);color:#4a3608}.btn-gold:hover{filter:brightness(1.06)}
+.btn-ghost{background:#fff;color:var(--hwd);border:2px solid var(--line)}.btn-ghost:hover{border-color:var(--hw)}
+.btn[disabled]{opacity:.45;cursor:not-allowed}
+.badge{display:inline-block;font:800 11.5px/1 var(--sans);letter-spacing:.06em;border-radius:999px;padding:5px 10px;vertical-align:2px}
+.badge.b-pre{background:#e8effb;color:var(--hwd)}.badge.b-hw{background:#fbf3dc;color:#7a5b12}
+.ipo{display:flex;align-items:stretch;gap:8px;flex-wrap:wrap;margin:12px 0 4px}
+.ipo .box{flex:1;min-width:150px;border:2px solid var(--hw);background:#eaf0fa;border-radius:12px;padding:10px 12px;text-align:center}
+.ipo .box b{color:var(--hwd);font-size:16px}
+.ipo .box small{display:block;color:var(--muted);font-size:12.5px;line-height:1.5}
+.ipo .box.proc{background:#efeafb;border-color:var(--indigo)}.ipo .box.proc b{color:var(--indigo)}
+.ipo .ar{align-self:center;color:var(--gold);font-weight:800;font-size:22px}
+.stor{border:2px dashed var(--gold);background:#fbf3dc;border-radius:12px;padding:9px 14px;text-align:center;font-weight:700;color:#7a5b12;font-size:14.5px;margin-top:8px}
+.statusline{display:flex;flex-wrap:wrap;gap:8px;margin-top:10px;font-size:14px;color:var(--muted)}
+.chip{background:#f4f7fb;border:1px solid var(--line);border-radius:999px;padding:4px 12px}
+.chip b{color:var(--hwd)}
+/* quiz */
+.prog{height:10px;background:#e2e8f0;border-radius:999px;overflow:hidden;margin:14px 0 4px}
+.prog i{display:block;height:100%;width:0;background:linear-gradient(90deg,var(--hw),var(--indigo));border-radius:999px;transition:width .3s}
+.qmeta{display:flex;justify-content:space-between;align-items:center;font-size:13.5px;color:var(--muted);margin-top:6px}
+.stem{font-size:19px;font-weight:700;margin:10px 0 14px;line-height:1.6}
+.opts{display:grid;gap:10px}
+.opt{display:flex;align-items:center;gap:10px;width:100%;text-align:left;font:500 16.5px/1.5 var(--sans);background:#f8fafc;border:2px solid var(--line);border-radius:12px;padding:12px 14px;min-height:48px;cursor:pointer;transition:.15s;color:var(--ink)}
+.opt:hover{border-color:var(--hw);background:#f2f6fd}
+.opt .k{flex:0 0 26px;height:26px;border-radius:50%;background:#e2e8f0;color:var(--hwd);font-weight:800;font-size:14px;display:inline-flex;align-items:center;justify-content:center}
+.opt.sel{border-color:var(--hw);background:#e8effb}.opt.sel .k{background:var(--hw);color:#fff}
+.opt.right{border-color:var(--ok);background:#e9f7f0}.opt.right .k{background:var(--ok);color:#fff}
+.opt.wrong{border-color:var(--fail);background:#fdeeec}.opt.wrong .k{background:var(--fail);color:#fff}
+.opt[disabled]{cursor:default}
+.conf{margin-top:14px;padding-top:12px;border-top:1px dashed var(--line)}
+.conf .lbl{font-size:14px;color:var(--muted);margin-bottom:8px}
+.confbtns{display:flex;gap:10px;flex-wrap:wrap}
+.confbtn{flex:1;min-width:140px;font:700 15.5px/1 var(--sans);background:#f8fafc;border:2px solid var(--line);border-radius:12px;padding:12px;min-height:46px;cursor:pointer;transition:.15s}
+.confbtn.sel{border-color:var(--warn);background:#fdf3e3;color:#8a5a10}
+.fb{margin-top:14px;border-radius:12px;padding:12px 14px;font-size:15.5px;display:none}
+.fb.ok{display:block;background:#e9f7f0;border:1px solid #bfe5d2;color:#1d6b45}
+.fb.no{display:block;background:#fdeeec;border:1px solid #f2c6c1;color:#a03d33}
+.qact{display:flex;gap:10px;margin-top:16px;flex-wrap:wrap}
+/* result */
+.ringwrap{display:flex;gap:18px;align-items:center;flex-wrap:wrap}
+.ring{width:120px;height:120px;flex:0 0 120px}
+.ring text{font:800 26px var(--sans);fill:var(--hwd)}
+.ring .cap{font:600 11px var(--sans);fill:var(--muted)}
+.quad{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:10px;margin-top:12px}
+.qd{border-radius:12px;padding:10px 12px;font-size:14px;border:1px solid var(--line)}
+.qd b{display:block;font-size:20px}
+.qd.q1{background:#e9f7f0}.qd.q1 b{color:var(--ok)}
+.qd.q2{background:#fdeeec}.qd.q2 b{color:var(--fail)}
+.qd.q3{background:#e8effb}.qd.q3 b{color:var(--hw)}
+.qd.q4{background:#fdf3e3}.qd.q4 b{color:var(--warn)}
+.coach{margin-top:14px;background:#f4f7ff;border-left:4px solid var(--hw);border-radius:0 12px 12px 0;padding:12px 14px;font-size:15.5px}
+.wrongitem{border:1px solid var(--line);border-radius:12px;padding:14px;margin-top:12px;background:#fff}
+.wrongitem .tag{font-size:12.5px;color:var(--warn);font-weight:800;letter-spacing:.05em}
+.wrongitem .ans{font-size:15px;margin:6px 0}
+.wrongitem .ans .u{color:var(--fail);font-weight:700}.wrongitem .ans .c{color:var(--ok);font-weight:700}
+.exp{background:#f8fafc;border-radius:10px;padding:10px 12px;font-size:14.5px;color:#40525f;margin-top:6px}
+.altbox{margin-top:10px;border-top:1px dashed var(--line);padding-top:10px;display:none}
+.altbox.show{display:block}
+.altbox .opts{margin-top:8px}
+.cloudmsg{margin-top:12px;font-size:14.5px;color:var(--muted)}
+.cloudmsg.ok{color:var(--ok);font-weight:700}
+.idbar{display:none;margin-top:12px;background:#fdf3e3;border:1px solid #eeda9d;border-radius:12px;padding:12px 14px;font-size:15px}
+.idbar.show{display:flex;gap:10px;align-items:center;flex-wrap:wrap;justify-content:space-between}
+footer{margin-top:34px;text-align:center;color:var(--muted);font-size:13px;border-top:1px solid var(--line);padding-top:14px}
+.hidden{display:none!important}
+#certmount{margin-top:10px}
+</style>
+</head>
+<body>
+<header>
+  <div class="wrap">
+    <h1>▢ 電腦系統硬體單元</h1>
+    <div class="sub">輸入 → 處理 → 輸出，儲存接住每一步｜課前先思考・課後再驗證</div>
+    <nav class="topnav">
+      <a href="index.html">⌂ 課程入口</a>
+      <a href="student.html#hardware">▢ 硬體互動模組</a>
+      <a href="student.html#assess">✓ 即時評量</a>
+    </nav>
+  </div>
+</header>
+<main class="wrap">
+
+  <!-- 首頁 -->
+  <section id="home">
+    <div class="card">
+      <span class="kicker">本單元一張圖</span>
+      <div class="ipo">
+        <div class="box"><b>① 輸入</b><small>鍵盤・觸控・讀卡機・鏡頭・感測器</small></div>
+        <div class="ar">➜</div>
+        <div class="box proc"><b>② 處理 CPU／GPU</b><small>⇄ 記憶體 RAM（暫存中介，斷電清空）</small></div>
+        <div class="ar">➜</div>
+        <div class="box"><b>③ 輸出</b><small>螢幕・喇叭・印表機・電控鎖</small></div>
+      </div>
+      <div class="stor">⇡⇣ ④ 儲存（永久）：SSD／硬碟／雲端——這次的輸出，成為下次的輸入</div>
+      <div class="statusline" id="mystatus"></div>
+    </div>
+
+    <div class="idbar" id="idbar">
+      <span>☁ 尚未進站登記——登記班級學號後，成績才會記在你名下。</span>
+      <button class="btn btn-gold" id="idbtn" type="button">✍ 進站登記（只填一次）</button>
+    </div>
+
+    <div class="grid2">
+      <div class="mode pre">
+        <div class="mi">🔮</div>
+        <h3>課前練習 <span class="badge b-pre">先思考・不計分</span></h3>
+        <ul>
+          <li>8 題趣味預測，約 5 分鐘</li>
+          <li>即答即回饋，猜錯更好玩</li>
+          <li>帶著猜想來上課對答案</li>
+        </ul>
+        <button class="btn btn-navy" type="button" onclick="HWU.start('pre')">開始預測 →</button>
+      </div>
+      <div class="mode hw">
+        <div class="mi">📝</div>
+        <h3>課後作業 <span class="badge b-hw">計分・48 小時內</span></h3>
+        <ul>
+          <li>12 題，每題標記把握度</li>
+          <li>成績自動存入平台雲端</li>
+          <li>錯題附解析＋再挑戰一題</li>
+        </ul>
+        <button class="btn btn-gold" type="button" onclick="HWU.start('hw')">開始作業 →</button>
+      </div>
+    </div>
+  </section>
+
+  <!-- 作答 -->
+  <section id="quiz" class="hidden">
+    <div class="card">
+      <span class="kicker" id="qmode"></span>
+      <div class="prog"><i id="progbar"></i></div>
+      <div class="qmeta"><span id="qnum"></span><span id="qtag"></span></div>
+      <div class="stem" id="qstem"></div>
+      <div class="opts" id="qopts"></div>
+      <div class="conf hidden" id="confwrap">
+        <div class="lbl">先自我評估：這題你有多少把握？（後設認知練習，不影響得分）</div>
+        <div class="confbtns">
+          <button class="confbtn" type="button" data-c="1">💪 很有把握</button>
+          <button class="confbtn" type="button" data-c="0">🤔 沒什麼把握</button>
+        </div>
+      </div>
+      <div class="fb" id="qfb"></div>
+      <div class="qact">
+        <button class="btn btn-navy" id="qnext" type="button" disabled>下一題 →</button>
+        <button class="btn btn-ghost" type="button" onclick="HWU.quit()">✕ 離開</button>
+      </div>
+    </div>
+  </section>
+
+  <!-- 結果 -->
+  <section id="result" class="hidden"></section>
+
+</main>
+<footer>
+  國立屏東科技大學 資訊管理系｜計算機概論與實習｜教材授權 CC BY-NC-SA 4.0<br/>
+  課前練習・課後作業互動頁（IOC 模擬平台硬體單元）
+</footer>
+<script id="hwu-cloud-loader">
+/* 共用 student.html 內建的 ioccloud 上傳器（同源載入，與平台永遠同版；離線時自動降級為本機紀錄） */
+(function(){
+"use strict";
+if(window.IOCCLOUD) return;
+try{
+  fetch("student.html",{cache:"force-cache"}).then(function(r){ if(!r.ok) throw new Error("http"); return r.text(); }).then(function(t){
+    if(window.IOCCLOUD) return;
+    var m=t.match(/<script id="ioccloud">([\s\S]*?)<\/script>/);
+    if(m&&m[1]){
+      var s=document.createElement("script"); s.id="ioccloud"; s.textContent=m[1];
+      document.body.appendChild(s);
+      try{ document.dispatchEvent(new Event("hwu-cloud-ready")); }catch(e){}
+    }
+  }).catch(function(){});
+}catch(e){}
+})();
+</script>
+<script id="hwu-app">
+(function(){
+"use strict";
+var $ = function(id){ return document.getElementById(id); };
+var LSKEY = "cc_hwunit_v1";
+function lsGet(){ try{ return JSON.parse(localStorage.getItem(LSKEY)||"{}"); }catch(e){ return {}; } }
+function lsSet(o){ try{ localStorage.setItem(LSKEY, JSON.stringify(o)); }catch(e){} }
+
+/* ---------- 題庫 ---------- */
+var PRE = [
+ {ccid:"C2-HW-01",tag:"進校門",stem:"從校門走到教室，你大概已經「驚動」了幾台電腦？",opts:["1 台以內","2～3 台","5 台以上"],ans:2,fb:"門禁刷卡、監視器、超商收銀、電子看板、教室點名……校園裡的電腦比你想的多得多。"},
+ {ccid:"C2-HW-01",tag:"圖書館",stem:"學生證「嗶」一聲進圖書館——這一刻，卡片＋讀卡機扮演的是？",opts:["輸入","處理","輸出"],ans:0,fb:"讀卡機把卡號變成數位資料送進系統，是標準的輸入裝置。"},
+ {ccid:"C2-HW-03",tag:"手機",stem:"手機裡負責「思考、判斷」的是？",opts:["鏡頭","CPU（處理器）","螢幕"],ans:1,fb:"鏡頭是輸入、螢幕是輸出，真正在想事情的是 CPU。"},
+ {ccid:"C2-HW-06",tag:"停電驚魂",stem:"報告打到一半忽然停電，「沒存檔」的段落會？",opts:["還留在電腦裡","直接消失","自動跑到雲端"],ans:1,fb:"它只住在 RAM（暫存）裡——斷電即清空，所以要隨手 Ctrl＋S。"},
+ {ccid:"C2-HW-04",tag:"選課大戰",stem:"選課系統一開放就轉圈圈，最像哪裡塞車？",opts:["輸入：你的滑鼠","處理：學校伺服器","輸出：你的螢幕"],ans:1,fb:"幾千人同時湧入，塞住的是伺服器的處理能力，不是你的滑鼠。"},
+ {ccid:"C2-HW-02",tag:"宿舍門禁",stem:"門禁「嗶」一聲、電控鎖自動開門——開門的鎖屬於？",opts:["輸入","處理","輸出"],ans:2,fb:"系統判斷完，把「開門」這個結果做出來——電控鎖就是輸出（致動器）。"},
+ {ccid:"C2-HW-07",tag:"雲端",stem:"雲端硬碟的「雲」，實際上是？",opts:["天上的訊號","別人機房裡的電腦","手機裡的晶片"],ans:1,fb:"雲端＝網路另一端機房裡成排的實體伺服器與硬碟。"},
+ {ccid:"C2-HW-05",tag:"比快",stem:"猜猜看：RAM 和硬碟，誰存取比較快？",opts:["RAM","硬碟","差不多"],ans:0,fb:"RAM 快非常多——所以 CPU 只跟 RAM 拿資料，硬碟負責長期保存。"}
+];
+var HW = [
+ {ccid:"C2-HW-01",ct:"AB",tag:"QR 點名",stem:"教室 QR 點名：手機鏡頭掃描 QR code。「鏡頭」屬於哪個單元？",opts:["輸入","處理","輸出","儲存"],ans:0,exp:"鏡頭把光變成數位影像送進系統——凡是「感知世界」的都是輸入。",alt:{stem:"再挑戰：麥克風把你的聲音變成數位訊號，它屬於？",opts:["輸入","處理","輸出"],ans:0,exp:"聲音進系統＝輸入。"}},
+ {ccid:"C2-HW-02",ct:"AB",tag:"超商結帳",stem:"超商自助結帳「嗶」完所有商品後，「計算總金額」的工作發生在？",opts:["條碼掃描器","收銀主機（CPU）","發票印表機","雲端相簿"],ans:1,exp:"運算與判斷都在處理單元——收銀主機裡的 CPU。",alt:{stem:"再挑戰：學餐點餐機「算出你點了 85 元」，是哪個單元？",opts:["輸入","處理","輸出"],ans:1,exp:"計算＝處理。"}},
+ {ccid:"C2-HW-02",ct:"AB",tag:"發票",stem:"結帳完成，發票被印了出來。「印發票」屬於？",opts:["輸入","處理","輸出","儲存"],ans:2,exp:"把結果回應給世界的都是輸出。",alt:{stem:"再挑戰：叫號螢幕顯示「B08 請取餐」，屬於？",opts:["輸入","處理","輸出"],ans:2,exp:"顯示結果＝輸出。"}},
+ {ccid:"C2-HW-05",ct:"AB",tag:"CPU 取料",stem:"CPU 運算時，直接從哪裡拿資料？",opts:["硬碟","記憶體 RAM","螢幕","印表機"],ans:1,exp:"資料先進 RAM，CPU 從 RAM 取用——「儲存」是單元之間的中介站。",alt:{stem:"再挑戰：輸入裝置收到的資料，第一站先送到？",opts:["硬碟","記憶體 RAM","印表機"],ans:1,exp:"一律先進 RAM 暫存。"}},
+ {ccid:"C2-HW-06",ct:"AB",tag:"存檔",stem:"關機前要先存檔，是因為？",opts:["RAM 斷電就清空","硬碟容量太小","CPU 需要休息","螢幕會關閉"],ans:0,exp:"RAM 是揮發性暫存；要保留成果，就得寫進 SSD／硬碟／雲端這些永久儲存。",alt:{stem:"再挑戰：「開一半還沒存檔的簡報」此刻主要住在哪裡？",opts:["RAM","SSD","雲端"],ans:0,exp:"工作中的資料都在 RAM。"}},
+ {ccid:"C2-HW-04",ct:"PA",tag:"選課大戰",stem:"選課系統瞬間湧入幾千人而卡住，主要瓶頸是？",opts:["你的鍵盤","伺服器的 CPU 與記憶體","你的螢幕","教室投影機"],ans:1,exp:"同時處理幾千筆請求，考驗的是伺服器的處理能力——跟你的滑鼠無關。",alt:{stem:"再挑戰：手遊團戰畫面卡頓（網路正常），最可能是手機的？",opts:["鏡頭","CPU／GPU 處理","喇叭"],ans:1,exp:"畫面算不動＝處理單元吃緊。"}},
+ {ccid:"C2-HW-07",ct:"PA",tag:"SSD vs HDD",stem:"關於 SSD 與傳統硬碟 HDD，正確的是？",opts:["SSD 靠磁頭讀寫碟片","SSD 無機械構造、速度較快","HDD 一斷電資料就消失","兩者都是暫存記憶體"],ans:1,exp:"SSD 用快閃記憶體、無機械構造；HDD 靠碟片與磁頭。兩者都是「永久儲存」。",alt:{stem:"再挑戰：筆電摔到地上，最怕摔壞的傳統零件是？",opts:["HDD（機械硬碟）","SSD","記憶體"],ans:0,exp:"HDD 有讀寫磁頭，怕震。"}},
+ {ccid:"C2-HW-05",ct:"AB",tag:"悠遊卡",stem:"悠遊卡在校門、超商、公車都刷得過，靠的是什麼讓各設備「認得」你的餘額？",opts:["卡片表面的印字","卡內晶片紀錄＋後端資料庫","司機的記憶力","手機相簿備份"],ans:1,exp:"儲存（晶片＋資料庫）讓上一筆交易被下一台設備讀到——儲存把不同情境串在一起。",alt:{stem:"再挑戰：宿舍門禁的「授權名單」存放在哪裡最合理？",opts:["門鎖的喇叭","系統資料庫","學生的手機殼"],ans:1,exp:"名單是資料，住在儲存層。"}},
+ {ccid:"C2-HW-01",ct:"AB",tag:"點名紀錄",stem:"每週點名紀錄存入資料庫，期末系統讀出來計算出席率。這展現「儲存」的什麼角色？",opts:["讓螢幕更亮","讓這次的輸出成為下次的輸入","取代 CPU 運算","讓網路變快"],ans:1,exp:"儲存讓電腦「有記憶」——單一事件被串成完整服務，這就是儲存的中介角色。",alt:{stem:"再挑戰：遊戲「存檔」隔天「讀檔」續玩，是儲存的哪種角色？",opts:["輸出變下次輸入","取代顯示卡","加快網速"],ans:0,exp:"同一個道理：存下來、再讀回來。"}},
+ {ccid:"C2-HW-02",ct:"AB",tag:"觸控螢幕",stem:"觸控螢幕在 IPO 架構中是？",opts:["只有輸入","只有輸出","同時是輸入與輸出","屬於儲存"],ans:2,exp:"觸控層收手勢＝輸入；顯示層給畫面＝輸出——一台裝置可以跨單元。",alt:{stem:"再挑戰：耳麥（耳機＋麥克風）呢？",opts:["麥克風輸入、耳機輸出","都是輸入","都是輸出"],ans:0,exp:"拆開看各自的資料方向。"}},
+ {ccid:"C2-HW-11",ct:"AL",tag:"開機除錯",stem:"電腦開機「嗶嗶」叫、進不了系統。依 POST 自我測試，最先懷疑哪個元件？",opts:["印表機","記憶體 RAM","滑鼠","喇叭"],ans:1,exp:"POST 偵測不到 RAM 會鳴聲中止——RAM 是開機必需的核心元件。",alt:{stem:"再挑戰：開機第一個執行的程式（POST／開機韌體）存放在哪？",opts:["主機板上的 BIOS／UEFI 晶片","雲端","印表機"],ans:0,exp:"開機韌體住在主機板晶片裡。"}},
+ {ccid:"C2-HW-01",ct:"AB",tag:"拍照打卡",stem:"手機「拍照打卡上傳」的完整資料流，正確順序是？",opts:["鏡頭 → RAM → CPU → 螢幕 → 雲端","螢幕 → CPU → 鏡頭 → 雲端 → RAM","雲端 → 鏡頭 → RAM → 螢幕 → CPU","鏡頭 → 雲端 → 螢幕 → RAM → CPU"],ans:0,exp:"輸入 → 暫存 → 處理 → 輸出 → 永久儲存——一條龍完整資料流，儲存接住最後一棒。",alt:{stem:"再挑戰：圖書館自助借書的順序是？",opts:["刷學生證→比對資格→更新紀錄→印收據","印收據→刷學生證→比對資格","更新紀錄→印收據→刷學生證"],ans:0,exp:"輸入→處理→儲存→輸出。"}}
+];
+
+/* ---------- 狀態 ---------- */
+var S = { mode:null, i:0, picks:[], confs:[], t0:0, pick:-1, conf:-1 };
+var UNIT = { pre:"硬體單元課前練習", hw:"硬體單元課後作業" };
+
+function bank(){ return S.mode==="pre" ? PRE : HW; }
+function show(id){ ["home","quiz","result"].forEach(function(x){ $(x).classList.toggle("hidden", x!==id); }); window.scrollTo(0,0); }
+
+function identity(){ try{ return window.IOCCLOUD && IOCCLOUD.identity && IOCCLOUD.identity() || null; }catch(e){ return null; } }
+function refreshHome(){
+  var st = lsGet(), parts = [];
+  parts.push(st.pre && st.pre.done ? "<span class='chip'>🔮 課前練習：已完成（猜對 <b>"+st.pre.raw+"/"+st.pre.max+"</b>）</span>" : "<span class='chip'>🔮 課前練習：尚未完成</span>");
+  parts.push(st.hw && st.hw.tries ? "<span class='chip'>📝 課後作業：最佳 <b>"+st.hw.best+"</b> 分（已作答 "+st.hw.tries+" 次）</span>" : "<span class='chip'>📝 課後作業：尚未作答</span>");
+  var id = identity();
+  if(id && id.sid){ parts.push("<span class='chip'>☁ 已登記：<b>"+(id.cls||"")+" "+id.sid+"</b> "+(id.name||"")+"</span>"); }
+  $("mystatus").innerHTML = parts.join("");
+  var bar = $("idbar"); if(bar) bar.classList.toggle("show", !(id && id.sid));
+}
+
+/* ---------- 作答流程 ---------- */
+function start(mode){
+  S.mode=mode; S.i=0; S.picks=[]; S.confs=[]; S.t0=Date.now();
+  $("qmode").textContent = mode==="pre" ? "🔮 課前練習｜先思考・不計分・即答即回饋" : "📝 課後作業｜計分＋把握度・結束後看解析";
+  show("quiz"); render();
+}
+function render(){
+  var B=bank(), q=B[S.i]; S.pick=-1; S.conf=-1;
+  $("progbar").style.width = Math.round(S.i/B.length*100)+"%";
+  $("qnum").textContent = "第 "+(S.i+1)+" / "+B.length+" 題";
+  $("qtag").textContent = "情境：" + q.tag;
+  $("qstem").textContent = q.stem;
+  var box=$("qopts"); box.innerHTML="";
+  q.opts.forEach(function(t,k){
+    var b=document.createElement("button");
+    b.type="button"; b.className="opt";
+    b.innerHTML="<span class='k'>"+String.fromCharCode(65+k)+"</span><span>"+t+"</span>";
+    b.addEventListener("click",function(){ pickOpt(k,b); });
+    box.appendChild(b);
+  });
+  $("confwrap").classList.toggle("hidden", S.mode!=="hw");
+  Array.prototype.forEach.call(document.querySelectorAll(".confbtn"),function(b){ b.classList.remove("sel"); });
+  var fb=$("qfb"); fb.className="fb"; fb.textContent="";
+  $("qnext").disabled=true;
+  $("qnext").textContent = (S.i===B.length-1) ? (S.mode==="pre"?"看預測結果 →":"交卷看結果 →") : "下一題 →";
+}
+function pickOpt(k,el){
+  var B=bank(), q=B[S.i];
+  if(S.mode==="pre"){
+    if(S.pick>-1) return;
+    S.pick=k;
+    var opts=$("qopts").children;
+    Array.prototype.forEach.call(opts,function(o,idx){
+      o.disabled=true;
+      if(idx===q.ans) o.classList.add("right");
+      else if(idx===k) o.classList.add("wrong");
+    });
+    var fb=$("qfb");
+    fb.className = "fb "+(k===q.ans?"ok":"no");
+    fb.textContent = (k===q.ans?"🎉 猜對了！":"💡 先記住這個猜想——")+q.fb;
+    $("qnext").disabled=false;
+  }else{
+    S.pick=k;
+    Array.prototype.forEach.call($("qopts").children,function(o,idx){ o.classList.toggle("sel", idx===k); });
+    maybeReady();
+  }
+}
+function maybeReady(){ $("qnext").disabled = !(S.pick>-1 && S.conf>-1); }
+Array.prototype.forEach.call(document.querySelectorAll(".confbtn"),function(b){
+  b.addEventListener("click",function(){
+    S.conf = +b.getAttribute("data-c");
+    Array.prototype.forEach.call(document.querySelectorAll(".confbtn"),function(x){ x.classList.toggle("sel", x===b); });
+    maybeReady();
+  });
+});
+$("qnext").addEventListener("click",function(){
+  var B=bank();
+  S.picks[S.i]=S.pick; if(S.mode==="hw") S.confs[S.i]=S.conf;
+  if(S.i < B.length-1){ S.i++; render(); } else { finish(); }
+});
+function quit(){ if(confirm("確定離開？本次作答將不保留。")){ show("home"); refreshHome(); } }
+
+/* ---------- 結束與上雲 ---------- */
+function calib(){
+  var c={gs:0,bs:0,gw:0,bw:0};
+  HW.forEach(function(q,i){
+    var ok = S.picks[i]===q.ans, sure = S.confs[i]===1;
+    if(ok&&sure)c.gs++; else if(!ok&&sure)c.bs++; else if(ok&&!sure)c.gw++; else c.bw++;
+  });
+  return c;
+}
+function pushCloud(rec, msgEl, onUp){
+  var waited=0;
+  (function attempt(){
+    var up=null; try{ up=window.IOCCLOUD; }catch(e){}
+    if(up && up.enqueue){
+      try{
+        up.enqueue(rec);
+        if(onUp){ try{ onUp(up); }catch(e){} }
+        var tries=0;
+        var t=setInterval(function(){
+          tries++;
+          var left=0; try{ left=up.outbox().filter(function(r){ return r.kind===rec.kind; }).length; }catch(e){}
+          if(left===0){ clearInterval(t); msgEl.className="cloudmsg ok"; msgEl.textContent="☁ ✔ 成績已上傳雲端試算表"+(rec.sid?("（學號 "+rec.sid+"）"):"（匿名）")+"。"; }
+          else if(tries>=8){ clearInterval(t); msgEl.textContent="☁ 已排入上傳佇列，恢復連線會自動補送（本機已保留紀錄）。"; }
+        },1500);
+        return;
+      }catch(e){ msgEl.textContent="☁ 上傳器異常，成績僅保留在本機。"; return; }
+    }
+    if(waited<8000){ waited+=800; msgEl.textContent="☁ 連線雲端中…"; setTimeout(attempt,800); }
+    else{ msgEl.textContent="☁ 此環境未連上雲端，成績僅保留在本機（連線後重新交卷可補傳）。"; }
+  })();
+}
+function finish(){
+  var B=bank(), raw=0;
+  B.forEach(function(q,i){ if(S.picks[i]===q.ans) raw++; });
+  var ms=Date.now()-S.t0, score=Math.round(raw/B.length*100), st=lsGet(), id=identity()||{};
+  if(S.mode==="pre"){
+    st.pre={done:1,raw:raw,max:B.length,ts:Date.now()}; lsSet(st);
+    renderPreResult(raw,B.length,ms);
+  }else{
+    var c=calib();
+    st.hw=st.hw||{tries:0,best:0};
+    st.hw.tries++; st.hw.best=Math.max(st.hw.best,score); st.hw.last={score:score,raw:raw,ts:Date.now()}; lsSet(st);
+    renderHwResult(raw,B.length,score,ms,c);
+  }
+}
+function ring(score){
+  var r=46, cir=2*Math.PI*r, off=cir*(1-score/100);
+  var col = score>=80?"var(--ok)":(score>=60?"var(--warn)":"var(--fail)");
+  return "<svg class='ring' viewBox='0 0 120 120'><circle cx='60' cy='60' r='"+r+"' fill='none' stroke='#e2e8f0' stroke-width='11'/>"+
+    "<circle cx='60' cy='60' r='"+r+"' fill='none' stroke='"+col+"' stroke-width='11' stroke-linecap='round' stroke-dasharray='"+cir+"' stroke-dashoffset='"+off+"' transform='rotate(-90 60 60)'/>"+
+    "<text x='60' y='64' text-anchor='middle'>"+score+"</text><text class='cap' x='60' y='82' text-anchor='middle'>分</text></svg>";
+}
+function mmss(ms){ var s=Math.round(ms/1000); return Math.floor(s/60)+" 分 "+(s%60)+" 秒"; }
+
+function renderPreResult(raw,max,ms){
+  var el=$("result");
+  el.innerHTML =
+   "<div class='card'><span class='kicker'>🔮 課前練習完成</span>"+
+   "<div class='ringwrap'>"+ring(Math.round(raw/max*100))+
+   "<div><div style='font-size:20px;font-weight:800;color:var(--hwd)'>猜對 "+raw+" / "+max+" 題（不計分）</div>"+
+   "<div style='color:var(--muted);margin-top:4px'>用時 "+mmss(ms)+"。把猜錯的印象帶進教室——上課時老師會一題一題揭曉，「先思考、後驗證」效果最好。</div></div></div>"+
+   "<div class='coach'>📌 上課前偷看一眼：整堂課只講一張圖——輸入 → 處理 → 輸出，儲存接住每一步。</div>"+
+   "<div class='cloudmsg' id='cloudmsg1'>☁ 上傳中…</div>"+
+   "<div class='qact'><button class='btn btn-ghost' type='button' onclick='HWU.home()'>回首頁</button>"+
+   "<button class='btn btn-navy' type='button' onclick='HWU.start(\"pre\")'>再玩一次</button></div></div>";
+  show("result");
+  var id=identity()||{};
+  var items=PRE.map(function(q,i){ return {ccid:q.ccid,ok:S.picks[i]===q.ans?1:0,pick:S.picks[i]}; });
+  pushCloud({kind:"warm",unit:UNIT.pre,raw:raw,max:max,score:Math.round(raw/max*100),ms:ms,sid:id.sid||"",items:items,page:"hw-unit"},$("cloudmsg1"));
+}
+
+function renderHwResult(raw,max,score,ms,c){
+  var el=$("result"), id=identity()||{};
+  var coach=[];
+  if(c.bs>0) coach.push("有 "+c.bs+" 題「很有把握卻答錯」——這是進步最快的入口，先看下面的解析。");
+  if(c.gw>=3) coach.push("你比自己想的更會（"+c.gw+" 題沒把握卻答對）——多給自己一點信心！");
+  if(score<60) coach.push("建議回「硬體互動模組」把模擬操作走一遍，再回來重新挑戰。");
+  if(!coach.length) coach.push("表現穩定，把握度校準也不錯——下個單元見！");
+  var wrongs="";
+  HW.forEach(function(q,i){
+    if(S.picks[i]===q.ans) return;
+    wrongs +=
+     "<div class='wrongitem'><span class='tag'>情境："+q.tag+"（"+q.ccid+"）"+(S.confs[i]===1?"・💪 當時很有把握":"・🤔 當時沒把握")+"</span>"+
+     "<div style='font-weight:700;margin-top:4px'>"+q.stem+"</div>"+
+     "<div class='ans'>你的答案：<span class='u'>"+(q.opts[S.picks[i]]||"未作答")+"</span>　✔ 正確答案：<span class='c'>"+q.opts[q.ans]+"</span></div>"+
+     "<div class='exp'>💡 "+q.exp+"</div>"+
+     "<button class='btn btn-ghost' type='button' style='margin-top:10px;min-height:40px' onclick='HWU.alt("+i+",this)'>🎯 再挑戰一題類似題（不計分）</button>"+
+     "<div class='altbox' id='alt"+i+"'></div></div>";
+  });
+  el.innerHTML =
+   "<div class='card'><span class='kicker'>📝 課後作業結果</span>"+
+   "<div class='ringwrap'>"+ring(score)+
+   "<div><div style='font-size:20px;font-weight:800;color:var(--hwd)'>答對 "+raw+" / "+max+" 題</div>"+
+   "<div style='color:var(--muted);margin-top:4px'>用時 "+mmss(ms)+"｜作答者："+(id.sid?((id.cls||"")+" "+id.sid+" "+(id.name||"")):"未登記（匿名）")+"</div></div></div>"+
+   "<div class='quad'>"+
+    "<div class='qd q1'>穩固區<b>"+c.gs+"</b>有把握・答對</div>"+
+    "<div class='qd q2'>盲點區<b>"+c.bs+"</b>有把握・答錯</div>"+
+    "<div class='qd q3'>低估區<b>"+c.gw+"</b>沒把握・答對</div>"+
+    "<div class='qd q4'>待學區<b>"+c.bw+"</b>沒把握・答錯</div>"+
+   "</div>"+
+   "<div class='coach'>🧭 "+coach.join("　")+"</div>"+
+   "<div class='cloudmsg' id='cloudmsg2'>☁ 上傳中…</div><div id='certmount'></div>"+
+   (wrongs?"<h2 style='font-size:18px;color:var(--hwd);margin:18px 0 0'>錯題回顧（看見錯誤 → 理解 → 重試）</h2>"+wrongs:"<div class='coach'>🏆 全對！去「硬體互動模組」玩玩故障排除吧。</div>")+
+   "<div class='qact'><button class='btn btn-ghost' type='button' onclick='HWU.home()'>回首頁</button>"+
+   "<button class='btn btn-gold' type='button' onclick='HWU.start(\"hw\")'>重新作答</button>"+
+   "<a class='btn btn-navy' href='student.html#hardware'>回硬體模組複習 →</a></div></div>";
+  show("result");
+  var items=HW.map(function(q,i){ return {ccid:q.ccid,ct:q.ct,ok:S.picks[i]===q.ans?1:0,conf:S.confs[i],pick:S.picks[i]}; });
+  pushCloud({kind:"subquiz",unit:UNIT.hw,raw:raw,max:max,score:score,ms:ms,calib:c,sid:id.sid||"",items:items,page:"hw-unit"},$("cloudmsg2"),
+    function(up){ try{ if(up.mountCert) up.mountCert($("certmount"),"subquiz"); }catch(e){} });
+}
+
+/* 再挑戰 */
+function altQ(i,btn){
+  var a=HW[i].alt, box=$("alt"+i);
+  if(!a||!box) return;
+  btn.style.display="none";
+  var h="<div style='font-weight:700'>"+a.stem+"</div><div class='opts'>";
+  a.opts.forEach(function(t,k){ h+="<button type='button' class='opt' data-k='"+k+"'><span class='k'>"+String.fromCharCode(65+k)+"</span><span>"+t+"</span></button>"; });
+  h+="</div><div class='fb' style='margin-top:10px' id='altfb"+i+"'></div>";
+  box.innerHTML=h; box.classList.add("show");
+  Array.prototype.forEach.call(box.querySelectorAll(".opt"),function(o){
+    o.addEventListener("click",function(){
+      var k=+o.getAttribute("data-k");
+      Array.prototype.forEach.call(box.querySelectorAll(".opt"),function(x,idx){
+        x.disabled=true;
+        if(idx===a.ans)x.classList.add("right"); else if(idx===k)x.classList.add("wrong");
+      });
+      var fb=$("altfb"+i); fb.className="fb "+(k===a.ans?"ok":"no");
+      fb.textContent=(k===a.ans?"🎉 這次穩了！":"再想想——")+a.exp;
+    });
+  });
+}
+
+/* 進站登記 */
+var idb=$("idbtn");
+if(idb) idb.addEventListener("click",function(){
+  var w=0;
+  (function open(){
+    try{
+      if(window.IOCCLOUD&&IOCCLOUD.openIdentity){
+        IOCCLOUD.openIdentity();
+        var n=0,t=setInterval(function(){ n++; if(identity()||n>60){ clearInterval(t); refreshHome(); } },1000);
+        return;
+      }
+    }catch(e){}
+    if(w<5000){ w+=500; setTimeout(open,500); }
+  })();
+});
+document.addEventListener("hwu-cloud-ready",function(){ setTimeout(refreshHome,200); });
+
+window.HWU={start:start,quit:quit,home:function(){show("home");refreshHome();},alt:altQ};
+if(document.readyState!=="loading"){ setTimeout(refreshHome,400); } else { document.addEventListener("DOMContentLoaded",function(){ setTimeout(refreshHome,400); }); }
+})();
+</script>
+</body>
+</html>
