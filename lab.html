@@ -1,0 +1,565 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+<meta charset="utf-8"/>
+<meta name="viewport" content="width=device-width,initial-scale=1"/>
+<link rel="preconnect" href="https://script.google.com" crossorigin/>
+<meta name="cc-cloud-url" content="https://script.google.com/macros/s/AKfycbz7wHWbc7go-OVR0Q_g_NBzDqwzV9-leqL1CRe1S9wGkLLjvJIAm-KrZj80s1KJ_VdGVg/exec"/>
+<script id="ioccloud-cfg">window.CC_GAS_URL=function(){try{var t=document.querySelector('meta[name="cc-cloud-url"]'),e=t&&t.getAttribute("content")||"";return/^https?:\/\//.test(e)?e:""}catch(t){return""}}()</script>
+<title>電腦教室實機實測｜硬體單元評量</title>
+<meta name="description" content="電腦教室實機實測：打開電腦、查出 CPU／RAM／磁碟／GPU 規格，並歸類到 IPOS 四單元。自動評分，成績存入雲端試算表。"/>
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Crect width='100' height='100' rx='18' fill='%2310312a'/%3E%3Ctext x='50' y='70' font-size='52' text-anchor='middle' fill='%23e0b44a'%3E%F0%9F%96%A5%3C/text%3E%3C/svg%3E"/>
+<style>
+:root{--board:#10312a;--board2:#0c2620;--gold:#e0b44a;--ok:#34a36b;--fail:#e2574c;--warn:#d9912f;
+--ink:#1b2733;--muted:#5b6b7a;--line:#dfe5ec;--bg:#eef1f5;--hw:#2e5496;--hwd:#21407a;--indigo:#29297a;
+--sans:"Noto Sans TC","PingFang TC","Microsoft JhengHei",system-ui,sans-serif}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--ink);font-family:var(--sans);font-size:17px;line-height:1.6;-webkit-font-smoothing:antialiased}
+.wrap{max-width:880px;margin:0 auto;padding:0 15px 64px}
+header{background:linear-gradient(135deg,var(--board),var(--board2));color:#fff;padding:16px 0 13px;border-bottom:4px solid var(--gold)}
+header .wrap{padding-bottom:0;display:flex;align-items:center;gap:10px;flex-wrap:wrap}
+h1{margin:0;font-size:21px}
+.sub{opacity:.9;font-size:13.5px;width:100%}
+.nav{margin-left:auto;display:flex;gap:7px;flex-wrap:wrap}
+.nav a,.nav button{font:700 12.5px/1 var(--sans);color:#fff;text-decoration:none;background:rgba(255,255,255,.12);
+border:1px solid rgba(255,255,255,.35);border-radius:999px;padding:7px 12px;cursor:pointer}
+.nav a:hover,.nav button:hover{background:rgba(255,255,255,.24)}
+.card{background:#fff;border:1px solid var(--line);border-radius:16px;padding:16px 18px;margin-top:14px;box-shadow:0 2px 10px rgba(16,49,42,.06)}
+.kicker{font:800 12px/1 var(--sans);letter-spacing:.08em;color:var(--warn)}
+.h2{font-size:18px;font-weight:800;color:var(--hwd);margin:4px 0 8px}
+.row{display:flex;gap:10px;align-items:center;flex-wrap:wrap}
+.spacer{flex:1}
+.chip{background:#f4f7fb;border:1px solid var(--line);border-radius:999px;padding:4px 12px;font-size:13.5px;color:var(--muted)}
+.chip b{color:var(--hwd)}
+.btn{display:inline-flex;align-items:center;justify-content:center;gap:7px;font:700 16px/1 var(--sans);
+border:none;border-radius:11px;padding:0 20px;min-height:46px;cursor:pointer;transition:.15s;text-decoration:none}
+.btn:active{transform:scale(.97)}
+.btn-navy{background:var(--hw);color:#fff}.btn-navy:hover{background:var(--hwd)}
+.btn-gold{background:var(--gold);color:#4a3608}.btn-gold:hover{filter:brightness(1.06)}
+.btn-ghost{background:#fff;color:var(--hwd);border:2px solid var(--line)}.btn-ghost:hover{border-color:var(--hw)}
+.f{display:grid;grid-template-columns:minmax(150px,1fr) minmax(160px,1.3fr);gap:8px 12px;align-items:start;margin-top:10px}
+@media(max-width:620px){.f{grid-template-columns:1fr}}
+.f .lab{font-weight:700;font-size:15.5px;padding-top:11px}
+.f .lab small{display:block;font-weight:500;font-size:12.5px;color:var(--muted);line-height:1.45}
+.inp{width:100%;font:500 16px var(--sans);border:2px solid var(--line);border-radius:10px;padding:10px 12px;min-height:44px;background:#fff}
+.inp:focus{outline:none;border-color:var(--hw)}
+.inp.bad{border-color:var(--fail);background:#fdeeec}
+.inp.good{border-color:var(--ok);background:#f4fbf7}
+.hint{font-size:12.5px;color:var(--fail);min-height:1px}
+.where{background:#f4f7ff;border-left:4px solid var(--hw);border-radius:0 10px 10px 0;padding:10px 12px;font-size:14.5px;margin-top:10px}
+.where b{color:var(--hwd)}
+.where code{background:#e8eef8;border-radius:5px;padding:1px 6px;font-family:ui-monospace,monospace;font-size:13.5px}
+.opts{display:grid;gap:8px;margin-top:6px}
+.opt{display:flex;align-items:center;gap:9px;text-align:left;font:500 15.5px/1.45 var(--sans);
+background:#f8fafc;border:2px solid var(--line);border-radius:10px;padding:10px 12px;min-height:44px;cursor:pointer;color:var(--ink)}
+.opt:hover{border-color:var(--hw)}
+.opt.sel{border-color:var(--hw);background:#e8effb}
+.opt .k{flex:0 0 24px;height:24px;border-radius:50%;background:#e2e8f0;color:var(--hwd);font-weight:800;font-size:13px;
+display:inline-flex;align-items:center;justify-content:center}
+.opt.sel .k{background:var(--hw);color:#fff}
+.ipos{display:grid;grid-template-columns:1fr auto;gap:8px;align-items:center;border:1px solid var(--line);
+border-radius:10px;padding:9px 11px;margin-top:7px;background:#fff}
+.ipos .nm{font-weight:700;font-size:15.5px}
+.seg4{display:inline-flex;border:2px solid var(--line);border-radius:9px;overflow:hidden}
+.seg4 button{font:800 13.5px/1 var(--sans);background:#fff;border:0;padding:9px 11px;cursor:pointer;color:var(--muted)}
+.seg4 button.on{background:var(--hw);color:#fff}
+.chk{display:flex;flex-wrap:wrap;gap:8px;margin-top:8px}
+.chk label{display:inline-flex;align-items:center;gap:6px;background:#f8fafc;border:2px solid var(--line);
+border-radius:999px;padding:8px 13px;font-size:14.5px;cursor:pointer}
+.chk input{width:17px;height:17px}
+.chk label.on{border-color:var(--ok);background:#eaf7f0}
+.ring{width:104px;height:104px;flex:0 0 104px}
+.ring text{font:800 24px var(--sans);fill:var(--hwd)}
+.ring .cap{font:600 11px var(--sans);fill:var(--muted)}
+.sc{display:grid;grid-template-columns:repeat(auto-fit,minmax(140px,1fr));gap:9px;margin-top:12px}
+.scb{border:1px solid var(--line);border-radius:11px;padding:9px 11px;font-size:14px;background:#f8fafc}
+.scb b{display:block;font-size:19px;color:var(--hwd)}
+.note{background:#f4f7ff;border-left:4px solid var(--hw);border-radius:0 11px 11px 0;padding:11px 13px;font-size:15px;margin-top:12px}
+.warnbox{background:#fdf3e3;border:1px solid #eeda9d;border-radius:11px;padding:11px 13px;font-size:14.5px;margin-top:10px;color:#7a5b12}
+table{width:100%;border-collapse:collapse;font-size:13.5px;margin-top:10px}
+th{background:var(--hw);color:#fff;padding:8px 9px;text-align:left;white-space:nowrap}
+td{border-bottom:1px solid var(--line);padding:7px 9px;vertical-align:top}
+.tw{overflow-x:auto}
+.cloudmsg{margin-top:12px;font-size:14.5px;color:var(--muted)}
+.cloudmsg.ok{color:var(--ok);font-weight:700}
+.gate{max-width:380px;margin:36px auto}
+.hidden{display:none!important}
+footer{margin-top:28px;text-align:center;color:var(--muted);font-size:12.5px;border-top:1px solid var(--line);padding-top:12px}
+</style>
+</head>
+<body>
+<header>
+  <div class="wrap">
+    <h1>🖥 電腦教室實機實測</h1>
+    <nav class="nav">
+      <a href="hw-unit.html">🔮 練習與作業</a>
+      <a href="live.html">⚡ 即時互動</a>
+      <a href="index.html">⌂ 入口</a>
+      <button id="modeBtn" type="button">教師端</button>
+    </nav>
+    <div class="sub">課程主題：<b>電腦系統架構 → 生活應用</b>｜打開你面前這台電腦，把它的四個單元找出來</div>
+  </div>
+</header>
+<main class="wrap">
+
+<section id="stu">
+  <div class="card">
+    <span class="kicker">開始之前</span>
+    <div class="h2">這份評量要你「真的去看那台電腦」</div>
+    <div style="font-size:15px;color:var(--muted)">
+      每台機器規格不同，所以沒有標準答案可以抄——但系統會檢查你填的格式合不合理，
+      而 IPOS 歸類與推理題是有標準答案的，會自動評分。填完按最下面「送出」。
+    </div>
+    <div class="row" style="margin-top:10px">
+      <span class="chip" id="whoS">身分：載入中…</span>
+      <span class="chip">配分：抄錄 40 ＋ 歸類 40 ＋ 推理 20</span>
+    </div>
+  </div>
+
+  <div class="card">
+    <span class="kicker">第 1 步</span><div class="h2">機台登記</div>
+    <div class="f">
+      <div class="lab">電腦教室<small>例如：資訊大樓 E301</small></div>
+      <div><input class="inp" id="v_room" placeholder="E301"/><div class="hint" id="h_room"></div></div>
+      <div class="lab">機台編號／座號<small>貼在主機或桌面的編號</small></div>
+      <div><input class="inp" id="v_seat" placeholder="12"/><div class="hint" id="h_seat"></div></div>
+    </div>
+  </div>
+
+  <div class="card">
+    <span class="kicker">第 2 步</span><div class="h2">處理單元：CPU</div>
+    <div class="where"><b>去哪裡看：</b>對工作列的「開始」按<b>右鍵</b> → <code>工作管理員</code> →
+      上方 <code>效能</code> → 左邊點 <code>CPU</code>。（快捷鍵 <code>Ctrl+Shift+Esc</code> 也可以）</div>
+    <div class="f">
+      <div class="lab">CPU 型號<small>右上角那一行，例：Intel Core i5-12400</small></div>
+      <div><input class="inp" id="v_cpu" placeholder="Intel Core i5-12400"/><div class="hint" id="h_cpu"></div></div>
+      <div class="lab">核心數<small>畫面下方「核心」</small></div>
+      <div><input class="inp" id="v_cores" inputmode="numeric" placeholder="6"/><div class="hint" id="h_cores"></div></div>
+      <div class="lab">邏輯處理器<small>下方「邏輯處理器」，通常是核心數的 1 或 2 倍</small></div>
+      <div><input class="inp" id="v_threads" inputmode="numeric" placeholder="12"/><div class="hint" id="h_threads"></div></div>
+      <div class="lab">基本速度（GHz）<small>下方「基本速度」</small></div>
+      <div><input class="inp" id="v_ghz" inputmode="decimal" placeholder="2.50"/><div class="hint" id="h_ghz"></div></div>
+    </div>
+  </div>
+
+  <div class="card">
+    <span class="kicker">第 3 步</span><div class="h2">儲存單元：記憶體與磁碟</div>
+    <div class="where"><b>去哪裡看：</b>同一個<code>效能</code>畫面，左邊改點 <code>記憶體</code>，再點 <code>磁碟 0</code>。</div>
+    <div class="f">
+      <div class="lab">RAM 總容量（GB）<small>記憶體頁右上角，例：16.0 GB</small></div>
+      <div><input class="inp" id="v_ram" inputmode="decimal" placeholder="16"/><div class="hint" id="h_ram"></div></div>
+      <div class="lab">RAM 速度（MHz）<small>記憶體頁下方「速度」</small></div>
+      <div><input class="inp" id="v_ramspd" inputmode="numeric" placeholder="3200"/><div class="hint" id="h_ramspd"></div></div>
+      <div class="lab">磁碟型號<small>磁碟頁最上面那一行</small></div>
+      <div><input class="inp" id="v_disk" placeholder="Samsung SSD 980 500GB"/><div class="hint" id="h_disk"></div></div>
+      <div class="lab">磁碟容量（GB）<small>磁碟頁下方「容量」</small></div>
+      <div><input class="inp" id="v_diskgb" inputmode="numeric" placeholder="512"/><div class="hint" id="h_diskgb"></div></div>
+      <div class="lab">磁碟類型<small>磁碟頁下方「類型」會寫 SSD 或 HDD</small></div>
+      <div>
+        <div class="seg4" id="v_disktype"><button type="button" data-v="SSD">SSD</button><button type="button" data-v="HDD">HDD</button></div>
+        <div class="hint" id="h_disktype"></div>
+      </div>
+    </div>
+    <div class="warnbox">⚠ 想一想：RAM 和磁碟的數字差很多——哪一個斷電會清空？這題等一下會考。</div>
+  </div>
+
+  <div class="card">
+    <span class="kicker">第 4 步</span><div class="h2">輸出單元：螢幕與顯示晶片</div>
+    <div class="where"><b>去哪裡看：</b>桌面按右鍵 → <code>顯示設定</code> 看<b>解析度</b>；
+      顯示晶片回<code>工作管理員 → 效能 → GPU</code>，或 <code>Win+R</code> 輸入 <code>dxdiag</code>。</div>
+    <div class="f">
+      <div class="lab">螢幕解析度<small>格式：1920x1080</small></div>
+      <div><input class="inp" id="v_res" placeholder="1920x1080"/><div class="hint" id="h_res"></div></div>
+      <div class="lab">顯示晶片／顯示卡<small>例：Intel UHD Graphics 730</small></div>
+      <div><input class="inp" id="v_gpu" placeholder="Intel UHD Graphics 730"/><div class="hint" id="h_gpu"></div></div>
+    </div>
+  </div>
+
+  <div class="card">
+    <span class="kicker">第 5 步</span><div class="h2">輸入單元：清點這台機器</div>
+    <div style="font-size:14.5px;color:var(--muted)">看得到、摸得到的才勾。至少要勾 2 項。</div>
+    <div class="chk" id="v_in">
+      <label><input type="checkbox" value="鍵盤"/>鍵盤</label>
+      <label><input type="checkbox" value="滑鼠"/>滑鼠</label>
+      <label><input type="checkbox" value="耳麥／麥克風"/>耳麥／麥克風</label>
+      <label><input type="checkbox" value="網路攝影機"/>網路攝影機</label>
+      <label><input type="checkbox" value="讀卡機"/>讀卡機</label>
+      <label><input type="checkbox" value="觸控螢幕"/>觸控螢幕</label>
+      <label><input type="checkbox" value="USB 埠"/>USB 埠</label>
+    </div>
+    <div class="hint" id="h_in"></div>
+  </div>
+
+  <div class="card">
+    <span class="kicker">第 6 步 · 40 分</span><div class="h2">把剛剛查到的元件歸到 IPOS</div>
+    <div style="font-size:14.5px;color:var(--muted)">這題有標準答案，會自動評分。</div>
+    <div id="iposBox"></div>
+  </div>
+
+  <div class="card">
+    <span class="kicker">第 7 步 · 20 分</span><div class="h2">用你自己抄到的數字回答</div>
+    <div id="qBox"></div>
+  </div>
+
+  <div class="card">
+    <div class="row">
+      <button class="btn btn-gold" id="submit" type="button">送出並評分 →</button>
+      <button class="btn btn-ghost" id="clearBtn" type="button">清空重填</button>
+      <span class="spacer"></span>
+      <span class="chip" id="saveTip">本機自動暫存中</span>
+    </div>
+    <div class="hint" id="h_all" style="margin-top:8px"></div>
+  </div>
+
+  <section id="result" class="hidden"></section>
+</section>
+
+<section id="tea" class="hidden">
+  <div class="card gate" id="gate">
+    <div class="kicker">教師端</div>
+    <div style="font-weight:700;margin:6px 0 10px">請輸入教師碼</div>
+    <input class="inp" id="code" type="password" placeholder="教師碼" autocomplete="off"/>
+    <div style="margin-top:10px"><button class="btn btn-navy" id="codeGo" type="button">進入</button></div>
+    <div id="codeMsg" style="color:var(--fail);font-size:14px;margin-top:8px"></div>
+  </div>
+  <div id="panel" class="hidden">
+    <div class="card">
+      <div class="row">
+        <div class="h2" style="margin:0">全班實測紀錄</div>
+        <span class="spacer"></span>
+        <span class="chip">已繳 <b id="tN">0</b> 人</span>
+        <button class="btn btn-ghost" id="tNow" type="button" style="min-height:38px;font-size:14px">↻ 更新</button>
+        <button class="btn btn-ghost" id="tCsv" type="button" style="min-height:38px;font-size:14px">⤓ 匯出 CSV</button>
+      </div>
+      <div class="note">同一間教室、同一機台編號的同學，規格應該一致——不一致就是有人沒有真的去看。</div>
+      <div class="tw"><table id="tTable"></table></div>
+    </div>
+  </div>
+</section>
+
+</main>
+<footer>國立屏東科技大學 資訊管理系｜計算機概論與實習｜教材授權 CC BY-NC-SA 4.0</footer>
+
+<script id="lab-cloud-loader">
+(function(){"use strict";
+if(window.IOCCLOUD) return;
+try{
+  fetch("student.html",{cache:"force-cache"}).then(function(r){if(!r.ok)throw 0;return r.text();}).then(function(t){
+    if(window.IOCCLOUD) return;
+    var m=t.match(/<script id="ioccloud">([\s\S]*?)<\/script>/);
+    if(m&&m[1]){var s=document.createElement("script");s.id="ioccloud";s.textContent=m[1];document.body.appendChild(s);
+      try{document.dispatchEvent(new Event("lab-cloud-ready"));}catch(e){}}
+  }).catch(function(){});
+}catch(e){}
+})();
+</script>
+
+<script id="lab-app">
+(function(){
+"use strict";
+var $=function(i){return document.getElementById(i);};
+var KIND="lab", LS="cc_lab_v1", TCODES=["npust1728","1728"];
+
+/* ── 欄位檢核：不是對答案（每台機器不同），是檢查「有沒有認真查」 ── */
+var F=[
+ {k:"room",  t:"text", min:2, msg:"請填教室代號，例如 E301"},
+ {k:"seat",  t:"text", min:1, msg:"請填機台編號或座號"},
+ {k:"cpu",   t:"model",msg:"CPU 型號要含英文與數字，例如 Intel Core i5-12400"},
+ {k:"cores", t:"int",  lo:1,  hi:128,  msg:"核心數應在 1–128"},
+ {k:"threads",t:"int", lo:1,  hi:256,  msg:"邏輯處理器應在 1–256"},
+ {k:"ghz",   t:"num",  lo:0.5,hi:6.5,  msg:"基本速度應在 0.5–6.5 GHz"},
+ {k:"ram",   t:"num",  lo:1,  hi:256,  msg:"RAM 應在 1–256 GB"},
+ {k:"ramspd",t:"int",  lo:400,hi:12000,msg:"RAM 速度應在 400–12000 MHz"},
+ {k:"disk",  t:"model",msg:"磁碟型號要含英文與數字"},
+ {k:"diskgb",t:"int",  lo:32, hi:16384,msg:"磁碟容量應在 32–16384 GB"},
+ {k:"res",   t:"res",  msg:"解析度格式為 1920x1080"},
+ {k:"gpu",   t:"model",msg:"顯示晶片名稱要含英文"}
+];
+function val(k){var e=$("v_"+k);return e?(e.value||"").trim():"";}
+function check(f){
+  var v=val(f.k);
+  if(!v) return "這一格還沒填";
+  if(f.t==="text")  return v.length>=(f.min||1)?"":f.msg;
+  if(f.t==="model") return (/[A-Za-z]/.test(v)&&v.length>=4)?"":f.msg;
+  if(f.t==="int"){var n=+v;return (/^\d+$/.test(v)&&n>=f.lo&&n<=f.hi)?"":f.msg;}
+  if(f.t==="num"){var m=parseFloat(v);return (isFinite(m)&&m>=f.lo&&m<=f.hi)?"":f.msg;}
+  if(f.t==="res")  return /^\d{3,5}\s*[xX×*]\s*\d{3,5}$/.test(v)?"":f.msg;
+  return "";
+}
+function diskType(){var b=document.querySelector("#v_disktype button.on");return b?b.getAttribute("data-v"):"";}
+function inputs(){return Array.prototype.filter.call($("v_in").querySelectorAll("input"),function(c){return c.checked;})
+  .map(function(c){return c.value;});}
+
+/* ── IPOS 歸類（有標準答案） ── */
+var IP=[
+ {n:"CPU（處理器）",a:"P"},{n:"記憶體 RAM",a:"S"},{n:"SSD／硬碟",a:"S"},
+ {n:"螢幕",a:"O"},{n:"鍵盤",a:"I"},{n:"網路攝影機",a:"I"},{n:"喇叭／耳機",a:"O"},{n:"顯示晶片 GPU",a:"P"}
+];
+var ipPick={};
+/* ── 推理題（用自己抄到的數字想） ── */
+var QS=[
+ {q:"你抄到的 RAM 容量和磁碟容量差了幾十倍。如果現在突然斷電，哪一個裡面的東西會消失？",
+  o:["RAM 裡的","磁碟裡的","兩個都會","兩個都不會"],a:0,
+  e:"RAM 是揮發性暫存，斷電即清空；磁碟是永久儲存。這就是為什麼要隨手存檔。"},
+ {q:"你抄到的「邏輯處理器」若是核心數的 2 倍，代表這顆 CPU：",
+  o:["有兩顆晶片","支援超執行緒，一個核心可同時處理兩條工作","時脈自動加倍","記憶體變兩倍"],a:1,
+  e:"邏輯處理器＝作業系統看到的可排程單位；2 倍通常代表支援超執行緒（Hyper-Threading／SMT）。"},
+ {q:"這台電腦跑起來卡卡的，你先看工作管理員發現「記憶體」使用率 95%。依 IPOS，問題出在哪一格？",
+  o:["輸入","處理與儲存之間的暫存不夠","輸出","網路"],a:1,
+  e:"RAM 是處理單元的工作桌；桌面不夠大，CPU 就得一直跟磁碟搬資料，整台變慢。"}
+];
+var qPick={};
+
+function ls(){try{return JSON.parse(localStorage.getItem(LS)||"{}");}catch(e){return{};}}
+function lsSet(o){try{localStorage.setItem(LS,JSON.stringify(o));}catch(e){}}
+function esc(s){return String(s==null?"":s).replace(/[&<>"]/g,function(c){return{"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c];});}
+function ident(){try{return window.IOCCLOUD&&IOCCLOUD.identity&&IOCCLOUD.identity()||null;}catch(e){return null;}}
+
+function save(){
+  var d={f:{},dt:diskType(),in:inputs(),ip:ipPick,q:qPick};
+  F.forEach(function(f){d.f[f.k]=val(f.k);});
+  var s=ls();s.draft=d;lsSet(s);
+}
+function restore(){
+  var d=(ls().draft)||null; if(!d) return;
+  F.forEach(function(f){var e=$("v_"+f.k);if(e&&d.f&&d.f[f.k])e.value=d.f[f.k];});
+  if(d.dt) Array.prototype.forEach.call($("v_disktype").querySelectorAll("button"),function(b){
+    b.classList.toggle("on",b.getAttribute("data-v")===d.dt);});
+  if(d.in) Array.prototype.forEach.call($("v_in").querySelectorAll("input"),function(c){
+    c.checked=d.in.indexOf(c.value)>=0; c.parentNode.classList.toggle("on",c.checked);});
+  if(d.ip) ipPick=d.ip; if(d.q) qPick=d.q;
+}
+
+function renderIpos(){
+  var b=$("iposBox");b.innerHTML="";
+  IP.forEach(function(it,i){
+    var d=document.createElement("div");d.className="ipos";
+    d.innerHTML='<span class="nm">'+esc(it.n)+'</span><span class="seg4" data-i="'+i+'">'+
+      ["I","P","O","S"].map(function(x){return '<button type="button" data-v="'+x+'"'+
+        (ipPick[i]===x?' class="on"':'')+'>'+x+'</button>';}).join("")+'</span>';
+    b.appendChild(d);
+    Array.prototype.forEach.call(d.querySelectorAll("button"),function(bt){
+      bt.addEventListener("click",function(){
+        ipPick[i]=bt.getAttribute("data-v");
+        Array.prototype.forEach.call(d.querySelectorAll("button"),function(x){
+          x.classList.toggle("on",x.getAttribute("data-v")===ipPick[i]);});
+        save();
+      });
+    });
+  });
+}
+function renderQ(){
+  var b=$("qBox");b.innerHTML="";
+  QS.forEach(function(q,i){
+    var d=document.createElement("div");
+    d.style.marginTop="12px";
+    d.innerHTML='<div style="font-weight:700;font-size:16px">'+(i+1)+'. '+esc(q.q)+'</div><div class="opts"></div>';
+    var o=d.querySelector(".opts");
+    q.o.forEach(function(t,k){
+      var bt=document.createElement("button");bt.type="button";
+      bt.className="opt"+(qPick[i]===k?" sel":"");
+      bt.innerHTML='<span class="k">'+String.fromCharCode(65+k)+'</span><span>'+esc(t)+'</span>';
+      bt.addEventListener("click",function(){
+        qPick[i]=k;
+        Array.prototype.forEach.call(o.children,function(x,xi){x.classList.toggle("sel",xi===k);});
+        save();
+      });
+      o.appendChild(bt);
+    });
+    b.appendChild(d);
+  });
+}
+
+/* ── 評分 ── */
+function grade(){
+  var bad=[],okN=0;
+  F.forEach(function(f){
+    var m=check(f), e=$("v_"+f.k), h=$("h_"+f.k);
+    if(e){e.classList.toggle("bad",!!m);e.classList.toggle("good",!m);}
+    if(h)h.textContent=m||"";
+    if(m)bad.push(f.k);else okN++;
+  });
+  if(!diskType()){bad.push("disktype");$("h_disktype").textContent="請選 SSD 或 HDD";}
+  else{$("h_disktype").textContent="";okN++;}
+  var ins=inputs();
+  if(ins.length<2){bad.push("in");$("h_in").textContent="至少勾 2 項";}
+  else{$("h_in").textContent="";okN++;}
+  var recTotal=F.length+2;
+  var recScore=Math.round(okN/recTotal*40);
+
+  var ipOk=0;IP.forEach(function(it,i){if(ipPick[i]===it.a)ipOk++;});
+  var ipScore=Math.round(ipOk/IP.length*40);
+  var qOk=0;QS.forEach(function(q,i){if(qPick[i]===q.a)qOk++;});
+  var qScore=Math.round(qOk/QS.length*20);
+
+  return {bad:bad,okN:okN,recTotal:recTotal,recScore:recScore,
+          ipOk:ipOk,ipScore:ipScore,qOk:qOk,qScore:qScore,
+          total:recScore+ipScore+qScore};
+}
+function ring(s){
+  var r=42,c=2*Math.PI*r,off=c*(1-s/100);
+  var col=s>=80?"var(--ok)":(s>=60?"var(--warn)":"var(--fail)");
+  return "<svg class='ring' viewBox='0 0 110 110'><circle cx='55' cy='55' r='"+r+"' fill='none' stroke='#e2e8f0' stroke-width='10'/>"+
+  "<circle cx='55' cy='55' r='"+r+"' fill='none' stroke='"+col+"' stroke-width='10' stroke-linecap='round' stroke-dasharray='"+c+
+  "' stroke-dashoffset='"+off+"' transform='rotate(-90 55 55)'/><text x='55' y='59' text-anchor='middle'>"+s+
+  "</text><text class='cap' x='55' y='76' text-anchor='middle'>分</text></svg>";
+}
+$("submit").addEventListener("click",function(){
+  var g=grade();
+  if(g.bad.length){
+    $("h_all").textContent="還有 "+g.bad.length+" 個地方要修正（已用紅框標出），修好再送出。";
+    var first=$("v_"+g.bad[0])||$("h_"+g.bad[0]);
+    if(first)try{first.scrollIntoView({behavior:"smooth",block:"center"});}catch(e){}
+    return;
+  }
+  $("h_all").textContent="";
+  var id=ident()||{}, spec={};
+  F.forEach(function(f){spec[f.k]=val(f.k);});
+  spec.disktype=diskType(); spec.inputs=inputs();
+
+  var wrong=[];
+  IP.forEach(function(it,i){if(ipPick[i]!==it.a)wrong.push({n:it.n,you:ipPick[i]||"未答",ans:it.a});});
+  var qrev="";
+  QS.forEach(function(q,i){
+    if(qPick[i]===q.a)return;
+    qrev+='<div style="border:1px solid var(--line);border-radius:11px;padding:11px;margin-top:9px">'+
+      '<div style="font-weight:700">'+esc(q.q)+'</div>'+
+      '<div style="font-size:14.5px;margin:5px 0">你選：<b style="color:var(--fail)">'+esc(q.o[qPick[i]]||"未答")+
+      '</b>　正解：<b style="color:var(--ok)">'+esc(q.o[q.a])+'</b></div>'+
+      '<div style="background:#f8fafc;border-radius:9px;padding:9px;font-size:14px">💡 '+esc(q.e)+'</div></div>';
+  });
+
+  $("result").innerHTML=
+   '<div class="card"><span class="kicker">評量結果</span>'+
+   '<div class="row" style="align-items:center;gap:16px">'+ring(g.total)+
+   '<div><div style="font-size:19px;font-weight:800;color:var(--hwd)">總分 '+g.total+' 分</div>'+
+   '<div style="color:var(--muted);font-size:14.5px">'+esc((id.cls||"")+" "+(id.sid||"未登記")+" "+(id.name||""))+
+   '｜'+esc(val("room")+" 第 "+val("seat")+" 號機")+'</div></div></div>'+
+   '<div class="sc">'+
+    '<div class="scb">實測抄錄<b>'+g.recScore+' / 40</b>'+g.okN+' / '+g.recTotal+' 欄合格</div>'+
+    '<div class="scb">IPOS 歸類<b>'+g.ipScore+' / 40</b>答對 '+g.ipOk+' / '+IP.length+'</div>'+
+    '<div class="scb">推理<b>'+g.qScore+' / 20</b>答對 '+g.qOk+' / '+QS.length+'</div>'+
+   '</div>'+
+   (wrong.length?'<div class="note"><b>歸類要訂正：</b>'+wrong.map(function(w){
+      return esc(w.n)+'（你填 '+esc(w.you)+'，應為 '+esc(w.ans)+'）';}).join('、')+'</div>':
+      '<div class="note">🏆 IPOS 歸類全對——你已經會用這把尺量任何一台機器了。</div>')+
+   qrev+
+   '<div class="cloudmsg" id="cmsg">☁ 上傳中…</div>'+
+   '<div class="row" style="margin-top:12px"><button class="btn btn-ghost" type="button" onclick="LAB.again()">修改後重新送出</button>'+
+   '<a class="btn btn-navy" href="hw-unit.html">接著做課後作業 →</a></div></div>';
+  $("result").classList.remove("hidden");
+  try{$("result").scrollIntoView({behavior:"smooth",block:"start"});}catch(e){}
+
+  var rec={kind:KIND,unit:"電腦教室實機實測",page:"lab",
+    sid:id.sid||"", room:val("room"), seat:val("seat"),
+    raw:g.total,max:100,score:g.total,
+    recScore:g.recScore,ipScore:g.ipScore,qScore:g.qScore,
+    spec:spec, ipWrong:wrong.length, qOk:g.qOk};
+  var waited=0;
+  (function push(){
+    var up=null;try{up=window.IOCCLOUD;}catch(e){}
+    if(up&&up.enqueue){
+      try{up.enqueue(rec);}catch(e){}
+      var n=0,t=setInterval(function(){
+        n++;var left=0;try{left=up.outbox().filter(function(r){return r.kind===KIND;}).length;}catch(e){}
+        if(left===0){clearInterval(t);var c=$("cmsg");if(c){c.className="cloudmsg ok";c.textContent="☁ ✔ 成績已上傳雲端試算表";}}
+        else if(n>=8){clearInterval(t);var c2=$("cmsg");if(c2)c2.textContent="☁ 已排入佇列，恢復連線會自動補送。";}
+      },1500);
+      return;
+    }
+    if(waited<8000){waited+=800;setTimeout(push,800);}
+    else{var c3=$("cmsg");if(c3)c3.textContent="☁ 此環境未連上雲端，成績僅留在本機。";}
+  })();
+});
+$("clearBtn").addEventListener("click",function(){
+  if(!confirm("確定清空所有欄位？"))return;
+  F.forEach(function(f){var e=$("v_"+f.k);if(e){e.value="";e.classList.remove("bad","good");}var h=$("h_"+f.k);if(h)h.textContent="";});
+  Array.prototype.forEach.call($("v_disktype").querySelectorAll("button"),function(b){b.classList.remove("on");});
+  Array.prototype.forEach.call($("v_in").querySelectorAll("input"),function(c){c.checked=false;c.parentNode.classList.remove("on");});
+  ipPick={};qPick={};renderIpos();renderQ();save();
+  $("result").classList.add("hidden");$("h_all").textContent="";
+});
+
+/* ── 教師端 ── */
+function detailOf(r){var d=r&&r.detail;if(typeof d==="string"){try{d=JSON.parse(d);}catch(e){d=null;}}return d||{};}
+var rowsCache=[];
+function tRefresh(){
+  if(!(window.IOCCLOUD&&IOCCLOUD.fetchAll)){$("tTable").innerHTML="<tr><td>雲端連線中…</td></tr>";return;}
+  IOCCLOUD.fetchAll(KIND,function(rows,err){
+    if(err){$("tTable").innerHTML='<tr><td style="color:var(--fail)">讀取失敗：'+esc(err)+'</td></tr>';return;}
+    var byS={};
+    (rows||[]).forEach(function(r){
+      var d=detailOf(r), key=(r.sid||d.sid||"?")+"|"+(d.room||"")+"|"+(d.seat||"");
+      var ts=r.ts||0;
+      if(!byS[key]||String(ts)>=String(byS[key].ts))byS[key]={ts:ts,r:r,d:d};
+    });
+    rowsCache=Object.keys(byS).map(function(k){return byS[k];});
+    rowsCache.sort(function(a,b){return (a.d.room+a.d.seat)>(b.d.room+b.d.seat)?1:-1;});
+    $("tN").textContent=rowsCache.length;
+    var h='<tr><th>教室</th><th>機台</th><th>學號</th><th>姓名</th><th>CPU</th><th>核心</th><th>RAM</th><th>磁碟</th><th>分數</th></tr>';
+    rowsCache.forEach(function(x){
+      var s=(x.d.spec)||{};
+      h+='<tr><td>'+esc(x.d.room||"")+'</td><td>'+esc(x.d.seat||"")+'</td><td>'+esc(x.r.sid||"")+'</td>'+
+         '<td>'+esc(x.r.name||"")+'</td><td>'+esc(s.cpu||"")+'</td><td>'+esc(s.cores||"")+'</td>'+
+         '<td>'+esc(s.ram||"")+' GB</td><td>'+esc((s.disktype||"")+" "+(s.diskgb||"")+" GB")+'</td>'+
+         '<td><b>'+esc(x.r.score!=null?x.r.score:"")+'</b></td></tr>';
+    });
+    $("tTable").innerHTML=h;
+  });
+}
+$("tNow").addEventListener("click",tRefresh);
+$("tCsv").addEventListener("click",function(){
+  var head=["教室","機台","學號","姓名","CPU","核心","邏輯處理器","GHz","RAM_GB","RAM_MHz","磁碟型號","磁碟GB","類型","解析度","GPU","抄錄","歸類","推理","總分"];
+  var lines=[head.join(",")];
+  rowsCache.forEach(function(x){
+    var s=x.d.spec||{};
+    lines.push([x.d.room,x.d.seat,x.r.sid,x.r.name,s.cpu,s.cores,s.threads,s.ghz,s.ram,s.ramspd,
+      s.disk,s.diskgb,s.disktype,s.res,s.gpu,x.d.recScore,x.d.ipScore,x.d.qScore,x.r.score]
+      .map(function(v){return '"'+String(v==null?"":v).replace(/"/g,'""')+'"';}).join(","));
+  });
+  var blob=new Blob(["﻿"+lines.join("\n")],{type:"text/csv;charset=utf-8"});
+  var a=document.createElement("a");a.href=URL.createObjectURL(blob);
+  a.download="實機實測_"+new Date().toISOString().slice(0,10)+".csv";a.click();
+});
+$("codeGo").addEventListener("click",function(){
+  var v=($("code").value||"").trim().toLowerCase();
+  if(TCODES.indexOf(v)<0){$("codeMsg").textContent="教師碼不正確。";return;}
+  var s=ls();s.tok=1;lsSet(s);
+  $("gate").classList.add("hidden");$("panel").classList.remove("hidden");tRefresh();
+});
+$("code").addEventListener("keydown",function(e){if(e.key==="Enter")$("codeGo").click();});
+$("modeBtn").addEventListener("click",function(){setMode($("tea").classList.contains("hidden")?"t":"s");});
+function setMode(m){
+  var t=(m==="t");
+  $("tea").classList.toggle("hidden",!t);$("stu").classList.toggle("hidden",t);
+  $("modeBtn").textContent=t?"學生端":"教師端";
+  try{history.replaceState(null,"",t?"#teacher":"#");}catch(e){}
+  if(t&&ls().tok){$("gate").classList.add("hidden");$("panel").classList.remove("hidden");tRefresh();}
+}
+
+/* ── 綁定 ── */
+F.forEach(function(f){var e=$("v_"+f.k);if(e)e.addEventListener("input",function(){
+  var h=$("h_"+f.k);if(h&&h.textContent){var m=check(f);h.textContent=m||"";e.classList.toggle("bad",!!m);e.classList.toggle("good",!m);}
+  save();});});
+Array.prototype.forEach.call($("v_disktype").querySelectorAll("button"),function(b){
+  b.addEventListener("click",function(){
+    Array.prototype.forEach.call($("v_disktype").querySelectorAll("button"),function(x){x.classList.remove("on");});
+    b.classList.add("on");$("h_disktype").textContent="";save();});});
+Array.prototype.forEach.call($("v_in").querySelectorAll("input"),function(c){
+  c.addEventListener("change",function(){c.parentNode.classList.toggle("on",c.checked);save();});});
+
+function refreshWho(){
+  var id=ident();
+  $("whoS").innerHTML=(id&&id.sid)?("身分：<b>"+esc((id.cls||"")+" "+id.sid)+"</b>"):"身分：匿名（建議先到作業頁登記學號）";
+}
+document.addEventListener("lab-cloud-ready",function(){setTimeout(refreshWho,250);});
+window.LAB={grade:grade,check:check,F:F,IP:IP,QS:QS,setMode:setMode,
+  again:function(){$("result").classList.add("hidden");window.scrollTo(0,0);},
+  _setIp:function(o){ipPick=o;renderIpos();},_setQ:function(o){qPick=o;renderQ();}};
+renderIpos();renderQ();restore();renderIpos();renderQ();
+setTimeout(refreshWho,600);
+setMode(/teacher/.test(location.hash)?"t":"s");
+})();
+</script>
+</body>
+</html>
