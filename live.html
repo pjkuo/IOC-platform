@@ -1,0 +1,425 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+<meta charset="utf-8"/>
+<meta name="viewport" content="width=device-width,initial-scale=1"/>
+<link rel="preconnect" href="https://script.google.com" crossorigin/>
+<meta name="cc-cloud-url" content="https://script.google.com/macros/s/AKfycbz7wHWbc7go-OVR0Q_g_NBzDqwzV9-leqL1CRe1S9wGkLLjvJIAm-KrZj80s1KJ_VdGVg/exec"/>
+<script id="ioccloud-cfg">window.CC_GAS_URL=function(){try{var t=document.querySelector('meta[name="cc-cloud-url"]'),e=t&&t.getAttribute("content")||"";return/^https?:\/\//.test(e)?e:""}catch(t){return""}}()</script>
+<title>課堂即時互動｜計算機概論模擬平台</title>
+<meta name="description" content="課堂即時互動：學生手機作答，教師端投影即時長條圖與文字雲。不限題數、不限人數，成績與作答紀錄自動存入雲端試算表。"/>
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Crect width='100' height='100' rx='18' fill='%2310312a'/%3E%3Ctext x='50' y='70' font-size='56' text-anchor='middle' fill='%23e0b44a'%3E%E2%9A%A1%3C/text%3E%3C/svg%3E"/>
+<style>
+:root{--board:#10312a;--board2:#0c2620;--gold:#e0b44a;--ok:#34a36b;--fail:#e2574c;--warn:#d9912f;
+--ink:#1b2733;--muted:#5b6b7a;--line:#dfe5ec;--bg:#eef1f5;--hw:#2e5496;--hwd:#21407a;--indigo:#29297a;
+--sans:"Noto Sans TC","PingFang TC","Microsoft JhengHei",system-ui,sans-serif}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--ink);font-family:var(--sans);font-size:17px;line-height:1.6;-webkit-font-smoothing:antialiased}
+.wrap{max-width:900px;margin:0 auto;padding:0 16px 64px}
+header{background:linear-gradient(135deg,var(--board),var(--board2));color:#fff;padding:16px 0 13px;border-bottom:4px solid var(--gold)}
+header .wrap{padding-bottom:0;display:flex;align-items:center;gap:12px;flex-wrap:wrap}
+h1{margin:0;font-size:21px;letter-spacing:.5px}
+.sub{opacity:.9;font-size:13.5px;width:100%}
+.hbtn{margin-left:auto;font:700 13px/1 var(--sans);color:#fff;text-decoration:none;background:rgba(255,255,255,.12);
+border:1px solid rgba(255,255,255,.35);border-radius:999px;padding:8px 13px;cursor:pointer}
+.hbtn:hover{background:rgba(255,255,255,.24)}
+.card{background:#fff;border:1px solid var(--line);border-radius:16px;padding:16px 18px;margin-top:14px;box-shadow:0 2px 10px rgba(16,49,42,.06)}
+.kicker{font:800 12px/1 var(--sans);letter-spacing:.08em;color:var(--warn)}
+.row{display:flex;gap:10px;align-items:center;flex-wrap:wrap}
+.spacer{flex:1}
+.chip{background:#f4f7fb;border:1px solid var(--line);border-radius:999px;padding:4px 12px;font-size:13.5px;color:var(--muted)}
+.chip b{color:var(--hwd)}
+.btn{display:inline-flex;align-items:center;justify-content:center;gap:7px;font:700 16px/1 var(--sans);
+border:none;border-radius:11px;padding:0 18px;min-height:44px;cursor:pointer;transition:.15s;text-decoration:none}
+.btn:active{transform:scale(.97)}
+.btn-navy{background:var(--hw);color:#fff}.btn-navy:hover{background:var(--hwd)}
+.btn-gold{background:var(--gold);color:#4a3608}.btn-gold:hover{filter:brightness(1.06)}
+.btn-ghost{background:#fff;color:var(--hwd);border:2px solid var(--line)}.btn-ghost:hover{border-color:var(--hw)}
+.btn[disabled]{opacity:.45;cursor:not-allowed}
+.seg{display:inline-flex;border:2px solid var(--line);border-radius:10px;overflow:hidden}
+.seg button{font:700 14px/1 var(--sans);background:#fff;border:0;padding:9px 14px;cursor:pointer;color:var(--muted)}
+.seg button.on{background:var(--hw);color:#fff}
+/* 學生端 */
+.qcard{border:2px solid var(--line);border-radius:14px;padding:14px 16px;margin-top:12px;background:#fff}
+.qcard.done{border-color:var(--ok);background:#f4fbf7}
+.qmin{font:800 12px/1 var(--sans);color:var(--warn);letter-spacing:.05em}
+.qtext{font-size:17.5px;font-weight:700;margin:7px 0 11px;line-height:1.55}
+.opts{display:grid;gap:9px}
+.opt{display:flex;align-items:center;gap:10px;text-align:left;font:500 16px/1.45 var(--sans);
+background:#f8fafc;border:2px solid var(--line);border-radius:11px;padding:11px 13px;min-height:46px;cursor:pointer;color:var(--ink)}
+.opt:hover{border-color:var(--hw);background:#f2f6fd}
+.opt .k{flex:0 0 25px;height:25px;border-radius:50%;background:#e2e8f0;color:var(--hwd);font-weight:800;font-size:13.5px;
+display:inline-flex;align-items:center;justify-content:center}
+.opt.sel{border-color:var(--ok);background:#e9f7f0}.opt.sel .k{background:var(--ok);color:#fff}
+.tin{width:100%;font:500 16px var(--sans);border:2px solid var(--line);border-radius:11px;padding:11px 13px;min-height:46px}
+.tin:focus{outline:none;border-color:var(--hw)}
+.sent{margin-top:10px;font-size:14.5px;color:var(--ok);font-weight:700;display:none}
+.sent.show{display:block}
+/* 教師端 */
+.tq{font-size:30px;font-weight:800;color:var(--hwd);line-height:1.35;margin:4px 0 14px}
+@media(max-width:700px){.tq{font-size:22px}}
+.bars{display:grid;gap:10px}
+.bar{display:grid;grid-template-columns:1fr auto;gap:8px;align-items:center}
+.bar .lab{font-size:16px;font-weight:700}
+.bar .track{grid-column:1/-1;display:block;height:30px;background:#e8edf3;border-radius:8px;overflow:hidden}
+.bar .fill{display:block;height:100%;min-width:3px;background:linear-gradient(90deg,var(--hw),var(--indigo));border-radius:8px;transition:width .5s}
+.bar.win .fill{background:linear-gradient(90deg,var(--gold),#c9972f)}
+.bar .n{font-size:15px;color:var(--muted);font-weight:700}
+.cloud{display:flex;flex-wrap:wrap;gap:10px 16px;align-items:baseline;justify-content:center;padding:14px 4px;min-height:80px}
+.cloud span{font-weight:800;line-height:1.15}
+.qrbox{text-align:center}
+.qrbox img{width:150px;height:150px;image-rendering:pixelated;border:6px solid #fff;border-radius:10px;box-shadow:0 2px 10px rgba(0,0,0,.12)}
+.qrbox .u{font-size:12.5px;color:var(--muted);margin-top:5px}
+.note{background:#f4f7ff;border-left:4px solid var(--hw);border-radius:0 11px 11px 0;padding:10px 13px;font-size:15px;margin-top:12px}
+.svwrap{margin-top:12px;border:1px solid var(--line);border-radius:12px;overflow:hidden;background:#fff}
+.svwrap iframe{display:block;width:100%;height:700px;border:0}
+@media(max-width:700px){.svwrap iframe{height:620px}}
+.gate{max-width:380px;margin:40px auto}
+.hidden{display:none!important}
+.big{font-size:34px;font-weight:800;color:var(--gold)}
+footer{margin-top:28px;text-align:center;color:var(--muted);font-size:12.5px;border-top:1px solid var(--line);padding-top:12px}
+</style>
+</head>
+<body>
+<header>
+  <div class="wrap">
+    <h1>⚡ 課堂即時互動</h1>
+    <button class="hbtn" id="modeBtn" type="button">切換教師端</button>
+    <div class="sub">課程主題：<b>電腦系統架構 → 生活應用</b>｜學生手機作答，結果即時長在投影幕上</div>
+  </div>
+</header>
+<main class="wrap">
+
+  <!-- 學生端 -->
+  <section id="stu">
+    <div class="card">
+      <div class="row">
+        <span class="kicker">場次</span>
+        <div class="seg" id="segS"></div>
+        <span class="spacer"></span>
+        <span class="chip" id="whoS">身分：載入中…</span>
+      </div>
+      <div style="font-size:14px;color:var(--muted);margin-top:8px">
+        老師說「開放第 ? 題」時，點下面對應的題目作答。答完抬頭看投影幕。
+      </div>
+    </div>
+    <div id="qlist"></div>
+
+    <div class="card" id="svCard">
+      <div class="row">
+        <div>
+          <div class="kicker">課堂問卷</div>
+          <div style="font-weight:700;margin-top:3px">老師說「開放問卷」時再填（填完記得按送出）</div>
+        </div>
+        <span class="spacer"></span>
+        <button class="btn btn-navy" id="svOpen" type="button">開啟問卷</button>
+      </div>
+      <div class="svwrap hidden" id="svWrap"><iframe id="svFrame" title="課堂問卷" loading="lazy"
+        referrerpolicy="no-referrer-when-downgrade" allow="clipboard-write"></iframe></div>
+      <div style="font-size:13px;color:var(--muted);margin-top:8px" id="svAlt" class="hidden">
+        載入不出來？<a id="svLink" target="_blank" rel="noopener" style="color:var(--hw);font-weight:700">改用新分頁開啟問卷 ↗</a>
+      </div>
+    </div>
+  </section>
+
+  <!-- 教師端 -->
+  <section id="tea" class="hidden">
+    <div class="card gate" id="gate">
+      <div class="kicker">教師端</div>
+      <div style="font-weight:700;margin:6px 0 10px">請輸入教師碼</div>
+      <input class="tin" id="code" type="password" placeholder="教師碼" autocomplete="off"/>
+      <div style="margin-top:10px"><button class="btn btn-navy" id="codeGo" type="button">進入</button></div>
+      <div id="codeMsg" style="color:var(--fail);font-size:14px;margin-top:8px"></div>
+    </div>
+
+    <div id="panel" class="hidden">
+      <div class="card">
+        <div class="row">
+          <span class="kicker">選題</span>
+          <div class="seg" id="segQ"></div>
+          <span class="spacer"></span>
+          <span class="kicker">場次</span>
+          <div class="seg" id="segT"></div>
+        </div>
+      </div>
+
+      <div class="card">
+        <div class="row" style="align-items:flex-start">
+          <div style="flex:1;min-width:280px">
+            <div class="qmin" id="tMin"></div>
+            <div class="tq" id="tQ"></div>
+            <div class="row">
+              <span class="chip">已作答 <b id="tN">0</b> 人</span>
+              <span class="chip">場次 <b id="tRoom">—</b></span>
+              <button class="btn btn-ghost" id="tLock" type="button" style="min-height:38px;font-size:14px">⏸ 鎖定</button>
+              <button class="btn btn-ghost" id="tNow" type="button" style="min-height:38px;font-size:14px">↻ 立即更新</button>
+            </div>
+          </div>
+          <div class="qrbox">
+            <img id="qrImg" alt="學生掃碼進入"/>
+            <div class="u">pjkuo.github.io/IOC-platform/live.html</div>
+          </div>
+        </div>
+        <div id="tOut" style="margin-top:16px"></div>
+        <div class="note" id="tNote"></div>
+      </div>
+    </div>
+  </section>
+
+</main>
+<footer>
+  國立屏東科技大學 資訊管理系｜計算機概論與實習｜教材授權 CC BY-NC-SA 4.0
+</footer>
+
+<script id="live-cloud-loader">
+/* 同源載入 student.html 內建的 ioccloud 上傳器（單一真源；離線自動降級為本機） */
+(function(){"use strict";
+if(window.IOCCLOUD) return;
+try{
+  fetch("student.html",{cache:"force-cache"}).then(function(r){if(!r.ok)throw 0;return r.text();}).then(function(t){
+    if(window.IOCCLOUD) return;
+    var m=t.match(/<script id="ioccloud">([\s\S]*?)<\/script>/);
+    if(m&&m[1]){var s=document.createElement("script");s.id="ioccloud";s.textContent=m[1];document.body.appendChild(s);
+      try{document.dispatchEvent(new Event("live-cloud-ready"));}catch(e){}}
+  }).catch(function(){});
+}catch(e){}
+})();
+</script>
+
+<script id="live-app">
+(function(){
+"use strict";
+var $=function(i){return document.getElementById(i);};
+var KIND="live", LS="cc_live_v1", TCODES=["npust1728","1728"];
+var QR="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAXIAAAFyAQAAAADAX2ykAAAC6ElEQVR4nO2cS2rkMBCGvxoJspQhB8hR7JuFOdLcwD5KH2DAWjbY/LOQ1I8MkxDGcdpQWpju1rf4oSipXm4Tn1nTj0/h4Lzzzn8pn62ugdXMLGIDtEeOtP24jx7nN+aDJEmQIxpZDVhNIwBpgV6SNO+lx/nt+AiAQViAsBiApu43BsDUzUDuoP+1hx7nv5JfTZqD6OcgjWlBY47fqMf5Tfm0wPRyNqZuNXudg8pv36XH+f/mi3e2JCnISEHWn55k5VQ+xQWSgLyHHue359cSHkOO0J+uB3Kodp/MzKzbS4/z2/GxOicAeTVIC4I3j930OL853yIoGwjSeHVnwIZ8SYy7nfQ4vyGPNF8eWtCYJEhqTpta6ttL0vho+p3/YJWEqJQxZoDixEH0qqUN+oK4fY/HN68lSJpbJavmv1Lbhfrbo+l3/v11qV/V0Mr6cY2UrxiQZhlpxvOjA/MaAekUYepqVlTc+VKOZur20+P8Vnw1o643LHeRVrmTU/3q5/PR+GLLGhyXqEr16h1b6KyxRF9+/x6Pj5Cfy4FsvVbT1M3Qz2uEBEZaYmkc+v17RP5yPtckuJ3FtatQXVfuv8fl07kUp8xeaqZESYJLkSOohlZ76XF+Wz7H5pw5UsZ1Blaz19N9zyEt++hxfkO+ncr8XcSqGy178vj5iDw3Zrzcv8XINTW6D6wfTb/zH6xaxmhWvQmtaszVCpfuv0fkb6arNL0sEfKTrB8BkrAyszNgdZLj0fQ7/8G6uikQWq+IduHenN5+Ph+Qr3Yrqxn5jblvNty+B+Nv4qtWpIRr/7d+8v7vUflIHW0v3UCsn58XSDO6FC5VBrOy37/H4+/fX1gjpLPRz2Cks6mfuzKJpX30OL8tfxda3dzEbaNv8xs1SXo0/c5/jq+vCQI2sJp+dgAE+fzkgfnSBL5+mrog/exC6+9DbSI9qH7n3+Nv31+wIZtVW6YFG3JtLVRPfkT9zv97mf8/g/POH5b/A1mJHaKLUhq3AAAAAElFTkSuQmCC";
+/* 課堂問卷（SurveyMars）——換問卷只要改這一行 */
+var SURVEY="https://ap.surveymars.com/q/7XchtP96e?collect=12&width=912&height=700&source=iframe&s=t";
+
+/* ── 題庫：同時是「互動教學內容規劃」——每題標好用在第幾分鐘與承接語 ── */
+var QS=[
+ {id:"q1",t:"poll",min:"0–3 分｜冷開場",
+  q:"今天從起床到現在，你第一個「用到電腦」的瞬間是？",
+  opts:["鬧鐘把我吵醒","滑手機看通知","刷卡進校門／搭車","在超商買早餐","到現在都還沒有"],
+  note:"揭曉語：五個其實全都是——連選「還沒有」的人，剛剛掃 QR 也用了。電腦不是那台桌機，是所有會「輸入→處理→輸出」的東西。"},
+ {id:"q2",t:"text",min:"3–8 分｜戳痛點",
+  q:"用「一個詞」形容你對「計算機概論」的第一印象",
+  ph:"例如：無聊、很難、跟我沒關係",
+  note:"承接語：這些字是我們班自己打出來的，不是我猜的。這堂課的目標，是下課前把最大的那個詞換掉。"},
+ {id:"q3",t:"poll",min:"16–22 分｜快問快答",
+  q:"YouBike 還車時，車柱螢幕顯示「扣款 10 元、餘額 490 元」——這個動作屬於哪個單元？",
+  opts:["輸入 Input","處理 Process","輸出 Output","儲存 Storage"],ans:2,
+  note:"正解 C 輸出。追問：那「知道你騎了幾分鐘」靠哪一格？→ 儲存：借車時間先存著，還車才算得出來。"},
+ {id:"q4",t:"poll",min:"42–50 分｜成果互評",
+  q:"哪一組的成果，你最想發成限動？（不能投自己那組）",
+  opts:["第 1 組","第 2 組","第 3 組","第 4 組","第 5 組","第 6 組","第 7 組","第 8 組"],
+  note:"票數最高的那組，下週開場由他們講 60 秒。"},
+ {id:"q5",t:"text",min:"56–60 分｜收尾",
+  q:"下課後，你最想拿今天這套架構去拆解哪一個生活場景？",
+  ph:"例如：手搖飲點餐機、宿舍洗衣機、抓寶遊戲",
+  note:"收尾語：把「電腦系統架構」變成你隨身的拆解工具——這些場景會留在紀錄裡，下週開場我唸三則，其中一個當作業題目。"}
+];
+var SLOTS=["A","B","C"];
+
+/* ── 工具 ── */
+function ls(){try{return JSON.parse(localStorage.getItem(LS)||"{}");}catch(e){return{};}}
+function lsSet(o){try{localStorage.setItem(LS,JSON.stringify(o));}catch(e){}}
+function today(){var d=new Date();return ""+d.getFullYear()+("0"+(d.getMonth()+1)).slice(-2)+("0"+d.getDate()).slice(-2);}
+var slot=(ls().slot||"A"), room=function(){return today()+"-"+slot;};
+function ident(){try{return window.IOCCLOUD&&IOCCLOUD.identity&&IOCCLOUD.identity()||null;}catch(e){return null;}}
+function anonId(){var s=ls();if(!s.anon){s.anon="a"+Math.random().toString(36).slice(2,9);lsSet(s);}return s.anon;}
+function who(){var id=ident();return (id&&id.sid)?id.sid:anonId();}
+function esc(s){return String(s==null?"":s).replace(/[&<>"]/g,function(c){return{"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c];});}
+
+function seg(el,items,cur,cb){
+  el.innerHTML="";
+  items.forEach(function(it){
+    var b=document.createElement("button");b.type="button";b.textContent=it.label;
+    if(it.val===cur)b.className="on";
+    b.addEventListener("click",function(){cb(it.val);});
+    el.appendChild(b);
+  });
+}
+
+/* ── 學生端 ── */
+function renderStu(){
+  seg($("segS"),SLOTS.map(function(s){return{label:s,val:s};}),slot,function(v){
+    slot=v;var s=ls();s.slot=v;lsSet(s);renderStu();
+  });
+  var id=ident();
+  $("whoS").innerHTML=(id&&id.sid)?("身分：<b>"+esc((id.cls||"")+" "+id.sid)+"</b>"):"身分：匿名（可到作業頁登記學號）";
+  var box=$("qlist");box.innerHTML="";
+  var st=ls();
+  QS.forEach(function(q,i){
+    var key=room()+"|"+q.id, done=st[key];
+    var d=document.createElement("div");
+    d.className="qcard"+(done?" done":"");
+    var h='<div class="qmin">第 '+(i+1)+' 題 · '+esc(q.min)+'</div><div class="qtext">'+esc(q.q)+'</div>';
+    if(q.t==="poll"){
+      h+='<div class="opts">';
+      q.opts.forEach(function(o,k){
+        h+='<button type="button" class="opt'+(done&&done.pick===k?" sel":"")+'" data-k="'+k+'">'+
+           '<span class="k">'+String.fromCharCode(65+k)+'</span><span>'+esc(o)+'</span></button>';
+      });
+      h+='</div>';
+    }else{
+      h+='<div class="row"><input class="tin" style="flex:1;min-width:180px" placeholder="'+esc(q.ph||"")+'" '+
+         (done?'value="'+esc(done.text)+'"':'')+'/><button class="btn btn-gold" type="button" data-send="1">送出</button></div>';
+    }
+    h+='<div class="sent'+(done?" show":"")+'">✓ 已送出，抬頭看投影幕</div>';
+    d.innerHTML=h;
+    if(q.t==="poll"){
+      Array.prototype.forEach.call(d.querySelectorAll(".opt"),function(b){
+        b.addEventListener("click",function(){
+          var k=+b.getAttribute("data-k");
+          Array.prototype.forEach.call(d.querySelectorAll(".opt"),function(x,xi){x.classList.toggle("sel",xi===k);});
+          submit(q,{pick:k});d.classList.add("done");d.querySelector(".sent").classList.add("show");
+        });
+      });
+    }else{
+      var inp=d.querySelector(".tin"), btn=d.querySelector("[data-send]");
+      btn.addEventListener("click",function(){
+        var v=(inp.value||"").trim();if(!v)return;
+        submit(q,{text:v});d.classList.add("done");d.querySelector(".sent").classList.add("show");
+      });
+      inp.addEventListener("keydown",function(e){if(e.key==="Enter")btn.click();});
+    }
+    box.appendChild(d);
+  });
+}
+function submit(q,payload){
+  var st=ls();st[room()+"|"+q.id]=payload;lsSet(st);
+  var id=ident()||{};
+  var rec={kind:KIND,unit:"課堂即時互動",room:room(),qid:q.id,uid:who(),
+           sid:id.sid||"",raw:1,max:1,page:"live"};
+  if(payload.pick!=null){rec.pick=payload.pick;rec.ansText=q.opts[payload.pick]||"";
+    if(q.ans!=null)rec.ok=(payload.pick===q.ans)?1:0;}
+  if(payload.text!=null)rec.text=payload.text;
+  try{ if(window.IOCCLOUD&&IOCCLOUD.enqueue) IOCCLOUD.enqueue(rec); }catch(e){}
+}
+
+/* ── 教師端 ── */
+var tQi=0, tTimer=null, tLocked=false;
+function detailOf(r){
+  var d=r&&r.detail;
+  if(typeof d==="string"){try{d=JSON.parse(d);}catch(e){d=null;}}
+  return d||{};
+}
+function agg(rows,q){
+  var byUid={};
+  rows.forEach(function(r){
+    var d=detailOf(r);
+    if(d.room!==room()||d.qid!==q.id)return;
+    var u=d.uid||r.sid||("r"+(r.id||Math.random()));
+    var ts=r.ts||d.ts_ms||0;
+    if(!byUid[u]||String(ts)>=String(byUid[u].ts))byUid[u]={ts:ts,d:d};
+  });
+  return Object.keys(byUid).map(function(u){return byUid[u].d;});
+}
+function drawPoll(ds,q){
+  var cnt=q.opts.map(function(){return 0;});
+  ds.forEach(function(d){var p=+d.pick;if(p>=0&&p<cnt.length)cnt[p]++;});
+  var tot=cnt.reduce(function(a,b){return a+b;},0)||0, mx=Math.max.apply(null,cnt);
+  var h='<div class="bars">';
+  q.opts.forEach(function(o,k){
+    var n=cnt[k], pct=tot?Math.round(n*100/tot):0;
+    var win=(tot>0&&n===mx&&n>0);
+    h+='<div class="bar'+(win?" win":"")+'"><span class="lab">'+String.fromCharCode(65+k)+'. '+esc(o)+
+       (q.ans===k?' <span style="color:var(--ok)">✔</span>':'')+'</span>'+
+       '<span class="n">'+n+' 人 · '+pct+'%</span>'+
+       '<span class="track"><span class="fill" style="width:'+pct+'%"></span></span></div>';
+  });
+  return h+'</div>';
+}
+function drawCloud(ds){
+  var f={};
+  ds.forEach(function(d){
+    var t=String(d.text||"").trim();if(!t)return;
+    t=t.slice(0,12);
+    f[t]=(f[t]||0)+1;
+  });
+  var ks=Object.keys(f).sort(function(a,b){return f[b]-f[a];}).slice(0,40);
+  if(!ks.length)return '<div style="text-align:center;color:var(--muted);padding:26px">還沒有人送出——等第一個字長出來</div>';
+  var mx=f[ks[0]], cols=["#2e5496","#29297a","#138a8a","#8a5a10","#6b4d9e","#1d6b45"];
+  var h='<div class="cloud">';
+  ks.forEach(function(k,i){
+    var sz=16+Math.round(30*(f[k]/mx));
+    h+='<span style="font-size:'+sz+'px;color:'+cols[i%cols.length]+'" title="'+f[k]+' 次">'+esc(k)+'</span>';
+  });
+  return h+'</div>';
+}
+function refresh(){
+  var q=QS[tQi];
+  if(!(window.IOCCLOUD&&IOCCLOUD.fetchAll)){$("tOut").innerHTML='<div style="color:var(--muted)">雲端連線中…</div>';return;}
+  IOCCLOUD.fetchAll(KIND,function(rows,err){
+    if(err){$("tOut").innerHTML='<div style="color:var(--fail)">讀取失敗：'+esc(err)+'</div>';return;}
+    var ds=agg(rows||[],q);
+    $("tN").textContent=ds.length;
+    $("tOut").innerHTML=(q.t==="poll")?drawPoll(ds,q):drawCloud(ds);
+  });
+}
+function renderTea(){
+  var q=QS[tQi];
+  seg($("segQ"),QS.map(function(x,i){return{label:"第 "+(i+1)+" 題",val:i};}),tQi,function(v){tQi=v;renderTea();refresh();});
+  seg($("segT"),SLOTS.map(function(s){return{label:s,val:s};}),slot,function(v){
+    slot=v;var s=ls();s.slot=v;lsSet(s);renderTea();refresh();
+  });
+  $("tMin").textContent=q.min;
+  $("tQ").textContent=q.q;
+  $("tRoom").textContent=room();
+  $("tNote").innerHTML="📌 "+esc(q.note);
+  $("qrImg").src=QR;
+}
+function startTimer(){ if(tTimer)clearInterval(tTimer); tTimer=setInterval(function(){ if(!tLocked)refresh(); },6000); }
+
+/* ── 模式切換 ── */
+function setMode(m){
+  var t=(m==="teacher");
+  $("tea").classList.toggle("hidden",!t);
+  $("stu").classList.toggle("hidden",t);
+  $("modeBtn").textContent=t?"切換學生端":"切換教師端";
+  try{history.replaceState(null,"",t?"#teacher":"#");}catch(e){}
+  if(t){ if(ls().tok){$("gate").classList.add("hidden");$("panel").classList.remove("hidden");renderTea();refresh();startTimer();} }
+  else { renderStu(); }
+}
+$("modeBtn").addEventListener("click",function(){
+  setMode($("tea").classList.contains("hidden")?"teacher":"student");
+});
+$("codeGo").addEventListener("click",function(){
+  var v=($("code").value||"").trim().toLowerCase();
+  if(TCODES.indexOf(v)<0){$("codeMsg").textContent="教師碼不正確。";return;}
+  var s=ls();s.tok=1;lsSet(s);
+  $("gate").classList.add("hidden");$("panel").classList.remove("hidden");
+  renderTea();refresh();startTimer();
+});
+$("code").addEventListener("keydown",function(e){if(e.key==="Enter")$("codeGo").click();});
+$("tLock").addEventListener("click",function(){
+  tLocked=!tLocked;
+  $("tLock").textContent=tLocked?"▶ 繼續更新":"⏸ 鎖定";
+});
+$("tNow").addEventListener("click",refresh);
+
+/* 課堂問卷：點開才載入，避免每支手機一進頁就抓外站 */
+(function(){
+  var open=false, btn=$("svOpen"), wrap=$("svWrap"), fr=$("svFrame"), alt=$("svAlt"), lk=$("svLink");
+  if(!btn) return;
+  lk.href=SURVEY;
+  btn.addEventListener("click",function(){
+    open=!open;
+    if(open && !fr.getAttribute("src")) fr.setAttribute("src",SURVEY);
+    wrap.classList.toggle("hidden",!open);
+    alt.classList.toggle("hidden",!open);
+    btn.textContent=open?"收合問卷":"開啟問卷";
+    if(open) setTimeout(function(){try{wrap.scrollIntoView({behavior:"smooth",block:"start"});}catch(e){}},80);
+  });
+})();
+
+document.addEventListener("live-cloud-ready",function(){
+  setTimeout(function(){ if($("tea").classList.contains("hidden"))renderStu(); else refresh(); },250);
+});
+
+window.LIVE={setMode:setMode,refresh:refresh,agg:agg,room:room,QS:QS,submit:submit,drawPoll:drawPoll,drawCloud:drawCloud};
+setMode(/teacher/.test(location.hash)?"teacher":"student");
+})();
+</script>
+</body>
+</html>
