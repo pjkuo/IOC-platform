@@ -57,4 +57,19 @@ function add(){try{
 }catch(e){}}
 "loading"===document.readyState?document.addEventListener("DOMContentLoaded",add):add();
 }();</script>
+
+<script id="lab-nav">/* 電腦教室實機實測捷徑（append-only 注入 2026-09-18） */
+!function(){if(window.__labNavInjected)return;window.__labNavInjected=1;
+function add(){try{
+ if(document.getElementById("lab-style"))return;
+ var st=document.createElement("style");st.id="lab-style";
+ st.textContent=".lab-mod{position:relative;border-color:#21407a!important}.lab-tag{position:absolute;top:-9px;right:-6px;background:#21407a;color:#fff;font:800 10px/1 sans-serif;border-radius:999px;padding:3px 7px;letter-spacing:.05em}";
+ document.head.appendChild(st);
+ var mods=document.querySelector(".mods");
+ if(mods){var a=document.createElement("a");a.className="mod lab-mod";a.href="lab.html";
+  a.innerHTML="<span class=\"mi\">🖥</span>電腦教室實機實測<span class=\"lab-tag\">評量</span>";
+  mods.appendChild(a);}
+}catch(e){}}
+"loading"===document.readyState?document.addEventListener("DOMContentLoaded",add):add();
+}();</script>
 </body> </html> 
