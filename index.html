@@ -72,4 +72,19 @@ function add(){try{
 }catch(e){}}
 "loading"===document.readyState?document.addEventListener("DOMContentLoaded",add):add();
 }();</script>
+
+<script id="assess-nav">/* 硬體單元單一評量單捷徑（append-only 注入 2026-09-18） */
+!function(){if(window.__assessNavInjected)return;window.__assessNavInjected=1;
+function add(){try{
+ if(document.getElementById("assess-style"))return;
+ var st=document.createElement("style");st.id="assess-style";
+ st.textContent=".as-mod{position:relative;border-color:#29297a!important}.as-tag{position:absolute;top:-9px;right:-6px;background:#29297a;color:#fff;font:800 10px/1 sans-serif;border-radius:999px;padding:3px 7px;letter-spacing:.05em}";
+ document.head.appendChild(st);
+ var mods=document.querySelector(".mods");
+ if(mods){var a=document.createElement("a");a.className="mod as-mod";a.href="assess.html";
+  a.innerHTML="<span class=\"mi\">☰</span>硬體單元評量單<span class=\"as-tag\">三段合一</span>";
+  mods.appendChild(a);}
+}catch(e){}}
+"loading"===document.readyState?document.addEventListener("DOMContentLoaded",add):add();
+}();</script>
 </body> </html> 
