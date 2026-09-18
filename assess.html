@@ -801,8 +801,13 @@ function paintInto(host,warm,sub,lab,imported){
       '<div><b>'+(cg.g===null?"—":(cg.g*100).toFixed(0)+"%")+'</b><span>班級平均增益・'+cg.band+'</span></div>'+
       '<div><b>'+cg.n+'</b><span>可配對人數</span></div>'+
     '</div>'+
-    '<div class="note">正規化學習增益 ＝（課後－課前）÷（100－課前），衡量「原本不會的部分補起了幾成」，'+
-    '不會因為班級起點高低而失真。目前分布：高增益 '+hi+' 人、中增益 '+mid+' 人、低增益 '+lo+' 人。</div>')+
+    (cg.g===null
+      ? '<div class="note"><b>無法計算增益</b>：課前平均已是 '+cg.pre.toFixed(1)+
+        ' 分，分母（100－課前）為 0。若課前練習在 Moodle 設成「完成即滿分」，'+
+        '成績單欄位人人 100 是<b>完成分而非答對率</b>——請改匯入<b>課前練習的 SCORM 互動報表</b>，'+
+        '那裡才有真正的逐題作答。</div>'
+      : '<div class="note">正規化學習增益 ＝（課後－課前）÷（100－課前），衡量「原本不會的部分補起了幾成」，'+
+        '不會因為班級起點高低而失真。目前分布：高增益 '+hi+' 人、中增益 '+mid+' 人、低增益 '+lo+' 人。</div>'))+
     '</div>';
 
   /* 逐題分析 */
@@ -985,10 +990,12 @@ function importView(){
    '<p class="lead">成績走 Moodle 之後，統計改由匯出檔計算。兩種檔案都可以丟進來，可一次選多個。</p>'+
    '<table><thead><tr><th>檔案</th><th>從哪裡匯出</th><th>算得出什麼</th></tr></thead><tbody>'+
    '<tr><td><b>成績單</b></td><td>課程 → 成績 → 匯出 → 純文字檔(.csv)</td>'+
-   '<td>學習增益、完成率、逐生總表</td></tr>'+
+   '<td>完成率、逐生總表</td></tr>'+
    '<tr><td><b>SCORM 互動報表</b></td><td>各 SCORM 活動 → 報表 → 互動 → 下載為 CSV</td>'+
-   '<td>逐題難度與鑑別度、概念弱點、盲點題、誠實度查核</td></tr>'+
+   '<td>學習增益、逐題難度與鑑別度、概念弱點、盲點題、誠實度查核</td></tr>'+
    '</tbody></table>'+
+   '<div class="note">課前練習在 Moodle 是「完成即滿分」，成績單那一欄人人 100，'+
+   '不能拿來算增益——<b>課前練習的互動報表請務必一起匯入</b>。</div>'+
    '<div class="row" style="margin-top:12px">'+
    '<input type="file" id="fi" multiple accept=".csv,.txt,.tsv,text/csv" style="font-size:14px"/>'+
    '<button class="btn btn-ghost btn-sm" type="button" id="backCloud">☁ 改用雲端資料</button></div>'+
@@ -1049,7 +1056,7 @@ function nameOf(head,r){
   return (a+b).trim()||b||a;
 }
 function keyOf(sid,name){ return (String(sid||"").trim()||("~"+String(name||"").trim())); }
-function numOr(v){ var s=String(v==null?"":v).replace(/[^\d.\-]/g,""); 
+function numOr(v){ var s=String(v==null?"":v).replace(/[^\d.\-]/g,"");
   if(s===""||s==="-") return null; var n=parseFloat(s); return isFinite(n)?n:null; }
 
 function runImport(){
@@ -1079,7 +1086,7 @@ function runImport(){
           if(col[k]<0) return;
           var v=numOr(r[col[k]]);
           if(v===null) return;
-          o[k]=o[k]||{}; o[k].score=v; o[k].ts=o[k].ts||"import";
+          o[k]=o[k]||{}; o[k].gradeScore=v; o[k].ts=o[k].ts||"import";
         });
       });
       return;
@@ -1115,7 +1122,7 @@ function runImport(){
         var tgt = sco==="post"?"post":"pre";
         o[tgt]=o[tgt]||{};
         o[tgt].items=items;
-        if(o[tgt].score==null) o[tgt].score=Math.round(raw2/items.length*100);
+        o[tgt].itemScore=Math.round(raw2/items.length*100);
         if(sco==="post"&&hasConf) o[tgt].calib=cal;
         o[tgt].ts=o[tgt].ts||"import";
       }else{
@@ -1138,11 +1145,11 @@ function runImport(){
         o.lab.spec=spec;
         o.lab.room=spec.room||o.lab.room||"";
         o.lab.seat=spec.seat||o.lab.seat||"";
-        if(o.lab.score==null&&(ipN||qN)){
+        if(ipN||qN){
           o.lab.ipScore=ipN?Math.round(ipOk/ipN*40):0;
           o.lab.qScore=qN?Math.round(qOk/qN*20):0;
           o.lab.recScore=40;
-          o.lab.score=o.lab.recScore+o.lab.ipScore+o.lab.qScore;
+          o.lab.itemScore=o.lab.recScore+o.lab.ipScore+o.lab.qScore;
         }
         o.lab.ts=o.lab.ts||"import";
       }
@@ -1152,19 +1159,33 @@ function runImport(){
   var rows=Object.keys(M).map(function(k){return M[k];});
   if(!rows.length){ $("impMsg").textContent="檔案讀到了，但找不到可辨識的學生列。"; return; }
 
-  /* 轉成 ST 期望的三組紀錄 */
-  var warm=[],sub=[],lab=[];
+  /* 轉成 ST 期望的三組紀錄。
+     課前練習在 Moodle 是「完成即滿分」，成績單欄位人人 100，拿來算增益會全部失真，
+     所以 pre 一律優先採用互動報表還原出的實際答對率；實機與課後才以成績單為準。 */
+  var warm=[],sub=[],lab=[],preFromGrade=0;
+  function pick(o,k){
+    var s = (k==="pre") ? (o[k].itemScore!=null?o[k].itemScore:o[k].gradeScore)
+                        : (o[k].gradeScore!=null?o[k].gradeScore:o[k].itemScore);
+    if(k==="pre"&&o[k].itemScore==null&&o[k].gradeScore!=null) preFromGrade++;
+    return Object.assign({sid:o.sid,name:o.name,cls:o.cls},o[k],{score:s==null?null:s});
+  }
   rows.forEach(function(o){
-    if(o.pre)  warm.push(Object.assign({sid:o.sid,name:o.name,cls:o.cls},o.pre));
-    if(o.post) sub.push(Object.assign({sid:o.sid,name:o.name,cls:o.cls},o.post));
-    if(o.lab)  lab.push(Object.assign({sid:o.sid,name:o.name,cls:o.cls},o.lab));
+    if(o.pre)  warm.push(pick(o,"pre"));
+    if(o.post) sub.push(pick(o,"post"));
+    if(o.lab)  lab.push(pick(o,"lab"));
   });
+  /* 只有成績單、而且課前分數看起來全是完成分 → 增益一定算不出來，要說清楚原因 */
+  var allFull = warm.length>0 && warm.every(function(r){return r.score===100;});
+  var preWarn = (preFromGrade>0 && allFull)
+    ? '<br/><b>課前分數全是 100</b>：那是 Moodle 的「完成分」，不是答對率。'+
+      '要算學習增益，請一併匯入<b>課前練習的 SCORM 互動報表</b>。'
+    : '';
 
   var host=$("out");
   host.innerHTML='<div class="card"><div class="note">已匯入 '+used.grade+' 份成績單、'+
     used.ix+' 份互動報表，合併出 '+rows.length+' 位學生。'+
-    (used.ix===0?'<br/><b>只有成績單</b>：學習增益與總表算得出來，逐題分析與誠實度查核需要互動報表。':'')+
-    '</div></div>';
+    (used.ix===0?'<br/><b>只有成績單</b>：總表算得出來，逐題分析與誠實度查核需要互動報表。':'')+
+    preWarn+'</div></div>';
   paintInto(host,warm,sub,lab,true);
 }
 
