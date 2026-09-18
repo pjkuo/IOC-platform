@@ -730,8 +730,18 @@ function teacherIn(){
   if(!okc){ $("codeMsg").textContent="教師碼不正確。"; return; }
   $("codeMsg").textContent=""; $("gate").classList.add("hidden");
   $("panel").classList.remove("hidden");
-  $("panel").innerHTML='<div class="card"><div class="lead">☁ 讀取雲端三段紀錄中…</div></div>';
-  loadAll();
+  $("panel").innerHTML=
+    '<div class="card"><span class="kicker d">資料來源</span><div class="h2">統計要從哪裡算？</div>'+
+    '<p class="lead">成績若已改走 Moodle（SCORM），雲端試算表就不會有新資料，請選匯入。</p>'+
+    '<div class="row" style="margin-top:6px">'+
+    '<button class="btn btn-navy" type="button" id="srcCloud">☁ 雲端試算表</button>'+
+    '<button class="btn btn-gold" type="button" id="srcFile">📄 匯入 Moodle 匯出檔</button>'+
+    '</div></div>';
+  $("srcCloud").onclick=function(){
+    $("panel").innerHTML='<div class="card"><div class="lead">☁ 讀取雲端三段紀錄中…</div></div>';
+    loadAll();
+  };
+  $("srcFile").onclick=importView;
 }
 function loadAll(){
   var up=cloud();
@@ -755,7 +765,8 @@ function loadAll(){
   need.forEach(function(k){ up.fetchAll(k,function(rows){ got[k]=rows||[]; maybe(false); }); });
   setTimeout(function(){maybe(true);},12000);   /* 任一段沒回來也不要一直卡在載入中 */
 }
-function paintTeacher(warm,sub,lab){
+function paintTeacher(warm,sub,lab){ paintInto($("panel"),warm,sub,lab,false); }
+function paintInto(host,warm,sub,lab,imported){
   var HW=B.HW||[];                       /* 教師可能在題庫載入完成前就進來 */
   var rows=ST.join(warm,sub,lab);
   var cg=ST.classGain(rows);
@@ -857,12 +868,304 @@ function paintTeacher(warm,sub,lab){
     }).join("")+'</tbody></table></div>'+
     '<div class="row" style="margin-top:11px">'+
     '<button class="btn btn-ghost btn-sm" type="button" id="csv">⬇ 匯出 CSV</button>'+
-    '<button class="btn btn-ghost btn-sm" type="button" id="reload">↻ 重新讀取</button></div>'+
-    '</div>';
+    (imported?'<button class="btn btn-ghost btn-sm" type="button" id="reimp">↻ 換一批檔案</button>'
+             :'<button class="btn btn-ghost btn-sm" type="button" id="reload">↻ 重新讀取</button>')+
+    '</div></div>';
 
-  $("panel").innerHTML=h;
+  if(imported) host.insertAdjacentHTML("beforeend",h); else host.innerHTML=h;
   $("csv").onclick=function(){exportCSV(rows);};
-  $("reload").onclick=loadAll;
+  if(imported) $("reimp").onclick=importView; else $("reload").onclick=loadAll;
+}
+
+/* ══════════════════════════════════════════════════════════════
+   匯入 Moodle 匯出檔
+   ──────────────────────────────────────────────────────────────
+   兩種來源：
+   A. 成績單匯出 CSV → 三個活動的分數 → 學習增益、完成率、總表
+   B. SCORM 互動報表 CSV → 逐題作答 → 難度、鑑別度、概念弱點、盲點、誠實度查核
+   互動欄位靠我們自訂的 interaction id 辨識（P01_ccid／Q01_ccid／IP01／R01／F01_key），
+   正誤不依賴 Moodle 的判定，一律拿學生的作答回題庫自己比對。
+   ══════════════════════════════════════════════════════════════ */
+
+var IMP={files:[]};
+
+/* ── CSV 解析：BOM、引號跳脫、CRLF、分隔符自動偵測 ── */
+function guessDelim(t){
+  var head=(t.split(/\r?\n/)[0]||""), best=",", n=-1;
+  [",","\t",";"].forEach(function(d){
+    var c=head.split(d).length; if(c>n){n=c;best=d;}
+  });
+  return best;
+}
+function parseCSV(text){
+  text=String(text).replace(/^﻿/,"");
+  var d=guessDelim(text), rows=[], row=[], cur="", q=false, i=0;
+  while(i<text.length){
+    var c=text.charAt(i);
+    if(q){
+      if(c==='"'){ if(text.charAt(i+1)==='"'){cur+='"';i+=2;continue;} q=false;i++;continue; }
+      cur+=c;i++;continue;
+    }
+    if(c==='"'){q=true;i++;continue;}
+    if(c===d){row.push(cur);cur="";i++;continue;}
+    if(c==="\r"){i++;continue;}
+    if(c==="\n"){row.push(cur);rows.push(row);row=[];cur="";i++;continue;}
+    cur+=c;i++;
+  }
+  if(cur!==""||row.length){row.push(cur);rows.push(row);}
+  return rows.filter(function(r){return r.some(function(x){return String(x).trim()!=="";});});
+}
+/* Moodle 預設匯出 UTF-8；若是 Big5 會出現替代字元，改用 big5 再解一次 */
+function readFile(f,cb){
+  var fr=new FileReader();
+  fr.onload=function(){
+    var buf=fr.result, txt;
+    try{ txt=new TextDecoder("utf-8",{fatal:false}).decode(buf); }catch(e){ txt=""; }
+    if(txt.indexOf("�")>-1){
+      try{ var alt=new TextDecoder("big5").decode(buf);
+           if(alt.indexOf("�")===-1) txt=alt; }catch(e){}
+    }
+    cb(txt);
+  };
+  fr.onerror=function(){ cb(""); };
+  fr.readAsArrayBuffer(f);
+}
+
+/* ── 互動欄位辨識 ── */
+var IXPAT=[
+  {re:/\bP(\d{1,2})_([A-Za-z0-9\-]+)/, kind:"pre"},
+  {re:/\bQ(\d{1,2})_([A-Za-z0-9\-]+)/, kind:"post"},
+  {re:/\bIP(\d{1,2})\b/,               kind:"ipos"},
+  {re:/\bR(\d{1,2})\b/,                kind:"reason"},
+  {re:/\bF(\d{1,2})_([A-Za-z]+)/,      kind:"spec"}
+];
+function ixCol(h){
+  for(var i=0;i<IXPAT.length;i++){
+    var m=String(h).match(IXPAT[i].re);
+    if(m) return {kind:IXPAT[i].kind, n:+m[1], key:m[2]||""};
+  }
+  return null;
+}
+/* ── 身分與分數欄位猜測 ── */
+function guessCol(head,pats){
+  for(var p=0;p<pats.length;p++)
+    for(var i=0;i<head.length;i++)
+      if(pats[p].test(String(head[i]))) return i;
+  return -1;
+}
+var COLPAT={
+  sid:[/ID\s*號碼/i,/id\s*number/i,/學號/,/\bidnumber\b/i],
+  first:[/^名字$/,/^first\s*name$/i],
+  last:[/^姓氏$/,/^surname$/i,/^last\s*name$/i],
+  name:[/^姓名$/,/^全名$/,/full\s*name/i,/^name$/i],
+  cls:[/^班級$/,/群組|group/i],
+  pre:[/課前|預測|warm|pre[-\s]?test/i],
+  lab:[/實機|實測|電腦教室|\blab\b/i],
+  post:[/課後|評量|post[-\s]?test|quiz/i]
+};
+
+function classify(head){
+  var ix=head.map(ixCol).filter(Boolean);
+  if(ix.length>=3){
+    var k={}; ix.forEach(function(x){k[x.kind]=1;});
+    var sco = k.post?"post" : k.pre?"pre" : (k.ipos||k.spec||k.reason)?"lab" : "?";
+    return {kind:"ix", sco:sco, n:ix.length};
+  }
+  var g=0;
+  ["pre","lab","post"].forEach(function(r){ if(guessCol(head,COLPAT[r])>-1) g++; });
+  if(g>=1) return {kind:"grade", n:g};
+  return {kind:"?", n:0};
+}
+
+/* ── 匯入畫面 ── */
+function importView(){
+  $("panel").classList.remove("hidden");
+  $("panel").innerHTML=
+   '<div class="card"><span class="kicker d">匯入</span><div class="h2">匯入 Moodle 匯出檔</div>'+
+   '<p class="lead">成績走 Moodle 之後，統計改由匯出檔計算。兩種檔案都可以丟進來，可一次選多個。</p>'+
+   '<table><thead><tr><th>檔案</th><th>從哪裡匯出</th><th>算得出什麼</th></tr></thead><tbody>'+
+   '<tr><td><b>成績單</b></td><td>課程 → 成績 → 匯出 → 純文字檔(.csv)</td>'+
+   '<td>學習增益、完成率、逐生總表</td></tr>'+
+   '<tr><td><b>SCORM 互動報表</b></td><td>各 SCORM 活動 → 報表 → 互動 → 下載為 CSV</td>'+
+   '<td>逐題難度與鑑別度、概念弱點、盲點題、誠實度查核</td></tr>'+
+   '</tbody></table>'+
+   '<div class="row" style="margin-top:12px">'+
+   '<input type="file" id="fi" multiple accept=".csv,.txt,.tsv,text/csv" style="font-size:14px"/>'+
+   '<button class="btn btn-ghost btn-sm" type="button" id="backCloud">☁ 改用雲端資料</button></div>'+
+   '<div id="flist"></div>'+
+   '<div class="row" style="margin-top:12px">'+
+   '<button class="btn btn-navy" type="button" id="goImp">產生分析</button>'+
+   '<span class="lead" id="impMsg" style="margin:0"></span></div>'+
+   '</div><div id="out"></div>';
+  $("fi").addEventListener("change",function(e){
+    IMP.files=[]; $("flist").innerHTML='<div class="lead">讀取中…</div>';
+    var fs=Array.prototype.slice.call(e.target.files), left=fs.length;
+    if(!left){ $("flist").innerHTML=""; return; }
+    fs.forEach(function(f,idx){
+      readFile(f,function(txt){
+        var rows=parseCSV(txt);
+        if(rows.length>1){
+          var head=rows[0].map(function(h){return String(h).trim();});
+          IMP.files[idx]={name:f.name,head:head,rows:rows.slice(1),info:classify(head)};
+        }else{
+          IMP.files[idx]={name:f.name,head:[],rows:[],info:{kind:"?",n:0}};
+        }
+        if(--left===0) paintFiles();
+      });
+    });
+  });
+  $("backCloud").onclick=function(){ $("panel").innerHTML=
+    '<div class="card"><div class="lead">☁ 讀取雲端三段紀錄中…</div></div>'; loadAll(); };
+  $("goImp").onclick=runImport;
+}
+
+function paintFiles(){
+  var fs=IMP.files.filter(Boolean);
+  if(!fs.length){ $("flist").innerHTML=""; return; }
+  var KIND={ix:"SCORM 互動報表",grade:"成績單",'?':"無法辨識"};
+  var SCO={pre:"課前練習",post:"課後評量",lab:"實機實測","?":"未知"};
+  $("flist").innerHTML='<div class="tw"><table><thead><tr><th>檔案</th><th>辨識為</th>'+
+    '<th>列數</th><th>對應</th></tr></thead><tbody>'+
+    fs.map(function(f,i){
+      var info=f.info, note="";
+      if(info.kind==="ix") note=SCO[info.sco]+'（'+info.n+' 個互動欄）';
+      else if(info.kind==="grade"){
+        note=["pre","lab","post"].filter(function(r){return guessCol(f.head,COLPAT[r])>-1;})
+          .map(function(r){return SCO[r];}).join("、")+" 分數欄";
+      }else note='<span style="color:var(--bad)">請確認是否為 CSV 匯出檔</span>';
+      return '<tr><td>'+esc(f.name)+'</td><td>'+KIND[info.kind]+'</td>'+
+        '<td>'+f.rows.length+'</td><td>'+note+
+        (info.kind==="ix"&&info.sco==="?"?'<br/><select id="sco'+i+'">'+
+          ['post','pre','lab'].map(function(s){return '<option value="'+s+'">'+SCO[s]+'</option>';}).join("")+
+          '</select>':'')+'</td></tr>';
+    }).join("")+'</tbody></table></div>';
+}
+
+/* ── 併表：以學號為主鍵，沒有學號就用姓名 ── */
+function nameOf(head,r){
+  var f=guessCol(head,COLPAT.first), l=guessCol(head,COLPAT.last), n=guessCol(head,COLPAT.name);
+  if(n>-1) return String(r[n]||"").trim();
+  var a=l>-1?String(r[l]||"").trim():"", b=f>-1?String(r[f]||"").trim():"";
+  return (a+b).trim()||b||a;
+}
+function keyOf(sid,name){ return (String(sid||"").trim()||("~"+String(name||"").trim())); }
+function numOr(v){ var s=String(v==null?"":v).replace(/[^\d.\-]/g,""); 
+  if(s===""||s==="-") return null; var n=parseFloat(s); return isFinite(n)?n:null; }
+
+function runImport(){
+  var fs=IMP.files.filter(Boolean).filter(function(f){return f.info.kind!=="?";});
+  if(!fs.length){ $("impMsg").textContent="沒有可用的檔案，請確認匯出格式為 CSV。"; return; }
+  $("impMsg").textContent="";
+  var M={};   /* key -> {sid,name,cls,pre,post,lab} */
+  function slot(sid,name,cls){
+    var k=keyOf(sid,name), o=M[k]||(M[k]={sid:String(sid||"").trim(),name:name||"",cls:cls||""});
+    if(!o.name&&name) o.name=name;
+    if(!o.cls&&cls) o.cls=cls;
+    if(!o.sid&&sid) o.sid=String(sid).trim();
+    return o;
+  }
+  var used={grade:0,ix:0};
+
+  fs.forEach(function(f,i){
+    var head=f.head, si=guessCol(head,COLPAT.sid), ci=guessCol(head,COLPAT.cls);
+
+    /* ── A. 成績單 ── */
+    if(f.info.kind==="grade"){
+      used.grade++;
+      var col={pre:guessCol(head,COLPAT.pre),lab:guessCol(head,COLPAT.lab),post:guessCol(head,COLPAT.post)};
+      f.rows.forEach(function(r){
+        var o=slot(si>-1?r[si]:"", nameOf(head,r), ci>-1?r[ci]:"");
+        ["pre","lab","post"].forEach(function(k){
+          if(col[k]<0) return;
+          var v=numOr(r[col[k]]);
+          if(v===null) return;
+          o[k]=o[k]||{}; o[k].score=v; o[k].ts=o[k].ts||"import";
+        });
+      });
+      return;
+    }
+
+    /* ── B. 互動報表 ── */
+    used.ix++;
+    var sel=$("sco"+i), sco=f.info.sco!=="?"?f.info.sco:(sel?sel.value:"post");
+    var cols=head.map(function(h,idx){var c=ixCol(h); return c?{idx:idx,c:c}:null;}).filter(Boolean);
+    f.rows.forEach(function(r){
+      var o=slot(si>-1?r[si]:"", nameOf(head,r), ci>-1?r[ci]:"");
+      if(sco==="post"||sco==="pre"){
+        var bank = sco==="post" ? (B.HW||[]) : (B.PRE||[]);
+        var items=[], cal={gs:0,bs:0,gw:0,bw:0}, hasConf=false;
+        cols.forEach(function(cc){
+          if(cc.c.kind!==(sco==="post"?"post":"pre")) return;
+          var qi=cc.c.n-1, q=bank[qi]; if(!q) return;
+          var raw=String(r[cc.idx]==null?"":r[cc.idx]).trim();
+          var m=raw.match(/^(\d+)\s*([su])?$/i); if(!m) return;
+          var pick=+m[1], conf=m[2]?(m[2].toLowerCase()==="s"?1:0):undefined;
+          var okq=pick===q.ans?1:0;
+          var it={ccid:cc.c.key||q.ccid,ok:okq};
+          if(conf!=null){
+            it.conf=conf; hasConf=true;
+            if(okq&&conf===1)cal.gs++; else if(!okq&&conf===1)cal.bs++;
+            else if(okq&&conf!==1)cal.gw++; else cal.bw++;
+          }
+          items[qi]=it;
+        });
+        items=items.filter(Boolean);
+        if(!items.length) return;
+        var raw2=items.filter(function(x){return x.ok===1;}).length;
+        var tgt = sco==="post"?"post":"pre";
+        o[tgt]=o[tgt]||{};
+        o[tgt].items=items;
+        if(o[tgt].score==null) o[tgt].score=Math.round(raw2/items.length*100);
+        if(sco==="post"&&hasConf) o[tgt].calib=cal;
+        o[tgt].ts=o[tgt].ts||"import";
+      }else{
+        /* 實機實測：規格欄 + IPOS + 推理 */
+        var spec={}, ipOk=0, ipN=0, qOk=0, qN=0;
+        cols.forEach(function(cc){
+          var raw=String(r[cc.idx]==null?"":r[cc.idx]).trim();
+          if(cc.c.kind==="spec"){ if(raw) spec[cc.c.key]=raw; return; }
+          if(cc.c.kind==="ipos"){
+            var it=(B.IP||[])[cc.c.n-1]; if(!it) return;
+            ipN++; if(raw.toUpperCase()===it.a) ipOk++; return;
+          }
+          if(cc.c.kind==="reason"){
+            var q=(B.QS||[])[cc.c.n-1]; if(!q) return;
+            qN++; if(+raw===q.a) qOk++; return;
+          }
+        });
+        if(!Object.keys(spec).length&&!ipN&&!qN) return;
+        o.lab=o.lab||{};
+        o.lab.spec=spec;
+        o.lab.room=spec.room||o.lab.room||"";
+        o.lab.seat=spec.seat||o.lab.seat||"";
+        if(o.lab.score==null&&(ipN||qN)){
+          o.lab.ipScore=ipN?Math.round(ipOk/ipN*40):0;
+          o.lab.qScore=qN?Math.round(qOk/qN*20):0;
+          o.lab.recScore=40;
+          o.lab.score=o.lab.recScore+o.lab.ipScore+o.lab.qScore;
+        }
+        o.lab.ts=o.lab.ts||"import";
+      }
+    });
+  });
+
+  var rows=Object.keys(M).map(function(k){return M[k];});
+  if(!rows.length){ $("impMsg").textContent="檔案讀到了，但找不到可辨識的學生列。"; return; }
+
+  /* 轉成 ST 期望的三組紀錄 */
+  var warm=[],sub=[],lab=[];
+  rows.forEach(function(o){
+    if(o.pre)  warm.push(Object.assign({sid:o.sid,name:o.name,cls:o.cls},o.pre));
+    if(o.post) sub.push(Object.assign({sid:o.sid,name:o.name,cls:o.cls},o.post));
+    if(o.lab)  lab.push(Object.assign({sid:o.sid,name:o.name,cls:o.cls},o.lab));
+  });
+
+  var host=$("out");
+  host.innerHTML='<div class="card"><div class="note">已匯入 '+used.grade+' 份成績單、'+
+    used.ix+' 份互動報表，合併出 '+rows.length+' 位學生。'+
+    (used.ix===0?'<br/><b>只有成績單</b>：學習增益與總表算得出來，逐題分析與誠實度查核需要互動報表。':'')+
+    '</div></div>';
+  paintInto(host,warm,sub,lab,true);
 }
 
 function exportCSV(rows){
@@ -887,7 +1190,9 @@ function exportCSV(rows){
 }
 
 /* 對外（供測試與除錯） */
-window.ASSESS={B:B,S:S,check:check,submit1:submit1,submit2:submit2,submit3:submit3,
+window.ASSESS={B:B,S:S,check:check,parseCSV:parseCSV,classify:classify,
+  guessCol:guessCol,COLPAT:COLPAT,ixCol:ixCol,IMP:IMP,runImport:runImport,importView:importView,
+  paintInto:paintInto,submit1:submit1,submit2:submit2,submit3:submit3,
   mode:mode,paintTeacher:paintTeacher,exportCSV:exportCSV,
   _set:function(g,o){S[g]=o;},_ls:lsGet};
 
