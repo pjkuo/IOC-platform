@@ -27,4 +27,19 @@ function add(){try{
 }catch(e){}}
 "loading"===document.readyState?document.addEventListener("DOMContentLoaded",add):add();
 }();</script>
+
+<script id="live-nav">/* 課堂即時互動捷徑（append-only 注入 2026-09-18） */
+!function(){if(window.__liveNavInjected)return;window.__liveNavInjected=1;
+function add(){try{
+ if(document.getElementById("live-style"))return;
+ var st=document.createElement("style");st.id="live-style";
+ st.textContent=".live-mod{position:relative;border-color:#2e5496!important}.live-live{position:absolute;top:-9px;right:-6px;background:#2e5496;color:#fff;font:800 10px/1 sans-serif;border-radius:999px;padding:3px 7px;letter-spacing:.05em}";
+ document.head.appendChild(st);
+ var mods=document.querySelector(".mods");
+ if(mods){var a=document.createElement("a");a.className="mod live-mod";a.href="live.html";
+  a.innerHTML="<span class=\"mi\">⚡</span>課堂即時互動<span class=\"live-live\">LIVE</span>";
+  mods.appendChild(a);}
+}catch(e){}}
+"loading"===document.readyState?document.addEventListener("DOMContentLoaded",add):add();
+}();</script>
 </body> </html> 
