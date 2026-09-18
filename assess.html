@@ -1,0 +1,900 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+<meta charset="utf-8"/>
+<meta name="viewport" content="width=device-width,initial-scale=1"/>
+<title>硬體單元評量單｜計算機概論與實習</title>
+<meta name="description" content="計算機概論與實習．硬體單元單一評量單：課前練習、電腦教室實機實測、課後評量三段一頁完成，成績寫入共同資料庫，教師端提供學習增益與逐題分析。"/>
+<meta name="cc-cloud-url" content="https://script.google.com/macros/s/AKfycbz7wHWbc7go-OVR0Q_g_NBzDqwzV9-leqL1CRe1S9wGkLLjvJIAm-KrZj80s1KJ_VdGVg/exec"/>
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Crect width='100' height='100' rx='18' fill='%2321407a'/%3E%3Ctext x='50' y='72' font-size='58' text-anchor='middle' fill='%23e0b44a'%3E%E2%98%B0%3C/text%3E%3C/svg%3E"/>
+<style>
+:root{--hw:#2e5496;--hwd:#21407a;--gold:#e0b44a;--board:#10312a;--ok:#34a36b;--warn:#c8871b;--bad:#c0392b;
+--ink:#1b2733;--muted:#5b6b7a;--line:#dfe5ec;--bg:#eef1f5;--soft:#f6f8fb;
+--sans:"Noto Sans TC","PingFang TC","Microsoft JhengHei",system-ui,sans-serif}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--ink);font-family:var(--sans);font-size:16.5px;line-height:1.62;-webkit-font-smoothing:antialiased}
+.wrap{max-width:980px;margin:0 auto;padding:0 14px 60px}
+header{background:linear-gradient(135deg,var(--hwd),#16305c);color:#fff;padding:14px 0 12px;border-bottom:4px solid var(--gold)}
+header .wrap{padding-bottom:0;display:flex;align-items:center;gap:10px;flex-wrap:wrap}
+h1{margin:0;font-size:20px;letter-spacing:.5px}
+.sub{opacity:.92;font-size:13px;width:100%}
+.nav{margin-left:auto;display:flex;gap:7px;flex-wrap:wrap}
+.nav a,.nav button{font:700 12.5px/1 var(--sans);color:#fff;text-decoration:none;background:rgba(255,255,255,.13);
+border:1px solid rgba(255,255,255,.35);border-radius:999px;padding:7px 12px;cursor:pointer}
+.nav a:hover,.nav button:hover{background:rgba(255,255,255,.26)}
+.card{background:#fff;border:1px solid var(--line);border-radius:16px;padding:15px 17px;margin-top:13px;
+box-shadow:0 2px 10px rgba(16,49,42,.06)}
+.kicker{display:inline-block;font:800 11.5px/1 var(--sans);letter-spacing:.09em;color:#fff;background:var(--hw);
+border-radius:999px;padding:5px 11px}
+.kicker.g{background:var(--gold);color:#4a3608}
+.kicker.d{background:var(--board)}
+.h2{font-size:18.5px;font-weight:800;color:var(--hwd);margin:9px 0 3px}
+.lead{color:var(--muted);font-size:14.5px;margin:0 0 6px}
+.rail{display:flex;gap:8px;flex-wrap:wrap;margin-top:12px}
+.rail div{flex:1;min-width:150px;background:#fff;border:1px solid var(--line);border-left:5px solid var(--line);
+border-radius:11px;padding:9px 12px;font-size:13.5px;color:var(--muted)}
+.rail div b{display:block;font-size:15px;color:var(--hwd)}
+.rail div.on{border-left-color:var(--hw)}
+.rail div.done{border-left-color:var(--ok);background:#f2fbf6}
+.rail div.done b::after{content:" ✔";color:var(--ok)}
+.idbar{display:flex;align-items:center;gap:10px;flex-wrap:wrap;background:#fff;border:1px solid var(--line);
+border-radius:14px;padding:10px 14px;margin-top:13px}
+.idbar .who{font-weight:800;color:var(--hwd)}
+.idbar .muted{color:var(--muted);font-size:13.5px}
+.sp{flex:1}
+.btn{font:800 14.5px/1 var(--sans);border-radius:10px;padding:11px 17px;border:1px solid transparent;cursor:pointer;
+text-decoration:none;display:inline-block}
+.btn-navy{background:var(--hw);color:#fff}.btn-navy:hover{background:var(--hwd)}
+.btn-gold{background:var(--gold);color:#4a3608}.btn-gold:hover{filter:brightness(.96)}
+.btn-ghost{background:#fff;color:var(--hwd);border-color:var(--line)}.btn-ghost:hover{border-color:var(--hw)}
+.btn-sm{font-size:13px;padding:8px 13px}
+.row{display:flex;gap:9px;flex-wrap:wrap;align-items:center}
+.q{border-top:1px dashed var(--line);padding:12px 0 4px}
+.q:first-of-type{border-top:0}
+.qh{font-weight:700;margin-bottom:7px}
+.qh .n{display:inline-block;min-width:26px;color:var(--hw);font-weight:900}
+.qh .tag{display:inline-block;font:700 11.5px/1 var(--sans);background:var(--soft);border:1px solid var(--line);
+color:var(--muted);border-radius:999px;padding:4px 9px;margin-right:7px}
+.opts{display:flex;gap:7px;flex-wrap:wrap}
+.opts button{font:600 14px/1.35 var(--sans);text-align:left;background:#fff;border:1.5px solid var(--line);
+border-radius:10px;padding:9px 13px;cursor:pointer;color:var(--ink);flex:1 1 210px}
+.opts button:hover{border-color:var(--hw)}
+.opts button.on{background:#eaf1fb;border-color:var(--hw);color:var(--hwd);font-weight:800}
+.conf{display:flex;gap:6px;margin-top:7px;align-items:center}
+.conf span{font-size:12.5px;color:var(--muted)}
+.conf button{font:700 12.5px/1 var(--sans);background:#fff;border:1.5px solid var(--line);border-radius:999px;
+padding:7px 12px;cursor:pointer;color:var(--muted)}
+.conf button.on{background:var(--gold);border-color:var(--gold);color:#4a3608}
+.f{display:grid;grid-template-columns:230px 1fr;gap:8px 12px;align-items:start;margin-top:9px}
+.lb{font-weight:700;font-size:14.5px;padding-top:8px}
+.lb small{display:block;font-weight:400;color:var(--muted);font-size:12.5px;line-height:1.45}
+.inp{width:100%;font:600 15px var(--sans);border:1.5px solid var(--line);border-radius:9px;padding:9px 11px;background:#fff}
+.inp:focus{outline:none;border-color:var(--hw)}
+.hint{font-size:12.5px;color:var(--bad);min-height:15px;padding-left:2px}
+.hint.ok{color:var(--ok)}
+.seg button{font:700 13.5px/1 var(--sans);background:#fff;border:1.5px solid var(--line);border-radius:9px;
+padding:9px 15px;cursor:pointer;margin-right:6px;color:var(--muted)}
+.seg button.on{background:var(--hw);border-color:var(--hw);color:#fff}
+.chk{display:flex;gap:8px;flex-wrap:wrap}
+.chk label{font-size:14px;background:#fff;border:1.5px solid var(--line);border-radius:9px;padding:8px 12px;cursor:pointer}
+.where{background:var(--soft);border-left:4px solid var(--hw);border-radius:0 9px 9px 0;padding:9px 12px;
+font-size:13.5px;color:var(--ink);margin-top:8px}
+.where code{background:#fff;border:1px solid var(--line);border-radius:5px;padding:1px 6px;font-size:12.5px}
+.ipos{display:grid;grid-template-columns:1fr auto;gap:8px;align-items:center;border-top:1px dashed var(--line);padding:9px 0}
+.ipos:first-child{border-top:0}
+.ipos .nm{font-weight:700;font-size:15px}
+.seg4 button{font:800 13px/1 var(--sans);width:42px;background:#fff;border:1.5px solid var(--line);
+border-radius:8px;padding:9px 0;cursor:pointer;margin-left:5px;color:var(--muted)}
+.seg4 button.on{background:var(--hwd);border-color:var(--hwd);color:#fff}
+.note{background:#fffaf0;border:1px solid #f0dcae;border-radius:11px;padding:10px 13px;font-size:14px;margin-top:10px}
+.err{background:#fdecea;border:1px solid #f3c2bd;color:#912018;border-radius:11px;padding:10px 13px;font-size:14px;margin-top:10px}
+.cloudmsg{font-size:13px;color:var(--muted);margin-top:9px}
+.cloudmsg.ok{color:var(--ok);font-weight:700}
+.res{background:var(--soft);border:1px solid var(--line);border-radius:13px;padding:13px 15px;margin-top:11px}
+.big{font-size:30px;font-weight:900;color:var(--hwd);line-height:1.1}
+.quad{display:grid;grid-template-columns:repeat(2,1fr);gap:8px;margin-top:10px}
+.qd{border-radius:10px;padding:9px 12px;font-size:13.5px;font-weight:700}
+.qd b{display:block;font-size:22px}
+.q1{background:#eaf7f0;color:#1d6b45}.q2{background:#fdecea;color:#912018}
+.q3{background:#eef2fb;color:#28457e}.q4{background:#fff6e6;color:#8a5e08}
+table{width:100%;border-collapse:collapse;font-size:13.5px;margin-top:9px}
+th,td{padding:7px 9px;border-bottom:1px solid var(--line);text-align:left;vertical-align:top}
+th{background:var(--hwd);color:#fff;font-weight:700;white-space:nowrap;position:sticky;top:0}
+tbody tr:nth-child(2n){background:var(--soft)}
+/* 分析表一律完整顯示（12 題的表被切掉最後一列，老師以為只有 11 題）；
+   只有可能上百列的逐生總表才限高捲動。 */
+.tw{overflow:auto;border:1px solid var(--line);border-radius:11px;margin-top:9px}
+.tw.roll{max-height:62vh}
+.pill{display:inline-block;font:700 11.5px/1 var(--sans);border-radius:999px;padding:4px 9px}
+.p-ok{background:#eaf7f0;color:#1d6b45}.p-mid{background:#fff6e6;color:#8a5e08}.p-bad{background:#fdecea;color:#912018}
+.bar{background:#e7ecf3;border-radius:999px;height:9px;overflow:hidden;min-width:70px}
+.bar i{display:block;height:100%;background:var(--hw);border-radius:999px}
+.kpi{display:grid;grid-template-columns:repeat(auto-fit,minmax(145px,1fr));gap:9px;margin-top:10px}
+.kpi div{background:var(--soft);border:1px solid var(--line);border-radius:11px;padding:10px 12px}
+.kpi b{display:block;font-size:24px;color:var(--hwd);line-height:1.2}
+.kpi span{font-size:12.5px;color:var(--muted)}
+.hidden{display:none!important}
+footer{margin-top:24px;text-align:center;color:var(--muted);font-size:12.5px;border-top:1px solid var(--line);padding-top:12px}
+@media(max-width:700px){.f{grid-template-columns:1fr}.lb{padding-top:0}.quad{grid-template-columns:1fr}
+.opts button{flex:1 1 100%}}
+</style>
+</head>
+<body>
+<header>
+  <div class="wrap">
+    <h1>☰ 硬體單元評量單</h1>
+    <nav class="nav">
+      <button type="button" id="mStu">👤 學生</button>
+      <button type="button" id="mTea">🎓 教師統計</button>
+      <a href="live.html">⚡ 課堂互動</a>
+      <a href="index.html">⌂ 課程入口</a>
+    </nav>
+    <div class="sub">課程主題：<b>電腦系統架構 → 生活應用</b>｜課前練習 · 實機實測 · 課後評量，一張單完成</div>
+  </div>
+</header>
+
+<main class="wrap">
+
+<div id="boot" class="card"><div class="lead">☁ 載入題庫中…</div></div>
+
+<!-- ══════════ 學生端 ══════════ -->
+<section id="stu" class="hidden">
+
+  <div class="idbar">
+    <span class="who" id="who">尚未填寫身分</span>
+    <span class="muted" id="whoSub">成績要能登錄，請先填學號與姓名</span>
+    <span class="sp"></span>
+    <button class="btn btn-ghost btn-sm" type="button" id="idBtn">填寫／修改身分</button>
+  </div>
+
+  <div class="rail" id="rail">
+    <div data-s="1"><b>① 課前練習</b>8 題・不計分，先猜再學</div>
+    <div data-s="2"><b>② 實機實測</b>打開這台電腦，抄下規格</div>
+    <div data-s="3"><b>③ 課後評量</b>12 題・計分並標信心</div>
+  </div>
+
+  <!-- ─── 第一段：課前練習 ─── -->
+  <div class="card" id="s1">
+    <span class="kicker">第 ① 段</span>
+    <div class="h2">課前練習 · 先思考</div>
+    <p class="lead">憑直覺作答就好，<b>不計分、不給解析</b>。猜錯的印象帶進教室，上課揭曉時記得最牢。</p>
+    <div id="s1q"></div>
+    <div class="row" style="margin-top:12px">
+      <button class="btn btn-navy" type="button" id="s1go">送出課前練習</button>
+      <span class="muted" id="s1msg"></span>
+    </div>
+    <div id="s1res" class="hidden"></div>
+  </div>
+
+  <!-- ─── 第二段：實機實測 ─── -->
+  <div class="card" id="s2">
+    <span class="kicker">第 ② 段</span>
+    <div class="h2">電腦教室實機實測 · 後驗證</div>
+    <p class="lead">打開眼前這台電腦，把真實規格抄下來。每台機器規格不同，所以這一段<b>不對答案，只檢查你有沒有真的查</b>。</p>
+    <div class="where"><b>去哪裡看：</b><code>Ctrl+Shift+Esc</code> 開工作管理員 → <code>效能</code> 分頁，左側切換 <code>CPU</code> / <code>記憶體</code> / <code>磁碟 0</code>；
+      解析度看桌面右鍵 <code>顯示設定</code>；顯示晶片看 <code>效能 → GPU</code> 或 <code>Win+R</code> 輸入 <code>dxdiag</code>。
+      需要圖解步驟請開 <a href="lab.html">實機實測導覽版 ↗</a>。</div>
+    <div class="f" id="s2f"></div>
+    <div class="f" style="margin-top:4px">
+      <div class="lb">磁碟類型<small>磁碟頁下方「類型」</small></div>
+      <div><div class="seg" id="v_disktype"><button type="button" data-v="SSD">SSD</button><button type="button" data-v="HDD">HDD</button></div>
+        <div class="hint" id="h_disktype"></div></div>
+      <div class="lb">輸入裝置清點<small>看得到、摸得到的才勾，至少 2 項</small></div>
+      <div><div class="chk" id="v_in"></div><div class="hint" id="h_in"></div></div>
+    </div>
+
+    <div class="h2" style="margin-top:16px">把這台電腦的零件歸進 IPOS</div>
+    <p class="lead">I 輸入　P 處理　O 輸出　S 儲存 —— 這一段<b>有標準答案</b>。</p>
+    <div id="s2ip"></div>
+
+    <div class="h2" style="margin-top:16px">用你抄到的數字推理</div>
+    <div id="s2q"></div>
+
+    <div class="row" style="margin-top:12px">
+      <button class="btn btn-navy" type="button" id="s2go">送出實機實測</button>
+      <span class="muted" id="s2msg"></span>
+    </div>
+    <div id="s2res" class="hidden"></div>
+  </div>
+
+  <!-- ─── 第三段：課後評量 ─── -->
+  <div class="card" id="s3">
+    <span class="kicker g">第 ③ 段</span>
+    <div class="h2">課後評量 · 計分</div>
+    <p class="lead">每題作答後請再標一次<b>有沒有把握</b>。「很有把握卻答錯」是進步最快的入口，送出後會特別標給你看。</p>
+    <div id="s3q"></div>
+    <div class="row" style="margin-top:12px">
+      <button class="btn btn-gold" type="button" id="s3go">送出課後評量</button>
+      <span class="muted" id="s3msg"></span>
+    </div>
+    <div id="s3res" class="hidden"></div>
+  </div>
+
+  <div class="card hidden" id="sum"></div>
+</section>
+
+<!-- ══════════ 教師端 ══════════ -->
+<section id="tea" class="hidden">
+  <div class="card" id="gate">
+    <span class="kicker d">教師端</span>
+    <div class="h2">班級統計分析</div>
+    <p class="lead">三段紀錄寫在同一份雲端試算表，這裡依學號併表後計算。</p>
+    <div class="row">
+      <input class="inp" id="code" style="max-width:220px" placeholder="教師碼" type="password"/>
+      <button class="btn btn-navy" type="button" id="codeGo">進入</button>
+      <span class="muted" id="codeMsg"></span>
+    </div>
+  </div>
+  <div id="panel" class="hidden"></div>
+</section>
+
+</main>
+<footer>國立屏東科技大學 資訊管理系｜計算機概論與實習｜教材授權 CC BY-NC-SA 4.0</footer>
+
+<script id="stats">
+/* ══ 統計引擎：純函數、無 DOM，另有 Node 單元測試 ══ */
+var ST=(function(){
+  "use strict";
+  /* 注意：+null 與 +"" 都等於 0。缺考若被當成 0 分，學習增益會被嚴重灌水，故先擋空值。 */
+  function num(x){if(x===null||x===undefined||x==="")return null;var n=+x;return isFinite(n)?n:null;}
+
+  function join(warm,sub,lab){
+    var m={};
+    function put(rows,key){
+      (rows||[]).forEach(function(r){
+        var sid=String(r.sid||"").trim(); if(!sid) return;
+        var o=m[sid]||(m[sid]={sid:sid,name:r.name||"",cls:r.cls||""});
+        if(!o[key]||String(r.ts||"")>String(o[key].ts||"")) o[key]=r;
+        if(r.name&&!o.name) o.name=r.name;
+        if(r.cls&&!o.cls) o.cls=r.cls;
+      });
+    }
+    put(warm,"pre"); put(sub,"post"); put(lab,"lab");
+    return Object.keys(m).sort().map(function(k){return m[k];});
+  }
+
+  function gain(pre,post){
+    pre=num(pre); post=num(post);
+    if(pre===null||post===null) return null;
+    if(pre>=100) return null;
+    return (post-pre)/(100-pre);
+  }
+  function band(g){if(g===null)return "—";if(g>=.7)return "高增益";if(g>=.3)return "中增益";return "低增益";}
+
+  function classGain(rows){
+    var p=[],q=[];
+    rows.forEach(function(r){
+      if(r.pre&&r.post){var a=num(r.pre.score),b=num(r.post.score);
+        if(a!==null&&b!==null){p.push(a);q.push(b);}}
+    });
+    if(!p.length) return {n:0,pre:null,post:null,g:null,band:"—"};
+    var s=function(A){return A.reduce(function(x,y){return x+y;},0)/A.length;};
+    var mp=s(p),mq=s(q), g= mp>=100?null:(mq-mp)/(100-mp);
+    return {n:p.length,pre:mp,post:mq,g:g,band:band(g)};
+  }
+
+  function dGrade(D){if(D>=.4)return "優良";if(D>=.3)return "良好";if(D>=.2)return "尚可";return "待修";}
+  function items(rows,nQ){
+    var use=(rows||[]).filter(function(r){return r.items&&r.items.length;});
+    if(!use.length) return {n:0,k:0,small:true,q:[]};
+    var n=use.length;
+    var sorted=use.slice().sort(function(a,b){return (num(b.score)||0)-(num(a.score)||0);});
+    var k = n>=20 ? Math.max(1,Math.round(n*0.27)) : Math.max(1,Math.floor(n/2));
+    var up=sorted.slice(0,k), lo=sorted.slice(n-k), out=[];
+    for(var i=0;i<nQ;i++){
+      var c=0,cu=0,cl=0,blind=0;
+      use.forEach(function(r){var it=r.items[i];if(it&&it.ok===1)c++;if(it&&it.ok===0&&it.conf===1)blind++;});
+      up.forEach(function(r){var it=r.items[i];if(it&&it.ok===1)cu++;});
+      lo.forEach(function(r){var it=r.items[i];if(it&&it.ok===1)cl++;});
+      var D=(cu/k)-(cl/k);
+      out.push({i:i,P:c/n,D:D,blind:blind,grade:dGrade(D),ccid:(use[0].items[i]||{}).ccid||""});
+    }
+    return {n:n,k:k,small:n<8,q:out};
+  }
+
+  function concepts(rows){
+    var m={};
+    (rows||[]).forEach(function(r){
+      (r.items||[]).forEach(function(it){
+        if(!it||!it.ccid) return;
+        var o=m[it.ccid]||(m[it.ccid]={ccid:it.ccid,n:0,ok:0});
+        o.n++; if(it.ok===1)o.ok++;
+      });
+    });
+    return Object.keys(m).map(function(k){var o=m[k];o.P=o.n?o.ok/o.n:0;return o;})
+      .sort(function(a,b){return a.P-b.P;});
+  }
+
+  var SPEC=["cpu","cores","threads","ghz","ram","ramspd","disk","diskgb","res","gpu"];
+  function nm(v){return String(v==null?"":v).trim().toLowerCase().replace(/\s+/g," ");}
+  function honesty(labRows){
+    var g={};
+    (labRows||[]).forEach(function(r){
+      var room=String(r.room||"").trim().toUpperCase(), seat=String(r.seat||"").trim();
+      if(!room||!seat) return;
+      var key=room+"|"+seat;
+      (g[key]||(g[key]={room:room,seat:seat,recs:[]})).recs.push(r);
+    });
+    var bad=[];
+    Object.keys(g).forEach(function(k){
+      var grp=g[k]; if(grp.recs.length<2) return;
+      var diff=[];
+      SPEC.forEach(function(f){
+        var vals=grp.recs.map(function(r){return nm((r.spec||{})[f]);}).filter(function(v){return v!=="";});
+        if(vals.length<2) return;
+        var uniq=vals.filter(function(v,i){return vals.indexOf(v)===i;});
+        if(uniq.length>1) diff.push({field:f,values:uniq});
+      });
+      if(diff.length) bad.push({room:grp.room,seat:grp.seat,
+        who:grp.recs.map(function(r){return r.name||r.sid||"?";}),diff:diff});
+    });
+    return bad.sort(function(a,b){return a.room<b.room?-1:a.room>b.room?1:(+a.seat)-(+b.seat);});
+  }
+
+  return {join:join,gain:gain,band:band,classGain:classGain,items:items,
+          concepts:concepts,honesty:honesty,dGrade:dGrade,SPEC:SPEC};
+})();
+</script>
+
+<script id="app">
+(function(){
+"use strict";
+var $=function(i){return document.getElementById(i);};
+var LS="cc_assess_v1", TCODES=["npust1728","1728"];
+var B={};                    /* 題庫（執行時自 hw-unit.html / lab.html 取出） */
+var S={p1:{},p3:{},c3:{},ip:{},rq:{}};  /* 作答狀態 */
+
+/* ── 欄位標籤（僅呈現用；驗證規則來自 lab.html 的 F） ── */
+var LB={
+ room:["教室代號","例如 E301","E301"], seat:["機台編號","貼在主機或螢幕上","12"],
+ cpu:["CPU 型號","效能 → CPU，右上角那一行","Intel Core i5-12400"],
+ cores:["核心數","CPU 頁下方「核心」","6"],
+ threads:["邏輯處理器","通常是核心數的 1 或 2 倍","12"],
+ ghz:["基本速度（GHz）","CPU 頁下方「基本速度」","2.50"],
+ ram:["RAM 總容量（GB）","效能 → 記憶體，右上角","16"],
+ ramspd:["RAM 速度（MHz）","記憶體頁下方「速度」","3200"],
+ disk:["磁碟型號","效能 → 磁碟 0，最上面那一行","Samsung SSD 980 500GB"],
+ diskgb:["磁碟容量（GB）","磁碟頁下方「容量」","512"],
+ res:["螢幕解析度","桌面右鍵 → 顯示設定","1920x1080"],
+ gpu:["顯示晶片／顯示卡","效能 → GPU，或 dxdiag","Intel UHD Graphics 730"]
+};
+var INDEV=["鍵盤","滑鼠","耳麥／麥克風","網路攝影機","讀卡機","觸控螢幕","USB 埠"];
+var IPNAME={I:"輸入",P:"處理",O:"輸出",S:"儲存"};
+
+/* ── 工具 ── */
+function esc(s){return String(s==null?"":s).replace(/[&<>"]/g,function(c){
+  return {"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c];});}
+function lsGet(){try{return JSON.parse(localStorage.getItem(LS)||"{}");}catch(e){return{};}}
+function lsSet(o){try{localStorage.setItem(LS,JSON.stringify(o));}catch(e){}}
+function cloud(){try{return window.IOCCLOUD||null;}catch(e){return null;}}
+function ident(){var c=cloud();try{return (c&&c.identity&&c.identity())||null;}catch(e){return null;}}
+function pct(x){return (x*100).toFixed(0)+"%";}
+
+/* 自來源頁取出陣列常值：單一真相來源，題目只維護在原頁 */
+function grab(txt,name){
+  var m=txt.match(new RegExp("var\\s+"+name+"\\s*=\\s*(\\[[\\s\\S]*?\\n\\]);"));
+  if(!m) return null;
+  try{ return (new Function("return "+m[1]))(); }catch(e){ return null; }
+}
+function getText(u){return fetch(u,{cache:"force-cache"}).then(function(r){
+  if(!r.ok) throw new Error(u+" "+r.status); return r.text();});}
+
+/* ══ 開機：載入雲端模組與三份題庫 ══ */
+function boot(){
+  Promise.all([getText("student.html"),getText("hw-unit.html"),getText("lab.html")])
+  .then(function(a){
+    var m=a[0].match(/<script id="ioccloud">([\s\S]*?)<\/script>/);
+    if(m&&m[1]&&!window.IOCCLOUD){
+      var sc=document.createElement("script"); sc.id="ioccloud"; sc.textContent=m[1];
+      document.body.appendChild(sc);
+    }
+    B.PRE=grab(a[1],"PRE"); B.HW=grab(a[1],"HW");
+    B.F=grab(a[2],"F"); B.IP=grab(a[2],"IP"); B.QS=grab(a[2],"QS");
+    var miss=["PRE","HW","F","IP","QS"].filter(function(k){return !B[k]||!B[k].length;});
+    if(miss.length) throw new Error("題庫缺漏："+miss.join("、"));
+    $("boot").classList.add("hidden");
+    $("stu").classList.remove("hidden");
+    render(); restore(); paintId(); paintRail();
+    setInterval(paintId,1200);
+    window.addEventListener("focus",paintId);
+  })
+  .catch(function(e){
+    $("boot").innerHTML='<div class="err"><b>題庫載入失敗：</b>'+esc(e.message)+
+      '<br/>請改用分頁版本作答，成績一樣會記錄：<br/>'+
+      '<a href="hw-unit.html">課前練習與課後作業 ↗</a>　<a href="lab.html">電腦教室實機實測 ↗</a></div>';
+  });
+}
+
+/* ══ 渲染 ══ */
+function render(){
+  /* 第一段 */
+  $("s1q").innerHTML=B.PRE.map(function(q,i){
+    return '<div class="q"><div class="qh"><span class="n">'+(i+1)+'.</span>'+
+      '<span class="tag">'+esc(q.tag)+'</span>'+esc(q.stem)+'</div>'+
+      '<div class="opts" data-g="p1" data-i="'+i+'">'+
+      q.opts.map(function(o,j){return '<button type="button" data-v="'+j+'">'+esc(o)+'</button>';}).join("")+
+      '</div></div>';
+  }).join("");
+
+  /* 第二段：規格欄位 */
+  $("s2f").innerHTML=B.F.map(function(f){
+    var L=LB[f.k]||[f.k,"",""];
+    return '<div class="lb">'+esc(L[0])+'<small>'+esc(L[1])+'</small></div>'+
+      '<div><input class="inp" id="v_'+f.k+'" placeholder="'+esc(L[2])+'"/>'+
+      '<div class="hint" id="h_'+f.k+'"></div></div>';
+  }).join("");
+  $("v_in").innerHTML=INDEV.map(function(d){
+    return '<label><input type="checkbox" value="'+esc(d)+'"/> '+esc(d)+'</label>';}).join("");
+
+  /* 第二段：IPOS */
+  $("s2ip").innerHTML=B.IP.map(function(it,i){
+    return '<div class="ipos"><span class="nm">'+esc(it.n)+'</span>'+
+      '<span class="seg4" data-g="ip" data-i="'+i+'">'+
+      ["I","P","O","S"].map(function(v){return '<button type="button" data-v="'+v+'">'+v+'</button>';}).join("")+
+      '</span></div>';
+  }).join("");
+
+  /* 第二段：推理題 */
+  $("s2q").innerHTML=B.QS.map(function(q,i){
+    return '<div class="q"><div class="qh"><span class="n">'+(i+1)+'.</span>'+esc(q.q)+'</div>'+
+      '<div class="opts" data-g="rq" data-i="'+i+'">'+
+      q.o.map(function(o,j){return '<button type="button" data-v="'+j+'">'+esc(o)+'</button>';}).join("")+
+      '</div></div>';
+  }).join("");
+
+  /* 第三段 */
+  $("s3q").innerHTML=B.HW.map(function(q,i){
+    return '<div class="q"><div class="qh"><span class="n">'+(i+1)+'.</span>'+
+      '<span class="tag">'+esc(q.tag)+'</span>'+esc(q.stem)+'</div>'+
+      '<div class="opts" data-g="p3" data-i="'+i+'">'+
+      q.opts.map(function(o,j){return '<button type="button" data-v="'+j+'">'+esc(o)+'</button>';}).join("")+
+      '</div>'+
+      '<div class="conf" data-g="c3" data-i="'+i+'"><span>你的把握程度：</span>'+
+      '<button type="button" data-v="1">💪 有把握</button>'+
+      '<button type="button" data-v="0">🤔 沒把握</button></div></div>';
+  }).join("");
+
+  /* 事件：選項與分段按鈕（事件委派，一次掛上） */
+  document.addEventListener("click",function(e){
+    var b=e.target.closest?e.target.closest("button[data-v]"):null;
+    if(!b) return;
+    var box=b.parentNode, g=box.getAttribute("data-g");
+    if(g){
+      var i=box.getAttribute("data-i"), v=b.getAttribute("data-v");
+      S[g][i]= (g==="ip") ? v : +v;
+      Array.prototype.forEach.call(box.querySelectorAll("button"),function(x){x.classList.remove("on");});
+      b.classList.add("on"); save();
+      return;
+    }
+    if(box.id==="v_disktype"){
+      Array.prototype.forEach.call(box.querySelectorAll("button"),function(x){x.classList.remove("on");});
+      b.classList.add("on"); save();
+    }
+  });
+  $("v_in").addEventListener("change",save);
+  B.F.forEach(function(f){
+    var e=$("v_"+f.k); if(e) e.addEventListener("input",function(){ $("h_"+f.k).textContent=""; save(); });
+  });
+
+  $("s1go").onclick=submit1; $("s2go").onclick=submit2; $("s3go").onclick=submit3;
+  $("idBtn").onclick=function(){
+    var c=cloud();
+    if(!c||!c.openIdentity){ alert("雲端模組尚未就緒，請稍候再試。"); return; }
+    c.openIdentity();
+    /* 身分視窗關閉的時機沒有事件可掛，改在其後幾秒內補畫，避免身分列顯示落後 */
+    [400,1200,2500,5000].forEach(function(t){setTimeout(paintId,t);});
+  };
+  $("mStu").onclick=function(){mode("s");}; $("mTea").onclick=function(){mode("t");};
+  $("codeGo").onclick=teacherIn;
+  $("code").addEventListener("keydown",function(e){if(e.key==="Enter")teacherIn();});
+}
+
+/* ══ 草稿保存與還原 ══ */
+function save(){
+  var st=lsGet();
+  st.draft={p1:S.p1,p3:S.p3,c3:S.c3,ip:S.ip,rq:S.rq,f:{},dt:diskType(),inp:inputs()};
+  B.F.forEach(function(f){var e=$("v_"+f.k); if(e) st.draft.f[f.k]=e.value;});
+  lsSet(st);
+}
+function restore(){
+  var d=(lsGet().draft)||{};
+  ["p1","p3","c3","ip","rq"].forEach(function(g){
+    var src=d[g]||{}; S[g]={};
+    Object.keys(src).forEach(function(i){
+      S[g][i]=src[i];
+      var box=document.querySelector('[data-g="'+g+'"][data-i="'+i+'"]');
+      if(!box) return;
+      var b=box.querySelector('button[data-v="'+src[i]+'"]');
+      if(b) b.classList.add("on");
+    });
+  });
+  if(d.f) B.F.forEach(function(f){var e=$("v_"+f.k); if(e&&d.f[f.k]!=null) e.value=d.f[f.k];});
+  if(d.dt) Array.prototype.forEach.call($("v_disktype").querySelectorAll("button"),function(b){
+    if(b.getAttribute("data-v")===d.dt) b.classList.add("on");});
+  if(d.inp&&d.inp.length) Array.prototype.forEach.call($("v_in").querySelectorAll("input"),function(c){
+    if(d.inp.indexOf(c.value)>-1) c.checked=true;});
+}
+
+/* ══ 身分列與進度軌 ══ */
+function paintId(){
+  var id=ident();
+  if(id&&(id.sid||id.name)){
+    $("who").textContent=(id.name||"")+(id.sid?"（"+id.sid+"）":"");
+    $("whoSub").textContent=id.cls?("班級："+id.cls):"身分已填寫，送出後會自動登錄";
+  }
+}
+function paintRail(){
+  var st=lsGet();
+  Array.prototype.forEach.call($("rail").children,function(d){
+    var n=d.getAttribute("data-s");
+    d.classList.toggle("done",!!(st["s"+n]&&st["s"+n].done));
+  });
+  var st2=lsGet();
+  if(st2.s1&&st2.s1.done&&st2.s3&&st2.s3.done) renderSummary(st2);
+}
+
+/* ══ 讀值與檢核 ══ */
+function val(k){var e=$("v_"+k);return e?(e.value||"").trim():"";}
+function diskType(){var b=$("v_disktype")&&$("v_disktype").querySelector("button.on");
+  return b?b.getAttribute("data-v"):"";}
+function inputs(){var box=$("v_in"); if(!box) return [];
+  return Array.prototype.filter.call(box.querySelectorAll("input"),function(c){return c.checked;})
+    .map(function(c){return c.value;});}
+function check(f){
+  var v=val(f.k);
+  if(!v) return "這一格還沒填";
+  if(f.t==="text")  return v.length>=(f.min||1)?"":f.msg;
+  if(f.t==="model") return (/[A-Za-z]/.test(v)&&v.length>=4)?"":f.msg;
+  if(f.t==="int"){var n=+v;return (/^\d+$/.test(v)&&n>=f.lo&&n<=f.hi)?"":f.msg;}
+  if(f.t==="num"){var m=parseFloat(v);return (isFinite(m)&&m>=f.lo&&m<=f.hi)?"":f.msg;}
+  if(f.t==="res")  return /^\d{3,5}\s*[xX×*]\s*\d{3,5}$/.test(v)?"":f.msg;
+  return "";
+}
+
+/* ══ 上雲 ══ */
+function push(rec,msgEl,after){
+  var waited=0;
+  (function go(){
+    var up=cloud();
+    if(up&&up.enqueue){
+      try{up.enqueue(rec);}catch(e){}
+      if(msgEl){msgEl.textContent="☁ 上傳中…"; msgEl.className="cloudmsg";}
+      var n=0,t=setInterval(function(){
+        n++; var left=0;
+        try{left=up.outbox().filter(function(r){return r.kind===rec.kind;}).length;}catch(e){}
+        if(left===0){clearInterval(t); if(msgEl){msgEl.className="cloudmsg ok";msgEl.textContent="☁ ✔ 已寫入雲端試算表";}
+          if(after)try{after(up);}catch(e){}}
+        else if(n>=8){clearInterval(t); if(msgEl) msgEl.textContent="☁ 已排入佇列，恢復連線會自動補送。";}
+      },1500);
+      return;
+    }
+    if(waited<8000){waited+=800;setTimeout(go,800);}
+    else if(msgEl) msgEl.textContent="☁ 雲端模組載入失敗，作答已存在本機。";
+  })();
+}
+function needId(msgEl){
+  var id=ident();
+  if(id&&(id.sid||id.name)) return id;
+  msgEl.textContent="請先填寫學號與姓名，成績才登得進去。";
+  var c=cloud(); if(c&&c.openIdentity) c.openIdentity();
+  return null;
+}
+
+/* ══ 第一段送出 ══ */
+function submit1(){
+  var un=[]; B.PRE.forEach(function(q,i){ if(S.p1[i]==null) un.push(i+1); });
+  if(un.length){ $("s1msg").textContent="還有第 "+un.join("、")+" 題沒作答。"; return; }
+  var id=needId($("s1msg")); if(!id) return;
+  $("s1msg").textContent="";
+  var raw=0; B.PRE.forEach(function(q,i){ if(S.p1[i]===q.ans) raw++; });
+  var max=B.PRE.length, score=Math.round(raw/max*100);
+  var items=B.PRE.map(function(q,i){return {ccid:q.ccid,ok:S.p1[i]===q.ans?1:0,pick:S.p1[i]};});
+
+  var st=lsGet(); st.s1={done:1,raw:raw,max:max,score:score,ts:Date.now()}; lsSet(st);
+  $("s1res").className="res";
+  $("s1res").innerHTML='<div class="big">猜對 '+raw+' / '+max+' 題</div>'+
+    '<div class="lead">這一段不計分。上課時老師會一題一題揭曉——<b>先思考、後驗證</b>，記憶最深。</div>'+
+    '<div class="cloudmsg" id="c1"></div>';
+  push({kind:"warm",unit:"硬體單元課前練習",page:"assess",sid:id.sid||"",
+        raw:raw,max:max,score:score,items:items},$("c1"));
+  paintRail();
+}
+
+/* ══ 第二段送出 ══ */
+function submit2(){
+  var bad=[];
+  B.F.forEach(function(f){
+    var m=check(f); $("h_"+f.k).textContent=m; if(m) bad.push((LB[f.k]||[f.k])[0]);
+  });
+  if(!diskType()){ $("h_disktype").textContent="請選 SSD 或 HDD"; bad.push("磁碟類型"); }
+  else $("h_disktype").textContent="";
+  var inp=inputs();
+  if(inp.length<2){ $("h_in").textContent="至少勾選 2 項"; bad.push("輸入裝置"); }
+  else $("h_in").textContent="";
+  var unIp=[]; B.IP.forEach(function(it,i){ if(!S.ip[i]) unIp.push(i+1); });
+  var unQ=[];  B.QS.forEach(function(q,i){ if(S.rq[i]==null) unQ.push(i+1); });
+  if(unIp.length) bad.push("IPOS 第 "+unIp.join("、")+" 項");
+  if(unQ.length)  bad.push("推理第 "+unQ.join("、")+" 題");
+  if(bad.length){ $("s2msg").textContent="請修正："+bad.slice(0,4).join("、")+(bad.length>4?" 等":""); return; }
+  var id=needId($("s2msg")); if(!id) return;
+  $("s2msg").textContent="";
+
+  var spec={}; B.F.forEach(function(f){spec[f.k]=val(f.k);});
+  spec.disktype=diskType(); spec.inputs=inp;
+  var ipOk=0, wrong=[];
+  B.IP.forEach(function(it,i){ if(S.ip[i]===it.a) ipOk++; else wrong.push({n:it.n,you:S.ip[i],ans:it.a}); });
+  var qOk=0; B.QS.forEach(function(q,i){ if(S.rq[i]===q.a) qOk++; });
+  /* 抄錄分：14 項（12 欄位＋磁碟類型＋輸入裝置）通過格式檢核的比例。
+     目前未通過就擋著不讓送，所以實際恆為滿分——但照實算，日後若放寬規則這裡仍然正確。 */
+  var okN=0;
+  B.F.forEach(function(f){ if(!check(f)) okN++; });
+  if(diskType()) okN++;
+  if(inp.length>=2) okN++;
+  var recScore=Math.round(okN/(B.F.length+2)*40);
+  var ipScore=Math.round(ipOk/B.IP.length*40);
+  var qScore=Math.round(qOk/B.QS.length*20);
+  var total=recScore+ipScore+qScore;
+
+  var st=lsGet(); st.s2={done:1,score:total,ts:Date.now()}; lsSet(st);
+  $("s2res").className="res";
+  $("s2res").innerHTML='<div class="big">'+total+' 分</div>'+
+    '<div class="lead">實測抄錄 '+recScore+'／40　IPOS 歸類 '+ipScore+'／40　推理 '+qScore+'／20</div>'+
+    '<div class="note"><b>'+esc(val("room"))+' 第 '+esc(val("seat"))+' 號機</b>　'+
+      esc(spec.cpu)+'　RAM '+esc(spec.ram)+' GB　'+esc(spec.disktype)+' '+esc(spec.diskgb)+' GB'+
+      '<br/><span style="color:var(--muted)">同一台機器、不同人抄出來的規格必須一致——老師會比對。</span></div>'+
+    (wrong.length?'<div class="note">IPOS 答錯 '+wrong.length+' 項：'+
+      wrong.map(function(w){return esc(w.n)+"（你選 "+esc(IPNAME[w.you]||w.you||"未答")+
+        "，正解 "+esc(IPNAME[w.ans])+"）";}).join("；")+'</div>':
+      '<div class="note">🏆 IPOS 歸類全對。</div>')+
+    '<div class="cloudmsg" id="c2"></div>';
+  push({kind:"lab",unit:"電腦教室實機實測",page:"assess",sid:id.sid||"",
+        room:val("room"),seat:val("seat"),raw:total,max:100,score:total,
+        recScore:recScore,ipScore:ipScore,qScore:qScore,spec:spec,
+        ipWrong:wrong.length,qOk:qOk},$("c2"));
+  paintRail();
+}
+
+/* ══ 第三段送出 ══ */
+function submit3(){
+  var un=[],uc=[];
+  B.HW.forEach(function(q,i){ if(S.p3[i]==null) un.push(i+1); if(S.c3[i]==null) uc.push(i+1); });
+  if(un.length){ $("s3msg").textContent="還有第 "+un.join("、")+" 題沒作答。"; return; }
+  if(uc.length){ $("s3msg").textContent="第 "+uc.join("、")+" 題還沒標把握程度。"; return; }
+  var id=needId($("s3msg")); if(!id) return;
+  $("s3msg").textContent="";
+
+  var raw=0,c={gs:0,bs:0,gw:0,bw:0};
+  B.HW.forEach(function(q,i){
+    var ok=S.p3[i]===q.ans, sure=S.c3[i]===1;
+    if(ok)raw++;
+    if(ok&&sure)c.gs++; else if(!ok&&sure)c.bs++; else if(ok&&!sure)c.gw++; else c.bw++;
+  });
+  var max=B.HW.length, score=Math.round(raw/max*100);
+  var items=B.HW.map(function(q,i){return {ccid:q.ccid,ct:q.ct,ok:S.p3[i]===q.ans?1:0,conf:S.c3[i],pick:S.p3[i]};});
+
+  var wrongs=B.HW.map(function(q,i){
+    if(S.p3[i]===q.ans) return "";
+    return '<div class="note"><b>第 '+(i+1)+' 題・'+esc(q.tag)+'</b>'+
+      (S.c3[i]===1?'　<span style="color:var(--bad);font-weight:700">💪 當時很有把握 → 這題最該補</span>':'　🤔 當時沒把握')+
+      '<br/>你選：'+esc(q.opts[S.p3[i]])+'　正解：<b>'+esc(q.opts[q.ans])+'</b>'+
+      '<br/><span style="color:var(--muted)">'+esc(q.exp)+'</span></div>';
+  }).join("");
+
+  var st=lsGet(); st.s3={done:1,raw:raw,max:max,score:score,calib:c,ts:Date.now()}; lsSet(st);
+  $("s3res").className="res";
+  $("s3res").innerHTML='<div class="big">'+score+' 分（答對 '+raw+'／'+max+'）</div>'+
+    '<div class="quad">'+
+      '<div class="qd q1">穩固區<b>'+c.gs+'</b>有把握・答對</div>'+
+      '<div class="qd q2">盲點區<b>'+c.bs+'</b>有把握・答錯</div>'+
+      '<div class="qd q3">低估區<b>'+c.gw+'</b>沒把握・答對</div>'+
+      '<div class="qd q4">待學區<b>'+c.bw+'</b>沒把握・答錯</div>'+
+    '</div>'+
+    (c.bs>0?'<div class="lead" style="margin-top:9px">有 '+c.bs+' 題落在<b>盲點區</b>——很有把握卻答錯，這是進步最快的入口，先看下面的解析。</div>':'')+
+    (wrongs||'<div class="note">🏆 全對！</div>')+
+    '<div class="cloudmsg" id="c3"></div><div id="certmount"></div>';
+  push({kind:"subquiz",unit:"硬體單元課後作業",page:"assess",sid:id.sid||"",
+        raw:raw,max:max,score:score,calib:c,items:items},$("c3"),
+    function(up){ try{ if(up.mountCert) up.mountCert($("certmount"),"subquiz"); }catch(e){} });
+  paintRail();
+}
+
+/* ══ 三段總覽（含個人學習增益） ══ */
+function renderSummary(st){
+  var g=ST.gain(st.s1.score,st.s3.score);
+  $("sum").classList.remove("hidden");
+  $("sum").innerHTML='<span class="kicker d">完成</span><div class="h2">你的三段總覽</div>'+
+    '<div class="kpi">'+
+      '<div><b>'+st.s1.score+'</b><span>① 課前練習（不計分）</span></div>'+
+      '<div><b>'+(st.s2&&st.s2.done?st.s2.score:"—")+'</b><span>② 實機實測</span></div>'+
+      '<div><b>'+st.s3.score+'</b><span>③ 課後評量</span></div>'+
+      '<div><b>'+(g===null?"—":(g>=0?"+":"")+(g*100).toFixed(0)+"%")+'</b><span>學習增益 '+ST.band(g)+'</span></div>'+
+    '</div>'+
+    '<div class="note">學習增益＝你補起了「原本不會的部分」的幾成。'+
+    (g===null?'（課前已滿分，這個指標無法計算。）':
+     g>=0.7?'超過七成，非常漂亮。':
+     g>=0.3?'落在三到七成之間，屬於正常的有效學習。':
+     '不到三成——把上面盲點區那幾題再看一次，通常能拉起來。')+'</div>';
+}
+
+/* ══ 模式切換 ══ */
+function mode(m){
+  $("stu").classList.toggle("hidden",m!=="s");
+  $("tea").classList.toggle("hidden",m!=="t");
+  $("mStu").style.opacity=m==="s"?1:.6; $("mTea").style.opacity=m==="t"?1:.6;
+}
+
+/* ══ 教師端 ══ */
+function teacherIn(){
+  var v=($("code").value||"").trim(), okc=TCODES.indexOf(v)>-1;
+  try{var c=cloud(); if(!okc&&c&&c.teacherCode&&c.teacherCode()) okc=(v===c.teacherCode());}catch(e){}
+  if(!okc){ $("codeMsg").textContent="教師碼不正確。"; return; }
+  $("codeMsg").textContent=""; $("gate").classList.add("hidden");
+  $("panel").classList.remove("hidden");
+  $("panel").innerHTML='<div class="card"><div class="lead">☁ 讀取雲端三段紀錄中…</div></div>';
+  loadAll();
+}
+function loadAll(){
+  var up=cloud();
+  if(!up||!up.fetchAll){ $("panel").innerHTML='<div class="card"><div class="err">雲端模組尚未就緒，請稍候重試。</div></div>'; return; }
+  var got={}, need=["warm","subquiz","lab"], done=false;
+  function maybe(force){
+    if(done) return;
+    if(!force&&Object.keys(got).length<need.length) return;
+    done=true;
+    paintTeacher(got.warm||[],got.subquiz||[],got.lab||[]);
+    if(force){
+      var missed=need.filter(function(k){return !got[k];});
+      if(missed.length){
+        var w=document.createElement("div"); w.className="card";
+        w.innerHTML='<div class="err">這幾段沒讀回來：<b>'+missed.join("、")+
+          '</b>。下面的數字不含它們，請按「重新讀取」再試一次。</div>';
+        $("panel").insertBefore(w,$("panel").firstChild);
+      }
+    }
+  }
+  need.forEach(function(k){ up.fetchAll(k,function(rows){ got[k]=rows||[]; maybe(false); }); });
+  setTimeout(function(){maybe(true);},12000);   /* 任一段沒回來也不要一直卡在載入中 */
+}
+function paintTeacher(warm,sub,lab){
+  var HW=B.HW||[];                       /* 教師可能在題庫載入完成前就進來 */
+  var rows=ST.join(warm,sub,lab);
+  var cg=ST.classGain(rows);
+  var it=ST.items(sub,HW.length);
+  var cc=ST.concepts(sub);
+  var hon=ST.honesty(lab);
+  var n1=rows.filter(function(r){return r.pre;}).length,
+      n2=rows.filter(function(r){return r.lab;}).length,
+      n3=rows.filter(function(r){return r.post;}).length;
+
+  var h='';
+  /* 概況 */
+  h+='<div class="card"><span class="kicker d">概況</span><div class="h2">三段完成情形</div>'+
+    '<div class="kpi">'+
+      '<div><b>'+rows.length+'</b><span>有紀錄的學生</span></div>'+
+      '<div><b>'+n1+'</b><span>① 課前練習</span></div>'+
+      '<div><b>'+n2+'</b><span>② 實機實測</span></div>'+
+      '<div><b>'+n3+'</b><span>③ 課後評量</span></div>'+
+    '</div></div>';
+
+  /* 學習增益 */
+  var gs=rows.map(function(r){return r.pre&&r.post?ST.gain(r.pre.score,r.post.score):null;})
+             .filter(function(x){return x!==null;});
+  var hi=gs.filter(function(x){return x>=.7;}).length,
+      mid=gs.filter(function(x){return x>=.3&&x<.7;}).length,
+      lo=gs.filter(function(x){return x<.3;}).length;
+  h+='<div class="card"><span class="kicker">學習增益</span><div class="h2">課前 → 課後</div>'+
+    (cg.n===0?'<div class="lead">還沒有學生同時完成課前與課後，無法計算。</div>':
+    '<div class="kpi">'+
+      '<div><b>'+cg.pre.toFixed(1)+'</b><span>課前平均</span></div>'+
+      '<div><b>'+cg.post.toFixed(1)+'</b><span>課後平均</span></div>'+
+      '<div><b>'+(cg.g===null?"—":(cg.g*100).toFixed(0)+"%")+'</b><span>班級平均增益・'+cg.band+'</span></div>'+
+      '<div><b>'+cg.n+'</b><span>可配對人數</span></div>'+
+    '</div>'+
+    '<div class="note">正規化學習增益 ＝（課後－課前）÷（100－課前），衡量「原本不會的部分補起了幾成」，'+
+    '不會因為班級起點高低而失真。目前分布：高增益 '+hi+' 人、中增益 '+mid+' 人、低增益 '+lo+' 人。</div>')+
+    '</div>';
+
+  /* 逐題分析 */
+  h+='<div class="card"><span class="kicker">逐題分析</span><div class="h2">課後評量 '+(HW.length||12)+' 題的難度與鑑別度</div>'+
+    (it.n===0?'<div class="lead">尚無課後評量紀錄。</div>':
+     (it.small?'<div class="note">⚠ 目前只有 '+it.n+' 份作答，鑑別度僅供參考，等全班交齊再看。</div>':'')+
+     '<div class="tw"><table><thead><tr><th>題</th><th>情境</th><th>難度 P</th><th>鑑別度 D</th>'+
+     '<th>評等</th><th>盲點人次</th><th>概念</th></tr></thead><tbody>'+
+     it.q.map(function(q,i){
+       var Q=HW[i]||{};
+       var pc=q.P<.4?"p-bad":(q.P>.85?"p-mid":"p-ok");
+       var dc=q.D<.2?"p-bad":(q.D<.3?"p-mid":"p-ok");
+       return '<tr><td>'+(i+1)+'</td><td>'+esc(Q.tag||"")+'</td>'+
+         '<td><span class="pill '+pc+'">'+pct(q.P)+'</span></td>'+
+         '<td><span class="pill '+dc+'">'+q.D.toFixed(2)+'</span></td>'+
+         '<td>'+q.grade+'</td>'+
+         '<td>'+(q.blind?'<b style="color:var(--bad)">'+q.blind+'</b>':'0')+'</td>'+
+         '<td>'+esc(q.ccid)+'</td></tr>';
+     }).join("")+'</tbody></table></div>'+
+     '<div class="note">難度 P ＝ 答對率，0.4–0.85 較理想；鑑別度 D ＝ 高分組答對率 － 低分組答對率，'+
+     'D 低於 0.2（或為負）代表這題分不出程度，題目本身可能有問題。'+
+     '「盲點人次」＝很有把握卻答錯的人數，<b>這幾題最值得在課堂上重講</b>。</div>')+
+    '</div>';
+
+  /* 概念弱點 */
+  h+='<div class="card"><span class="kicker">概念弱點</span><div class="h2">依 CCID 聚合的答對率（低到高）</div>'+
+    (cc.length===0?'<div class="lead">尚無資料。</div>':
+     '<div class="tw"><table><thead><tr><th>CCID</th><th>答對率</th><th></th><th>作答數</th></tr></thead><tbody>'+
+     cc.map(function(o){
+       return '<tr><td>'+esc(o.ccid)+'</td><td>'+pct(o.P)+'</td>'+
+         '<td style="width:45%"><span class="bar"><i style="width:'+(o.P*100).toFixed(0)+'%"></i></span></td>'+
+         '<td>'+o.n+'</td></tr>';
+     }).join("")+'</tbody></table></div>'+
+     '<div class="note">最上面那幾個概念是全班的弱點，下次課從那裡切入。</div>')+
+    '</div>';
+
+  /* 誠實度查核 */
+  h+='<div class="card"><span class="kicker">誠實度查核</span><div class="h2">同教室同機台，規格應該一致</div>'+
+    (hon.length===0?'<div class="lead">✔ 目前沒有發現同一台機器被抄出不同規格。</div>':
+     '<div class="tw"><table><thead><tr><th>教室</th><th>機台</th><th>學生</th><th>不一致欄位</th></tr></thead><tbody>'+
+     hon.map(function(b){
+       return '<tr><td>'+esc(b.room)+'</td><td>'+esc(b.seat)+'</td><td>'+esc(b.who.join("、"))+'</td>'+
+         '<td>'+b.diff.map(function(d){return '<b>'+esc(d.field)+'</b>：'+esc(d.values.join(" ／ "));}).join("<br/>")+
+         '</td></tr>';
+     }).join("")+'</tbody></table></div>'+
+     '<div class="note">不一致不等於作弊——也可能是看錯欄位。建議當場請這幾位同學一起重看一次，順勢帶出「資料為什麼要交叉查核」。</div>')+
+    '</div>';
+
+  /* 學生總表 */
+  h+='<div class="card"><span class="kicker">總表</span><div class="h2">逐生三段成績</div>'+
+    '<div class="tw roll"><table><thead><tr><th>學號</th><th>姓名</th><th>① 課前</th><th>② 實機</th>'+
+    '<th>③ 課後</th><th>增益</th><th>盲點</th><th>教室/機台</th></tr></thead><tbody>'+
+    rows.map(function(r){
+      var g=r.pre&&r.post?ST.gain(r.pre.score,r.post.score):null;
+      var cal=(r.post&&r.post.calib)||{};
+      return '<tr><td>'+esc(r.sid)+'</td><td>'+esc(r.name)+'</td>'+
+        '<td>'+(r.pre?r.pre.score:"—")+'</td>'+
+        '<td>'+(r.lab?r.lab.score:"—")+'</td>'+
+        '<td>'+(r.post?r.post.score:"—")+'</td>'+
+        '<td>'+(g===null?"—":(g>=0?"+":"")+(g*100).toFixed(0)+"%")+'</td>'+
+        '<td>'+(cal.bs!=null?cal.bs:"—")+'</td>'+
+        '<td>'+(r.lab?esc(r.lab.room||"")+" / "+esc(r.lab.seat||""):"—")+'</td></tr>';
+    }).join("")+'</tbody></table></div>'+
+    '<div class="row" style="margin-top:11px">'+
+    '<button class="btn btn-ghost btn-sm" type="button" id="csv">⬇ 匯出 CSV</button>'+
+    '<button class="btn btn-ghost btn-sm" type="button" id="reload">↻ 重新讀取</button></div>'+
+    '</div>';
+
+  $("panel").innerHTML=h;
+  $("csv").onclick=function(){exportCSV(rows);};
+  $("reload").onclick=loadAll;
+}
+
+function exportCSV(rows){
+  var head=["學號","姓名","班級","課前","實機","課後","學習增益","盲點題數","教室","機台","CPU","RAM(GB)","磁碟類型"];
+  var lines=[head.join(",")];
+  rows.forEach(function(r){
+    var g=r.pre&&r.post?ST.gain(r.pre.score,r.post.score):null;
+    var sp=(r.lab&&r.lab.spec)||{}, cal=(r.post&&r.post.calib)||{};
+    lines.push([r.sid,r.name,r.cls,
+      r.pre?r.pre.score:"", r.lab?r.lab.score:"", r.post?r.post.score:"",
+      g===null?"":(g*100).toFixed(1)+"%", cal.bs!=null?cal.bs:"",
+      r.lab?(r.lab.room||""):"", r.lab?(r.lab.seat||""):"",
+      sp.cpu||"", sp.ram||"", sp.disktype||""
+    ].map(function(v){var s=String(v==null?"":v);
+      return /[",\n]/.test(s)?'"'+s.replace(/"/g,'""')+'"':s;}).join(","));
+  });
+  var blob=new Blob(["﻿"+lines.join("\r\n")],{type:"text/csv;charset=utf-8"});
+  var a=document.createElement("a");
+  a.href=URL.createObjectURL(blob);
+  a.download="硬體單元評量單-"+new Date().toISOString().slice(0,10)+".csv";
+  document.body.appendChild(a); a.click(); document.body.removeChild(a);
+}
+
+/* 對外（供測試與除錯） */
+window.ASSESS={B:B,S:S,check:check,submit1:submit1,submit2:submit2,submit3:submit3,
+  mode:mode,paintTeacher:paintTeacher,exportCSV:exportCSV,
+  _set:function(g,o){S[g]=o;},_ls:lsGet};
+
+/* 啟動時不呼叫 mode()：#stu 要等題庫載入完成才由 boot() 揭開，否則空白表單會先閃一下 */
+$("mStu").style.opacity=1; $("mTea").style.opacity=.6;
+if(document.readyState==="loading") document.addEventListener("DOMContentLoaded",boot); else boot();
+})();
+</script>
+</body>
+</html>
