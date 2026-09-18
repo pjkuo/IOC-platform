@@ -42,4 +42,19 @@ function add(){try{
 }catch(e){}}
 "loading"===document.readyState?document.addEventListener("DOMContentLoaded",add):add();
 }();</script>
+
+<script id="survey-nav">/* 課堂問卷捷徑（append-only 注入 2026-09-18） */
+!function(){if(window.__surveyNavInjected)return;window.__surveyNavInjected=1;
+function add(){try{
+ if(document.getElementById("survey-style"))return;
+ var st=document.createElement("style");st.id="survey-style";
+ st.textContent=".sv-mod{border-color:#34a36b!important}";
+ document.head.appendChild(st);
+ var mods=document.querySelector(".mods");
+ if(mods){var a=document.createElement("a");a.className="mod sv-mod";a.href="survey.html";
+  a.innerHTML="<span class=\"mi\">✎</span>課堂問卷";
+  mods.appendChild(a);}
+}catch(e){}}
+"loading"===document.readyState?document.addEventListener("DOMContentLoaded",add):add();
+}();</script>
 </body> </html> 
