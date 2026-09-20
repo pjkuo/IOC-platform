@@ -80,9 +80,9 @@ padding:9px 15px;cursor:pointer;margin-right:6px;color:var(--muted)}
 .where{background:var(--soft);border-left:4px solid var(--hw);border-radius:0 9px 9px 0;padding:9px 12px;
 font-size:13.5px;color:var(--ink);margin-top:8px}
 .where code{background:#fff;border:1px solid var(--line);border-radius:5px;padding:1px 6px;font-size:12.5px}
-.ipos{display:grid;grid-template-columns:1fr auto;gap:8px;align-items:center;border-top:1px dashed var(--line);padding:9px 0}
-.ipos:first-child{border-top:0}
-.ipos .nm{font-weight:700;font-size:15px}
+.ipom{display:grid;grid-template-columns:1fr auto;gap:8px;align-items:center;border-top:1px dashed var(--line);padding:9px 0}
+.ipom:first-child{border-top:0}
+.ipom .nm{font-weight:700;font-size:15px}
 .seg4 button{font:800 13px/1 var(--sans);width:42px;background:#fff;border:1.5px solid var(--line);
 border-radius:8px;padding:9px 0;cursor:pointer;margin-left:5px;color:var(--muted)}
 .seg4 button.on{background:var(--hwd);border-color:var(--hwd);color:#fff}
@@ -183,8 +183,8 @@ footer{margin-top:24px;text-align:center;color:var(--muted);font-size:12.5px;bor
       <div><div class="chk" id="v_in"></div><div class="hint" id="h_in"></div></div>
     </div>
 
-    <div class="h2" style="margin-top:16px">把這台電腦的零件歸進 IPOS</div>
-    <p class="lead">I 輸入　P 處理　O 輸出　S 儲存 —— 這一段<b>有標準答案</b>。</p>
+    <div class="h2" style="margin-top:16px">把這台電腦的零件歸進 IPOM</div>
+    <p class="lead">I 輸入　P 處理　O 輸出　M 記憶 —— 這一段<b>有標準答案</b>。</p>
     <div id="s2ip"></div>
 
     <div class="h2" style="margin-top:16px">用你抄到的數字推理</div>
@@ -359,7 +359,7 @@ var LB={
  gpu:["顯示晶片／顯示卡","效能 → GPU，或 dxdiag","Intel UHD Graphics 730"]
 };
 var INDEV=["鍵盤","滑鼠","耳麥／麥克風","網路攝影機","讀卡機","觸控螢幕","USB 埠"];
-var IPNAME={I:"輸入",P:"處理",O:"輸出",S:"儲存"};
+var IPNAME={I:"輸入",P:"處理",O:"輸出",M:"記憶"};
 
 /* ── 工具 ── */
 function esc(s){return String(s==null?"":s).replace(/[&<>"]/g,function(c){
@@ -426,11 +426,11 @@ function render(){
   $("v_in").innerHTML=INDEV.map(function(d){
     return '<label><input type="checkbox" value="'+esc(d)+'"/> '+esc(d)+'</label>';}).join("");
 
-  /* 第二段：IPOS */
+  /* 第二段：IPOM */
   $("s2ip").innerHTML=B.IP.map(function(it,i){
-    return '<div class="ipos"><span class="nm">'+esc(it.n)+'</span>'+
+    return '<div class="ipom"><span class="nm">'+esc(it.n)+'</span>'+
       '<span class="seg4" data-g="ip" data-i="'+i+'">'+
-      ["I","P","O","S"].map(function(v){return '<button type="button" data-v="'+v+'">'+v+'</button>';}).join("")+
+      ["I","P","O","M"].map(function(v){return '<button type="button" data-v="'+v+'">'+v+'</button>';}).join("")+
       '</span></div>';
   }).join("");
 
@@ -501,11 +501,14 @@ function restore(){
   ["p1","p3","c3","ip","rq"].forEach(function(g){
     var src=d[g]||{}; S[g]={};
     Object.keys(src).forEach(function(i){
-      S[g][i]=src[i];
       var box=document.querySelector('[data-g="'+g+'"][data-i="'+i+'"]');
       if(!box) return;
       var b=box.querySelector('button[data-v="'+src[i]+'"]');
-      if(b) b.classList.add("on");
+      /* 找不到按鈕代表這個值已不在選項裡（例如改版前存下的 S）。
+         留著會變成「畫面沒選、內部有值」，驗證還會放行，所以整個丟掉。 */
+      if(!b) return;
+      S[g][i]=src[i];
+      b.classList.add("on");
     });
   });
   if(d.f) B.F.forEach(function(f){var e=$("v_"+f.k); if(e&&d.f[f.k]!=null) e.value=d.f[f.k];});
@@ -613,7 +616,7 @@ function submit2(){
   else $("h_in").textContent="";
   var unIp=[]; B.IP.forEach(function(it,i){ if(!S.ip[i]) unIp.push(i+1); });
   var unQ=[];  B.QS.forEach(function(q,i){ if(S.rq[i]==null) unQ.push(i+1); });
-  if(unIp.length) bad.push("IPOS 第 "+unIp.join("、")+" 項");
+  if(unIp.length) bad.push("IPOM 第 "+unIp.join("、")+" 項");
   if(unQ.length)  bad.push("推理第 "+unQ.join("、")+" 題");
   if(bad.length){ $("s2msg").textContent="請修正："+bad.slice(0,4).join("、")+(bad.length>4?" 等":""); return; }
   var id=needId($("s2msg")); if(!id) return;
@@ -638,14 +641,14 @@ function submit2(){
   var st=lsGet(); st.s2={done:1,score:total,ts:Date.now()}; lsSet(st);
   $("s2res").className="res";
   $("s2res").innerHTML='<div class="big">'+total+' 分</div>'+
-    '<div class="lead">實測抄錄 '+recScore+'／40　IPOS 歸類 '+ipScore+'／40　推理 '+qScore+'／20</div>'+
+    '<div class="lead">實測抄錄 '+recScore+'／40　IPOM 歸類 '+ipScore+'／40　推理 '+qScore+'／20</div>'+
     '<div class="note"><b>'+esc(val("room"))+' 第 '+esc(val("seat"))+' 號機</b>　'+
       esc(spec.cpu)+'　RAM '+esc(spec.ram)+' GB　'+esc(spec.disktype)+' '+esc(spec.diskgb)+' GB'+
       '<br/><span style="color:var(--muted)">同一台機器、不同人抄出來的規格必須一致——老師會比對。</span></div>'+
-    (wrong.length?'<div class="note">IPOS 答錯 '+wrong.length+' 項：'+
+    (wrong.length?'<div class="note">IPOM 答錯 '+wrong.length+' 項：'+
       wrong.map(function(w){return esc(w.n)+"（你選 "+esc(IPNAME[w.you]||w.you||"未答")+
         "，正解 "+esc(IPNAME[w.ans])+"）";}).join("；")+'</div>':
-      '<div class="note">🏆 IPOS 歸類全對。</div>')+
+      '<div class="note">🏆 IPOM 歸類全對。</div>')+
     '<div class="cloudmsg" id="c2"></div>';
   push({kind:"lab",unit:"電腦教室實機實測",page:"assess",sid:id.sid||"",
         room:val("room"),seat:val("seat"),raw:total,max:100,score:total,
@@ -940,7 +943,7 @@ function readFile(f,cb){
 var IXPAT=[
   {re:/\bP(\d{1,2})_([A-Za-z0-9\-]+)/, kind:"pre"},
   {re:/\bQ(\d{1,2})_([A-Za-z0-9\-]+)/, kind:"post"},
-  {re:/\bIP(\d{1,2})\b/,               kind:"ipos"},
+  {re:/\bIP(\d{1,2})\b/,               kind:"ipom"},
   {re:/\bR(\d{1,2})\b/,                kind:"reason"},
   {re:/\bF(\d{1,2})_([A-Za-z]+)/,      kind:"spec"}
 ];
@@ -973,7 +976,7 @@ function classify(head){
   var ix=head.map(ixCol).filter(Boolean);
   if(ix.length>=3){
     var k={}; ix.forEach(function(x){k[x.kind]=1;});
-    var sco = k.post?"post" : k.pre?"pre" : (k.ipos||k.spec||k.reason)?"lab" : "?";
+    var sco = k.post?"post" : k.pre?"pre" : (k.ipom||k.spec||k.reason)?"lab" : "?";
     return {kind:"ix", sco:sco, n:ix.length};
   }
   var g=0;
@@ -1126,12 +1129,12 @@ function runImport(){
         if(sco==="post"&&hasConf) o[tgt].calib=cal;
         o[tgt].ts=o[tgt].ts||"import";
       }else{
-        /* 實機實測：規格欄 + IPOS + 推理 */
+        /* 實機實測：規格欄 + IPOM + 推理 */
         var spec={}, ipOk=0, ipN=0, qOk=0, qN=0;
         cols.forEach(function(cc){
           var raw=String(r[cc.idx]==null?"":r[cc.idx]).trim();
           if(cc.c.kind==="spec"){ if(raw) spec[cc.c.key]=raw; return; }
-          if(cc.c.kind==="ipos"){
+          if(cc.c.kind==="ipom"){
             var it=(B.IP||[])[cc.c.n-1]; if(!it) return;
             ipN++; if(raw.toUpperCase()===it.a) ipOk++; return;
           }
