@@ -752,8 +752,27 @@ function teacherIn(){
   };
   $("srcFile").onclick=importView;
 }
+/* 備援 fetchAll：student.html 的 ioccloud 模組被抽出注入本頁時，包裝 fetchAll
+   的那段程式沒有套用（原本只在 student.html 本頁執行），導致教師端讀不到雲端
+   資料而卡在「尚未就緒」。這裡直接依同一個讀取協定（action=all&kind=）打 GAS，
+   讓教師統計不必依賴模組是否補上 fetchAll。回傳簽名同原本：fetchAll(kind, cb)。*/
+function ensureFetchAll(up){
+  if(!up) return up;
+  if(typeof up.fetchAll==="function") return up;
+  var base="";
+  try{ base=(up.getUrl&&up.getUrl())||""; }catch(e){}
+  if(!base){ try{ base=localStorage.getItem("cc_cloud_url")||""; }catch(e){} }
+  if(!base) return up;
+  up.fetchAll=function(kind,cb){
+    var u=base+(base.indexOf("?")<0?"?":"&")+"action=all&kind="+encodeURIComponent(kind);
+    fetch(u,{method:"GET",redirect:"follow"}).then(function(r){return r.json();})
+      .then(function(j){ var rows=Array.isArray(j)?j:(j&&(j.rows||j.data)||[]); cb(rows,null); })
+      .catch(function(e){ cb(null,e); });
+  };
+  return up;
+}
 function loadAll(){
-  var up=cloud();
+  var up=ensureFetchAll(cloud());
   if(!up||!up.fetchAll){ $("panel").innerHTML='<div class="card"><div class="err">雲端模組尚未就緒，請稍候重試。</div></div>'; return; }
   var got={}, need=["warm","subquiz","lab"], done=false;
   function maybe(force){
