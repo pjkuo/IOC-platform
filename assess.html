@@ -376,7 +376,13 @@ function grab(txt,name){
   if(!m) return null;
   try{ return (new Function("return "+m[1]))(); }catch(e){ return null; }
 }
-function getText(u){return fetch(u,{cache:"force-cache"}).then(function(r){
+/* 題庫版本：改題庫（例如換答案鍵）後務必改這個字串。
+   舊版用 force-cache 直取瀏覽器快取、永不重抓，導致改完答案鍵的學生端
+   仍拿舊題庫計分（分類判分把 RAM／SSD 判成錯、正解顯示空白）。
+   加版本參數後：同版沿用快取（省 GAS 配額與流量），版本一變就強制抓新的。 */
+var BANKV="ipom-20260920";
+function bankURL(u){return u+(u.indexOf("?")<0?"?":"&")+"v="+BANKV;}
+function getText(u){return fetch(bankURL(u),{cache:"force-cache"}).then(function(r){
   if(!r.ok) throw new Error(u+" "+r.status); return r.text();});}
 
 /* ══ 開機：載入雲端模組與三份題庫 ══ */
