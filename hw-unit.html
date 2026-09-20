@@ -7,7 +7,7 @@
 <meta name="cc-cloud-url" content="https://script.google.com/macros/s/AKfycbz7wHWbc7go-OVR0Q_g_NBzDqwzV9-leqL1CRe1S9wGkLLjvJIAm-KrZj80s1KJ_VdGVg/exec"/>
 <script id="ioccloud-cfg">window.CC_GAS_URL=function(){try{var t=document.querySelector('meta[name="cc-cloud-url"]'),e=t&&t.getAttribute("content")||"";return/^https?:\/\//.test(e)?e:""}catch(t){return""}}()</script>
 <title>硬體單元｜課前練習與課後作業</title>
-<meta name="description" content="計算機概論模擬平台・電腦系統硬體單元：輸入→處理→輸出，儲存接住每一步。課前趣味預測 8 題、課後作業 12 題（計分＋把握度，成績上雲端）。"/>
+<meta name="description" content="計算機概論模擬平台・電腦系統硬體單元：輸入→處理→輸出，記憶接住每一步。課前趣味預測 8 題、課後作業 12 題（計分＋把握度，成績上雲端）。"/>
 <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Crect width='100' height='100' rx='18' fill='%2310312a'/%3E%3Ctext x='50' y='68' font-size='52' text-anchor='middle' fill='%23e0b44a'%3E▢%3C/text%3E%3C/svg%3E"/>
 <style>
 :root{--board:#10312a;--board2:#0c2620;--gold:#e0b44a;--ok:#34a36b;--fail:#e2574c;--warn:#d9912f;--ink:#1b2733;--muted:#5b6b7a;--line:#dfe5ec;--bg:#eef1f5;--hw:#2e5496;--hwd:#21407a;--indigo:#29297a;--sans:"Noto Sans TC","PingFang TC","Microsoft JhengHei",system-ui,sans-serif}
@@ -106,7 +106,7 @@ footer{margin-top:34px;text-align:center;color:var(--muted);font-size:13px;borde
 <header>
   <div class="wrap">
     <h1>▢ 電腦系統硬體單元</h1>
-    <div class="sub">輸入 → 處理 → 輸出，儲存接住每一步｜課前先思考・課後再驗證</div>
+    <div class="sub">輸入 → 處理 → 輸出，記憶接住每一步｜課前先思考・課後再驗證</div>
     <nav class="topnav">
       <a href="index.html">⌂ 課程入口</a>
       <a href="student.html#hardware">▢ 硬體互動模組</a>
@@ -127,7 +127,7 @@ footer{margin-top:34px;text-align:center;color:var(--muted);font-size:13px;borde
         <div class="ar">➜</div>
         <div class="box"><b>③ 輸出</b><small>螢幕・喇叭・印表機・電控鎖</small></div>
       </div>
-      <div class="stor">⇡⇣ ④ 儲存（永久）：SSD／硬碟／雲端——這次的輸出，成為下次的輸入</div>
+      <div class="stor">⇡⇣ ④ 記憶（非揮發）：SSD／硬碟／雲端——這次的輸出，成為下次的輸入</div>
       <div class="statusline" id="mystatus"></div>
     </div>
 
@@ -229,18 +229,18 @@ var PRE = [
  {ccid:"C2-HW-05",tag:"比快",stem:"猜猜看：RAM 和硬碟，誰存取比較快？",opts:["RAM","硬碟","差不多"],ans:0,fb:"RAM 快非常多——所以 CPU 只跟 RAM 拿資料，硬碟負責長期保存。"}
 ];
 var HW = [
- {ccid:"C2-HW-01",ct:"AB",tag:"QR 點名",stem:"教室 QR 點名：手機鏡頭掃描 QR code。「鏡頭」屬於哪個單元？",opts:["輸入","處理","輸出","儲存"],ans:0,exp:"鏡頭把光變成數位影像送進系統——凡是「感知世界」的都是輸入。",alt:{stem:"再挑戰：麥克風把你的聲音變成數位訊號，它屬於？",opts:["輸入","處理","輸出"],ans:0,exp:"聲音進系統＝輸入。"}},
+ {ccid:"C2-HW-01",ct:"AB",tag:"QR 點名",stem:"教室 QR 點名：手機鏡頭掃描 QR code。「鏡頭」屬於哪個單元？",opts:["輸入","處理","輸出","記憶"],ans:0,exp:"鏡頭把光變成數位影像送進系統——凡是「感知世界」的都是輸入。",alt:{stem:"再挑戰：麥克風把你的聲音變成數位訊號，它屬於？",opts:["輸入","處理","輸出"],ans:0,exp:"聲音進系統＝輸入。"}},
  {ccid:"C2-HW-02",ct:"AB",tag:"超商結帳",stem:"超商自助結帳「嗶」完所有商品後，「計算總金額」的工作發生在？",opts:["條碼掃描器","收銀主機（CPU）","發票印表機","雲端相簿"],ans:1,exp:"運算與判斷都在處理單元——收銀主機裡的 CPU。",alt:{stem:"再挑戰：學餐點餐機「算出你點了 85 元」，是哪個單元？",opts:["輸入","處理","輸出"],ans:1,exp:"計算＝處理。"}},
- {ccid:"C2-HW-02",ct:"AB",tag:"發票",stem:"結帳完成，發票被印了出來。「印發票」屬於？",opts:["輸入","處理","輸出","儲存"],ans:2,exp:"把結果回應給世界的都是輸出。",alt:{stem:"再挑戰：叫號螢幕顯示「B08 請取餐」，屬於？",opts:["輸入","處理","輸出"],ans:2,exp:"顯示結果＝輸出。"}},
- {ccid:"C2-HW-05",ct:"AB",tag:"CPU 取料",stem:"CPU 運算時，直接從哪裡拿資料？",opts:["硬碟","記憶體 RAM","螢幕","印表機"],ans:1,exp:"資料先進 RAM，CPU 從 RAM 取用——「儲存」是單元之間的中介站。",alt:{stem:"再挑戰：輸入裝置收到的資料，第一站先送到？",opts:["硬碟","記憶體 RAM","印表機"],ans:1,exp:"一律先進 RAM 暫存。"}},
- {ccid:"C2-HW-06",ct:"AB",tag:"存檔",stem:"關機前要先存檔，是因為？",opts:["RAM 斷電就清空","硬碟容量太小","CPU 需要休息","螢幕會關閉"],ans:0,exp:"RAM 是揮發性暫存；要保留成果，就得寫進 SSD／硬碟／雲端這些永久儲存。",alt:{stem:"再挑戰：「開一半還沒存檔的簡報」此刻主要住在哪裡？",opts:["RAM","SSD","雲端"],ans:0,exp:"工作中的資料都在 RAM。"}},
+ {ccid:"C2-HW-02",ct:"AB",tag:"發票",stem:"結帳完成，發票被印了出來。「印發票」屬於？",opts:["輸入","處理","輸出","記憶"],ans:2,exp:"把結果回應給世界的都是輸出。",alt:{stem:"再挑戰：叫號螢幕顯示「B08 請取餐」，屬於？",opts:["輸入","處理","輸出"],ans:2,exp:"顯示結果＝輸出。"}},
+ {ccid:"C2-HW-05",ct:"AB",tag:"CPU 取料",stem:"CPU 運算時，直接從哪裡拿資料？",opts:["硬碟","記憶體 RAM","螢幕","印表機"],ans:1,exp:"資料先進 RAM，CPU 從 RAM 取用——「記憶」是單元之間的中介站。",alt:{stem:"再挑戰：輸入裝置收到的資料，第一站先送到？",opts:["硬碟","記憶體 RAM","印表機"],ans:1,exp:"一律先進 RAM 暫存。"}},
+ {ccid:"C2-HW-06",ct:"AB",tag:"存檔",stem:"關機前要先存檔，是因為？",opts:["RAM 斷電就清空","硬碟容量太小","CPU 需要休息","螢幕會關閉"],ans:0,exp:"RAM 是揮發性暫存；要保留成果，就得寫進 SSD／硬碟／雲端這些非揮發性記憶。",alt:{stem:"再挑戰：「開一半還沒存檔的簡報」此刻主要住在哪裡？",opts:["RAM","SSD","雲端"],ans:0,exp:"工作中的資料都在 RAM。"}},
  {ccid:"C2-HW-04",ct:"PA",tag:"選課大戰",stem:"選課系統瞬間湧入幾千人而卡住，主要瓶頸是？",opts:["你的鍵盤","伺服器的 CPU 與記憶體","你的螢幕","教室投影機"],ans:1,exp:"同時處理幾千筆請求，考驗的是伺服器的處理能力——跟你的滑鼠無關。",alt:{stem:"再挑戰：手遊團戰畫面卡頓（網路正常），最可能是手機的？",opts:["鏡頭","CPU／GPU 處理","喇叭"],ans:1,exp:"畫面算不動＝處理單元吃緊。"}},
- {ccid:"C2-HW-07",ct:"PA",tag:"SSD vs HDD",stem:"關於 SSD 與傳統硬碟 HDD，正確的是？",opts:["SSD 靠磁頭讀寫碟片","SSD 無機械構造、速度較快","HDD 一斷電資料就消失","兩者都是暫存記憶體"],ans:1,exp:"SSD 用快閃記憶體、無機械構造；HDD 靠碟片與磁頭。兩者都是「永久儲存」。",alt:{stem:"再挑戰：筆電摔到地上，最怕摔壞的傳統零件是？",opts:["HDD（機械硬碟）","SSD","記憶體"],ans:0,exp:"HDD 有讀寫磁頭，怕震。"}},
- {ccid:"C2-HW-05",ct:"AB",tag:"悠遊卡",stem:"悠遊卡在校門、超商、公車都刷得過，靠的是什麼讓各設備「認得」你的餘額？",opts:["卡片表面的印字","卡內晶片紀錄＋後端資料庫","司機的記憶力","手機相簿備份"],ans:1,exp:"儲存（晶片＋資料庫）讓上一筆交易被下一台設備讀到——儲存把不同情境串在一起。",alt:{stem:"再挑戰：宿舍門禁的「授權名單」存放在哪裡最合理？",opts:["門鎖的喇叭","系統資料庫","學生的手機殼"],ans:1,exp:"名單是資料，住在儲存層。"}},
- {ccid:"C2-HW-01",ct:"AB",tag:"點名紀錄",stem:"每週點名紀錄存入資料庫，期末系統讀出來計算出席率。這展現「儲存」的什麼角色？",opts:["讓螢幕更亮","讓這次的輸出成為下次的輸入","取代 CPU 運算","讓網路變快"],ans:1,exp:"儲存讓電腦「有記憶」——單一事件被串成完整服務，這就是儲存的中介角色。",alt:{stem:"再挑戰：遊戲「存檔」隔天「讀檔」續玩，是儲存的哪種角色？",opts:["輸出變下次輸入","取代顯示卡","加快網速"],ans:0,exp:"同一個道理：存下來、再讀回來。"}},
- {ccid:"C2-HW-02",ct:"AB",tag:"觸控螢幕",stem:"觸控螢幕在 IPO 架構中是？",opts:["只有輸入","只有輸出","同時是輸入與輸出","屬於儲存"],ans:2,exp:"觸控層收手勢＝輸入；顯示層給畫面＝輸出——一台裝置可以跨單元。",alt:{stem:"再挑戰：耳麥（耳機＋麥克風）呢？",opts:["麥克風輸入、耳機輸出","都是輸入","都是輸出"],ans:0,exp:"拆開看各自的資料方向。"}},
+ {ccid:"C2-HW-07",ct:"PA",tag:"SSD vs HDD",stem:"關於 SSD 與傳統硬碟 HDD，正確的是？",opts:["SSD 靠磁頭讀寫碟片","SSD 無機械構造、速度較快","HDD 一斷電資料就消失","兩者都是暫存記憶體"],ans:1,exp:"SSD 用快閃記憶體、無機械構造；HDD 靠碟片與磁頭。兩者都是「非揮發性記憶」。",alt:{stem:"再挑戰：筆電摔到地上，最怕摔壞的傳統零件是？",opts:["HDD（機械硬碟）","SSD","記憶體"],ans:0,exp:"HDD 有讀寫磁頭，怕震。"}},
+ {ccid:"C2-HW-05",ct:"AB",tag:"悠遊卡",stem:"悠遊卡在校門、超商、公車都刷得過，靠的是什麼讓各設備「認得」你的餘額？",opts:["卡片表面的印字","卡內晶片紀錄＋後端資料庫","司機的記憶力","手機相簿備份"],ans:1,exp:"記憶（晶片＋資料庫）讓上一筆交易被下一台設備讀到——記憶把不同情境串在一起。",alt:{stem:"再挑戰：宿舍門禁的「授權名單」存放在哪裡最合理？",opts:["門鎖的喇叭","系統資料庫","學生的手機殼"],ans:1,exp:"名單是資料，住在記憶層。"}},
+ {ccid:"C2-HW-01",ct:"AB",tag:"點名紀錄",stem:"每週點名紀錄存入資料庫，期末系統讀出來計算出席率。這展現「記憶」的什麼角色？",opts:["讓螢幕更亮","讓這次的輸出成為下次的輸入","取代 CPU 運算","讓網路變快"],ans:1,exp:"記憶單元讓電腦「記得住事情」——單一事件被串成完整服務，這就是記憶的中介角色。",alt:{stem:"再挑戰：遊戲「存檔」隔天「讀檔」續玩，是記憶的哪種角色？",opts:["輸出變下次輸入","取代顯示卡","加快網速"],ans:0,exp:"同一個道理：存下來、再讀回來。"}},
+ {ccid:"C2-HW-02",ct:"AB",tag:"觸控螢幕",stem:"觸控螢幕在 IPO 架構中是？",opts:["只有輸入","只有輸出","同時是輸入與輸出","屬於記憶"],ans:2,exp:"觸控層收手勢＝輸入；顯示層給畫面＝輸出——一台裝置可以跨單元。",alt:{stem:"再挑戰：耳麥（耳機＋麥克風）呢？",opts:["麥克風輸入、耳機輸出","都是輸入","都是輸出"],ans:0,exp:"拆開看各自的資料方向。"}},
  {ccid:"C2-HW-11",ct:"AL",tag:"開機除錯",stem:"電腦開機「嗶嗶」叫、進不了系統。依 POST 自我測試，最先懷疑哪個元件？",opts:["印表機","記憶體 RAM","滑鼠","喇叭"],ans:1,exp:"POST 偵測不到 RAM 會鳴聲中止——RAM 是開機必需的核心元件。",alt:{stem:"再挑戰：開機第一個執行的程式（POST／開機韌體）存放在哪？",opts:["主機板上的 BIOS／UEFI 晶片","雲端","印表機"],ans:0,exp:"開機韌體住在主機板晶片裡。"}},
- {ccid:"C2-HW-01",ct:"AB",tag:"拍照打卡",stem:"手機「拍照打卡上傳」的完整資料流，正確順序是？",opts:["鏡頭 → RAM → CPU → 螢幕 → 雲端","螢幕 → CPU → 鏡頭 → 雲端 → RAM","雲端 → 鏡頭 → RAM → 螢幕 → CPU","鏡頭 → 雲端 → 螢幕 → RAM → CPU"],ans:0,exp:"輸入 → 暫存 → 處理 → 輸出 → 永久儲存——一條龍完整資料流，儲存接住最後一棒。",alt:{stem:"再挑戰：圖書館自助借書的順序是？",opts:["刷學生證→比對資格→更新紀錄→印收據","印收據→刷學生證→比對資格","更新紀錄→印收據→刷學生證"],ans:0,exp:"輸入→處理→儲存→輸出。"}}
+ {ccid:"C2-HW-01",ct:"AB",tag:"拍照打卡",stem:"手機「拍照打卡上傳」的完整資料流，正確順序是？",opts:["鏡頭 → RAM → CPU → 螢幕 → 雲端","螢幕 → CPU → 鏡頭 → 雲端 → RAM","雲端 → 鏡頭 → RAM → 螢幕 → CPU","鏡頭 → 雲端 → 螢幕 → RAM → CPU"],ans:0,exp:"輸入 → 暫存 → 處理 → 輸出 → 非揮發記憶——一條龍完整資料流，記憶接住最後一棒。",alt:{stem:"再挑戰：圖書館自助借書的順序是？",opts:["刷學生證→比對資格→更新紀錄→印收據","印收據→刷學生證→比對資格","更新紀錄→印收據→刷學生證"],ans:0,exp:"輸入→處理→記憶→輸出。"}}
 ];
 
 /* ---------- 狀態 ---------- */
@@ -384,7 +384,7 @@ function renderPreResult(raw,max,ms){
    "<div class='ringwrap'>"+ring(Math.round(raw/max*100))+
    "<div><div style='font-size:20px;font-weight:800;color:var(--hwd)'>猜對 "+raw+" / "+max+" 題（不計分）</div>"+
    "<div style='color:var(--muted);margin-top:4px'>用時 "+mmss(ms)+"。把猜錯的印象帶進教室——上課時老師會一題一題揭曉，「先思考、後驗證」效果最好。</div></div></div>"+
-   "<div class='coach'>📌 上課前偷看一眼：整堂課只講一張圖——輸入 → 處理 → 輸出，儲存接住每一步。</div>"+
+   "<div class='coach'>📌 上課前偷看一眼：整堂課只講一張圖——輸入 → 處理 → 輸出，記憶接住每一步。</div>"+
    "<div class='cloudmsg' id='cloudmsg1'>☁ 上傳中…</div>"+
    "<div class='qact'><button class='btn btn-ghost' type='button' onclick='HWU.home()'>回首頁</button>"+
    "<button class='btn btn-navy' type='button' onclick='HWU.start(\"pre\")'>再玩一次</button></div></div>";
