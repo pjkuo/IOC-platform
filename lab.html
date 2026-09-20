@@ -7,7 +7,7 @@
 <meta name="cc-cloud-url" content="https://script.google.com/macros/s/AKfycbz7wHWbc7go-OVR0Q_g_NBzDqwzV9-leqL1CRe1S9wGkLLjvJIAm-KrZj80s1KJ_VdGVg/exec"/>
 <script id="ioccloud-cfg">window.CC_GAS_URL=function(){try{var t=document.querySelector('meta[name="cc-cloud-url"]'),e=t&&t.getAttribute("content")||"";return/^https?:\/\//.test(e)?e:""}catch(t){return""}}()</script>
 <title>電腦教室實機實測｜硬體單元評量</title>
-<meta name="description" content="電腦教室實機實測：打開電腦、查出 CPU／RAM／磁碟／GPU 規格，並歸類到 IPOS 四單元。自動評分，成績存入雲端試算表。"/>
+<meta name="description" content="電腦教室實機實測：打開電腦、查出 CPU／RAM／磁碟／GPU 規格，並歸類到 IPOM 四單元。自動評分，成績存入雲端試算表。"/>
 <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Crect width='100' height='100' rx='18' fill='%2310312a'/%3E%3Ctext x='50' y='70' font-size='52' text-anchor='middle' fill='%23e0b44a'%3E%F0%9F%96%A5%3C/text%3E%3C/svg%3E"/>
 <style>
 :root{--board:#10312a;--board2:#0c2620;--gold:#e0b44a;--ok:#34a36b;--fail:#e2574c;--warn:#d9912f;
@@ -57,9 +57,9 @@ background:#f8fafc;border:2px solid var(--line);border-radius:10px;padding:10px 
 .opt .k{flex:0 0 24px;height:24px;border-radius:50%;background:#e2e8f0;color:var(--hwd);font-weight:800;font-size:13px;
 display:inline-flex;align-items:center;justify-content:center}
 .opt.sel .k{background:var(--hw);color:#fff}
-.ipos{display:grid;grid-template-columns:1fr auto;gap:8px;align-items:center;border:1px solid var(--line);
+.ipom{display:grid;grid-template-columns:1fr auto;gap:8px;align-items:center;border:1px solid var(--line);
 border-radius:10px;padding:9px 11px;margin-top:7px;background:#fff}
-.ipos .nm{font-weight:700;font-size:15.5px}
+.ipom .nm{font-weight:700;font-size:15.5px}
 .seg4{display:inline-flex;border:2px solid var(--line);border-radius:9px;overflow:hidden}
 .seg4 button{font:800 13.5px/1 var(--sans);background:#fff;border:0;padding:9px 11px;cursor:pointer;color:var(--muted)}
 .seg4 button.on{background:var(--hw);color:#fff}
@@ -108,7 +108,7 @@ footer{margin-top:28px;text-align:center;color:var(--muted);font-size:12.5px;bor
     <div class="h2">這份評量要你「真的去看那台電腦」</div>
     <div style="font-size:15px;color:var(--muted)">
       每台機器規格不同，所以沒有標準答案可以抄——但系統會檢查你填的格式合不合理，
-      而 IPOS 歸類與推理題是有標準答案的，會自動評分。填完按最下面「送出」。
+      而 IPOM 歸類與推理題是有標準答案的，會自動評分。填完按最下面「送出」。
     </div>
     <div class="row" style="margin-top:10px">
       <span class="chip" id="whoS">身分：載入中…</span>
@@ -143,7 +143,7 @@ footer{margin-top:28px;text-align:center;color:var(--muted);font-size:12.5px;bor
   </div>
 
   <div class="card">
-    <span class="kicker">第 3 步</span><div class="h2">儲存單元：記憶體與磁碟</div>
+    <span class="kicker">第 3 步</span><div class="h2">記憶單元：主記憶體與磁碟</div>
     <div class="where"><b>去哪裡看：</b>同一個<code>效能</code>畫面，左邊改點 <code>記憶體</code>，再點 <code>磁碟 0</code>。</div>
     <div class="f">
       <div class="lab">RAM 總容量（GB）<small>記憶體頁右上角，例：16.0 GB</small></div>
@@ -191,9 +191,9 @@ footer{margin-top:28px;text-align:center;color:var(--muted);font-size:12.5px;bor
   </div>
 
   <div class="card">
-    <span class="kicker">第 6 步 · 40 分</span><div class="h2">把剛剛查到的元件歸到 IPOS</div>
+    <span class="kicker">第 6 步 · 40 分</span><div class="h2">把剛剛查到的元件歸到 IPOM</div>
     <div style="font-size:14.5px;color:var(--muted)">這題有標準答案，會自動評分。</div>
-    <div id="iposBox"></div>
+    <div id="ipomBox"></div>
   </div>
 
   <div class="card">
@@ -290,9 +290,9 @@ function diskType(){var b=document.querySelector("#v_disktype button.on");return
 function inputs(){return Array.prototype.filter.call($("v_in").querySelectorAll("input"),function(c){return c.checked;})
   .map(function(c){return c.value;});}
 
-/* ── IPOS 歸類（有標準答案） ── */
+/* ── IPOM 歸類（有標準答案） ── */
 var IP=[
- {n:"CPU（處理器）",a:"P"},{n:"記憶體 RAM",a:"S"},{n:"SSD／硬碟",a:"S"},
+ {n:"CPU（處理器）",a:"P"},{n:"記憶體 RAM",a:"M"},{n:"SSD／硬碟",a:"M"},
  {n:"螢幕",a:"O"},{n:"鍵盤",a:"I"},{n:"網路攝影機",a:"I"},{n:"喇叭／耳機",a:"O"},{n:"顯示晶片 GPU",a:"P"}
 ];
 var ipPick={};
@@ -300,12 +300,12 @@ var ipPick={};
 var QS=[
  {q:"你抄到的 RAM 容量和磁碟容量差了幾十倍。如果現在突然斷電，哪一個裡面的東西會消失？",
   o:["RAM 裡的","磁碟裡的","兩個都會","兩個都不會"],a:0,
-  e:"RAM 是揮發性暫存，斷電即清空；磁碟是永久儲存。這就是為什麼要隨手存檔。"},
+  e:"RAM 是揮發性暫存，斷電即清空；磁碟是非揮發性記憶，斷電保留。這就是為什麼要隨手存檔。"},
  {q:"你抄到的「邏輯處理器」若是核心數的 2 倍，代表這顆 CPU：",
   o:["有兩顆晶片","支援超執行緒，一個核心可同時處理兩條工作","時脈自動加倍","記憶體變兩倍"],a:1,
   e:"邏輯處理器＝作業系統看到的可排程單位；2 倍通常代表支援超執行緒（Hyper-Threading／SMT）。"},
- {q:"這台電腦跑起來卡卡的，你先看工作管理員發現「記憶體」使用率 95%。依 IPOS，問題出在哪一格？",
-  o:["輸入","處理與儲存之間的暫存不夠","輸出","網路"],a:1,
+ {q:"這台電腦跑起來卡卡的，你先看工作管理員發現「記憶體」使用率 95%。依 IPOM，問題出在哪一格？",
+  o:["輸入","處理與記憶之間的暫存不夠","輸出","網路"],a:1,
   e:"RAM 是處理單元的工作桌；桌面不夠大，CPU 就得一直跟磁碟搬資料，整台變慢。"}
 ];
 var qPick={};
@@ -327,15 +327,19 @@ function restore(){
     b.classList.toggle("on",b.getAttribute("data-v")===d.dt);});
   if(d.in) Array.prototype.forEach.call($("v_in").querySelectorAll("input"),function(c){
     c.checked=d.in.indexOf(c.value)>=0; c.parentNode.classList.toggle("on",c.checked);});
-  if(d.ip) ipPick=d.ip; if(d.q) qPick=d.q;
+  /* 舊草稿可能存著已淘汰的字母（改版前的 S）。留著會變成「畫面沒選、
+     內部有值」，送出時驗證還會放行——等於帶一個選不到的錯答案，所以濾掉。 */
+  if(d.ip){ ipPick={}; Object.keys(d.ip).forEach(function(i){
+    if(["I","P","O","M"].indexOf(d.ip[i])>-1) ipPick[i]=d.ip[i]; }); }
+  if(d.q) qPick=d.q;
 }
 
-function renderIpos(){
-  var b=$("iposBox");b.innerHTML="";
+function renderIpom(){
+  var b=$("ipomBox");b.innerHTML="";
   IP.forEach(function(it,i){
-    var d=document.createElement("div");d.className="ipos";
+    var d=document.createElement("div");d.className="ipom";
     d.innerHTML='<span class="nm">'+esc(it.n)+'</span><span class="seg4" data-i="'+i+'">'+
-      ["I","P","O","S"].map(function(x){return '<button type="button" data-v="'+x+'"'+
+      ["I","P","O","M"].map(function(x){return '<button type="button" data-v="'+x+'"'+
         (ipPick[i]===x?' class="on"':'')+'>'+x+'</button>';}).join("")+'</span>';
     b.appendChild(d);
     Array.prototype.forEach.call(d.querySelectorAll("button"),function(bt){
@@ -437,12 +441,12 @@ $("submit").addEventListener("click",function(){
    '｜'+esc(val("room")+" 第 "+val("seat")+" 號機")+'</div></div></div>'+
    '<div class="sc">'+
     '<div class="scb">實測抄錄<b>'+g.recScore+' / 40</b>'+g.okN+' / '+g.recTotal+' 欄合格</div>'+
-    '<div class="scb">IPOS 歸類<b>'+g.ipScore+' / 40</b>答對 '+g.ipOk+' / '+IP.length+'</div>'+
+    '<div class="scb">IPOM 歸類<b>'+g.ipScore+' / 40</b>答對 '+g.ipOk+' / '+IP.length+'</div>'+
     '<div class="scb">推理<b>'+g.qScore+' / 20</b>答對 '+g.qOk+' / '+QS.length+'</div>'+
    '</div>'+
    (wrong.length?'<div class="note"><b>歸類要訂正：</b>'+wrong.map(function(w){
       return esc(w.n)+'（你填 '+esc(w.you)+'，應為 '+esc(w.ans)+'）';}).join('、')+'</div>':
-      '<div class="note">🏆 IPOS 歸類全對——你已經會用這把尺量任何一台機器了。</div>')+
+      '<div class="note">🏆 IPOM 歸類全對——你已經會用這把尺量任何一台機器了。</div>')+
    qrev+
    '<div class="cloudmsg" id="cmsg">☁ 上傳中…</div>'+
    '<div class="row" style="margin-top:12px"><button class="btn btn-ghost" type="button" onclick="LAB.again()">修改後重新送出</button>'+
@@ -476,7 +480,7 @@ $("clearBtn").addEventListener("click",function(){
   F.forEach(function(f){var e=$("v_"+f.k);if(e){e.value="";e.classList.remove("bad","good");}var h=$("h_"+f.k);if(h)h.textContent="";});
   Array.prototype.forEach.call($("v_disktype").querySelectorAll("button"),function(b){b.classList.remove("on");});
   Array.prototype.forEach.call($("v_in").querySelectorAll("input"),function(c){c.checked=false;c.parentNode.classList.remove("on");});
-  ipPick={};qPick={};renderIpos();renderQ();save();
+  ipPick={};qPick={};renderIpom();renderQ();save();
   $("result").classList.add("hidden");$("h_all").textContent="";
 });
 
@@ -555,8 +559,8 @@ function refreshWho(){
 document.addEventListener("lab-cloud-ready",function(){setTimeout(refreshWho,250);});
 window.LAB={grade:grade,check:check,F:F,IP:IP,QS:QS,setMode:setMode,
   again:function(){$("result").classList.add("hidden");window.scrollTo(0,0);},
-  _setIp:function(o){ipPick=o;renderIpos();},_setQ:function(o){qPick=o;renderQ();}};
-renderIpos();renderQ();restore();renderIpos();renderQ();
+  _setIp:function(o){ipPick=o;renderIpom();},_setQ:function(o){qPick=o;renderQ();}};
+renderIpom();renderQ();restore();renderIpom();renderQ();
 setTimeout(refreshWho,600);
 setMode(/teacher/.test(location.hash)?"t":"s");
 })();
