@@ -1,0 +1,51 @@
+name: relabel-tmp
+on:
+  push:
+    paths:
+      - ".github/workflows/relabel-tmp.yml"
+  workflow_dispatch:
+permissions:
+  contents: write
+jobs:
+  relabel:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Apply relabel (md5-gated)
+        run: |
+          python3 - <<'PYEOF'
+          import hashlib,sys
+          A='{v:"assess",t:"即時評量"},{v:"exam",t:"期中評量"}]'
+          B='{v:"assess",t:"即時評量"},{v:"exam",t:"課後評量"},{v:"midterm",t:"期中評量"}]'
+          MD5={
+           "student.html":("618f2a4df83245b8ae7f0e1a647db951","aa549455a33db0e5853eaa470ef824b3"),
+           "teacher.html":("4be014a5376c29495bb8735f9ccdbe24","b0e0174b76956125cbef59f2e4564866"),
+          }
+          def md5(b): return hashlib.md5(b).hexdigest()
+          out={}
+          for f,(m0,m1) in MD5.items():
+              b=open(f,"rb").read()
+              if md5(b)!=m0: sys.exit("BEFORE md5 mismatch: "+f+" "+md5(b))
+              s=b.decode("utf-8")
+              if s.count(A)!=1: sys.exit("pattern count != 1 in "+f)
+              nb=s.replace(A,B).encode("utf-8")
+              if md5(nb)!=m1: sys.exit("AFTER md5 mismatch: "+f+" "+md5(nb))
+              out[f]=nb
+          for f,nb in out.items():
+              open(f,"wb").write(nb); print("OK",f,md5(nb))
+          PYEOF
+      - name: Commit and push
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add student.html teacher.html
+          git commit -F - <<'MSG'
+          student/teacher 導覽列：exam 分頁「期中評量」→「課後評量」，並新增「期中評量」分頁（→ #midterm 線上期中評量）
+
+          - 課後評量系統（view exam）原分頁標籤誤標為「期中評量」；線上期中評量（view midterm）原無分頁，只能從首頁卡片進入
+          - 純前端文字＋一個分頁項，後端與資料庫不動；由暫時性 workflow relabel-tmp 於伺服器端套用（md5 閘門），套用後移除
+
+          Co-Authored-By: Claude Fable 5.1 <noreply@anthropic.com>
+          Claude-Session: https://claude.ai/code/session_013A7C2Hy5aeYJ1RrGejqnvY
+          MSG
+          git push origin HEAD:main
